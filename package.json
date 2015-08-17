@@ -1,0 +1,21 @@
+{
+  "name": "down-quark",
+  "version": "0.0.1",
+  "description": "Electron based markdown editor",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Martin Laine",
+  "license": "ISC",
+  "devDependencies": {
+    "electron-prebuilt": "^0.30.4",
+    "electron-rebuild": "^0.2.5"
+  },
+  "dependencies": {
+    "babel": "^5.8.21",
+    "react": "^0.13.3",
+    "stylus": "^0.52.0"
+  }
+}
