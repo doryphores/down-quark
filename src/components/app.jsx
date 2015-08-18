@@ -1,7 +1,16 @@
 import React from "react"
 import Tree from "./tree"
+import {registerCommands} from "../utils/shortcut_manager"
 
 export default class App extends React.Component {
+  componentDidMount() {
+    registerCommands()
+  }
+
+  componentWillUnmount() {
+    unregisterCommands()
+  }
+
   render() {
     return (
       <div className="u-container  u-container--horizontal">
