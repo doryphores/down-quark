@@ -16,6 +16,7 @@ class TreeStore {
 
   openFolder(dirname) {
     this.tree = new FileTree(dirname)
+    this.tree.on("change", this.emitChange.bind(this))
   }
 
   expandNode(node) {

@@ -1,11 +1,14 @@
 import _ from "underscore"
 import fs from "fs"
 import path from "path"
+import PathWatcher from "pathwatcher"
+import EventEmitter from "events"
 
 const IGNORED_FILES = [".DS_Store", "Thumbs.db", ".git"]
 
-class Node {
+class Node extends EventEmitter {
   constructor(p) {
+    super()
     this.path = p
     this.name = path.basename(p)
     this.expanded = false
@@ -21,6 +24,24 @@ class Node {
   open() {
     if (this.type === "file") return
 
+    this.reload()
+
+    this.expanded = true
+
+    this.watch()
+  }
+
+  close() {
+    if (this.type === "file") return
+
+    this.expanded = false
+
+    this.unwatch()
+  }
+
+  reload() {
+    console.log("RELOAD NODE: " + this.path)
+
     // Read node list from file system
     var nodeList = _.difference(fs.readdirSync(this.path), IGNORED_FILES)
 
@@ -30,7 +51,10 @@ class Node {
         return nodeList.indexOf(node.name) === -1
       }),
       _.difference(nodeList, _.pluck(this.children, "name")).map((p) => {
-        return new Node(path.join(this.path, p))
+        var node = new Node(path.join(this.path, p))
+        // Ensure "change" events bubble up the tree
+        node.on("change", this.emit.bind(this, "change"))
+        return node
       })
     ).sort(
       function nodeCompare(a, b) {
@@ -39,17 +63,34 @@ class Node {
       }
     )
 
-    this.expanded = true
+    this.children.forEach((node) => {if (node.expanded) node.reload()})
 
-    console.log("START WATCHING PATH:" + this.path)
+    this.emit("change")
   }
 
-  close() {
-    if (this.type === "file") return
+  watch() {
+    console.log("START WATCHING: " + this.path)
 
-    this.expanded = false
+    this.watcher = PathWatcher.watch(this.path, (event) => {
+      if (event == "change") this.reload()
+    })
 
-    console.log("STOP WATCHING PATH:" + this.path)
+    this.children.forEach((node) => {
+      if (node.expanded) node.watch()
+    })
+  }
+
+  unwatch() {
+    console.log("STOP WATCHING: " + this.path)
+
+    if (this.watcher) {
+      this.watcher.close()
+      this.watcher = null
+    }
+
+    this.children.forEach((node) => {
+      if (node.watcher) node.unwatch()
+    })
   }
 }
 
