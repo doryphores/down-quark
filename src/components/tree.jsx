@@ -1,6 +1,7 @@
 import React from "react"
 import classNames from "classnames"
 import TreeActions from "../actions/tree_actions"
+import FileSystemActions from "../actions/file_system_actions"
 
 export default class Tree extends React.Component {
   startResize() {
@@ -28,7 +29,7 @@ export default class Tree extends React.Component {
                       selectedPath={this.props.selectedPath}/>
           </ul>
         </div>
-        <div className="c-tree__resizer"
+        <div className="c-tree__resize-handle"
              onMouseDown={this.startResize.bind(this)}/>
       </div>
     )
@@ -42,6 +43,11 @@ class TreeNode extends React.Component {
       TreeActions[action](this.props.node)
     }
     TreeActions.select(this.props.node.path)
+  }
+
+  handleDoubleClick() {
+    if (this.props.node.type === "dir") return
+    FileSystemActions.openFile(this.props.node.path)
   }
 
   nodeClasses() {
@@ -61,7 +67,8 @@ class TreeNode extends React.Component {
   render() {
     var nodeLabel = (
       <span className={this.labelClasses()}
-            onClick={this.handleClick.bind(this)}>
+            onClick={this.handleClick.bind(this)}
+            onDoubleClick={this.handleDoubleClick.bind(this)}>
         {this.props.node.name}
       </span>
     )

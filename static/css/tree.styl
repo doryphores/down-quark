@@ -1,3 +1,12 @@
+/**
+ * The tree component is a nested tree view of the currently open content
+ * folder. Tree nodes come in two types: files and folders. Folders can be
+ * collapsed and expanded. Both node types can be selected.
+ *
+ * The tree view uses the full page height and has a variable width. Resizing
+ * happens when dragging an invisible resize handle.
+ */
+
 .c-tree
   position relative
   // Position it above so that the resizer handle is on top
@@ -7,16 +16,16 @@
   // Set min and max widths for restricting the resizing
   min-width 200px
   max-width 50%
-  background-color #dedede
+  background-color #88867C
   font-size 1.2rem
-  line-height 2.2rem
+  line-height 2.6rem
   font-weight bold
   -webkit-user-select none
 
 
 // This is an invisible handle for resizing the tree panel
 
-.c-tree__resizer
+.c-tree__resize-handle
   position absolute
   top 0
   bottom 0
@@ -75,8 +84,8 @@
   position absolute
   left 0
   right 0
-  height 2.2rem
-  background-color rgba(0,0,0,.2)
+  height 2.6rem
+  background-color rgba(255,255,255,.5)
 
 
 // The node label contains the node's name and icon

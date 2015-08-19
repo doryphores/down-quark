@@ -1,0 +1,61 @@
+.c-tab-bar
+  display flex
+  flex-direction row
+  height 4rem
+  margin 0
+  padding 0
+  list-style none
+  background #525252
+  font-size 1.4rem
+  font-weight bold
+  line-height 4rem
+
+
+// Tabs are horizontally layed out flexbox items. There have two main states:
+// normal and active, but can also be marked as "dirty".
+//
+// Each tab has a close button
+
+.c-tab-bar__item
+  position relative
+  box-sizing border-box
+  display inline-block
+  flex 1
+  width -webkit-min-content
+  max-width 160px
+  min-width 60px
+  padding 0 30px 0 10px
+  overflow hidden
+  text-overflow ellipsis
+  text-align center
+  white-space nowrap
+  color white
+  -webkit-user-select none
+  cursor default
+  transition box-shadow .15s
+
+.c-tab-bar__item--active
+  flex 2
+  box-shadow 0 -4px 0 #5B87C2 inset
+
+.c-tab-bar__close
+  position absolute
+  right 0
+  width 20px
+  text-align center
+  cursor pointer
+  transform scale(0)
+  transition transform .15s
+
+  &::before
+    @extend $octicon, .octicon-x:before
+
+    .c-tab-bar__item--dirty &
+      @extend .octicon-primitive-dot:before
+
+    .c-tab-bar__item:hover &
+      @extend .octicon-x:before
+
+  .c-tab-bar__item:hover &,
+  .c-tab-bar__item--active &
+    transform scale(1)

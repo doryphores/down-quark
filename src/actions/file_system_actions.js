@@ -21,6 +21,14 @@ class FileSystemActions {
   openFolder(dirname) {
     this.dispatch(dirname)
   }
+
+  openFile(filePath) {
+    this.dispatch(filePath)
+  }
+
+  closeFile(filePath) {
+    this.dispatch(filePath)
+  }
 }
 
 export default alt.createActions(FileSystemActions)
