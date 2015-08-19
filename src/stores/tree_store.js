@@ -5,18 +5,20 @@ import TreeActions from "../actions/tree_actions"
 
 class TreeStore {
   constructor() {
-    this.tree = null
+    this.root = null
+    this.selectedPath = null
 
     this.bindListeners({
-      openFolder: FileSystemActions.OPEN_FOLDER,
-      expandNode: TreeActions.EXPAND,
-      collapseNode: TreeActions.COLLAPSE
+      openFolder   : FileSystemActions.OPEN_FOLDER,
+      expandNode   : TreeActions.EXPAND,
+      collapseNode : TreeActions.COLLAPSE,
+      selectNode   : TreeActions.SELECT
     })
   }
 
   openFolder(dirname) {
-    this.tree = new FileTree(dirname)
-    this.tree.on("change", this.emitChange.bind(this))
+    this.root = new FileTree(dirname)
+    this.root.on("change", this.emitChange.bind(this))
   }
 
   expandNode(node) {
@@ -25,6 +27,10 @@ class TreeStore {
 
   collapseNode(node) {
     node.close()
+  }
+
+  selectNode(nodePath) {
+    this.selectedPath = nodePath
   }
 }
 

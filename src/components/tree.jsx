@@ -24,7 +24,8 @@ export default class Tree extends React.Component {
       <div className="u-panel  c-tree">
         <div className="c-tree__scroller">
           <ul className="c-tree__node-list">
-            <TreeNode node={this.props.root}/>
+            <TreeNode node={this.props.root}
+                      selectedPath={this.props.selectedPath}/>
           </ul>
         </div>
         <div className="c-tree__resizer"
@@ -36,22 +37,33 @@ export default class Tree extends React.Component {
 
 class TreeNode extends React.Component {
   handleClick() {
-    var action = this.props.node.expanded ? "collapse" : "expand"
-    TreeActions[action](this.props.node)
+    if (this.props.node.type === "dir") {
+      var action = this.props.node.expanded ? "collapse" : "expand"
+      TreeActions[action](this.props.node)
+    }
+    TreeActions.select(this.props.node.path)
   }
 
   nodeClasses() {
     return classNames("c-tree__node", {
+      "c-tree__node--expanded": this.props.node.expanded,
+      "c-tree__node--selected": this.props.node.path === this.props.selectedPath
+    })
+  }
+
+  labelClasses() {
+    return classNames("c-tree__node-label", {
       "octicon-file-text": this.props.node.type === "file",
-      "octicon-file-directory": this.props.node.type === "dir",
-      "c-tree__node--expanded": this.props.node.expanded
+      "octicon-file-directory": this.props.node.type === "dir"
     })
   }
 
   render() {
     var nodeLabel = (
-      <span className="c-tree__node-label"
-            onClick={this.handleClick.bind(this)}>{this.props.node.name}</span>
+      <span className={this.labelClasses()}
+            onClick={this.handleClick.bind(this)}>
+        {this.props.node.name}
+      </span>
     )
 
     if (this.props.node.type === "file") {
@@ -62,7 +74,11 @@ class TreeNode extends React.Component {
           {nodeLabel}
           <ul className="c-tree__node-list">
             {this.props.node.children.map((node) => {
-              return <TreeNode key={node.name} node={node}/>
+              return (
+                <TreeNode key={node.name}
+                          node={node}
+                          selectedPath={this.props.selectedPath}/>
+              )
             })}
           </ul>
         </li>

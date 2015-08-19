@@ -1,15 +1,20 @@
 .c-tree
   position relative
+  // Position it above so that the resizer handle is on top
   z-index 2
   height 100%
   width 300px
+  // Set min and max widths for restricting the resizing
   min-width 200px
   max-width 50%
   background-color #dedede
   font-size 1.2rem
-  line-height 1.8
+  line-height 2.2rem
   font-weight bold
   -webkit-user-select none
+
+
+// This is an invisible handle for resizing the tree panel
 
 .c-tree__resizer
   position absolute
@@ -19,6 +24,10 @@
   width 5px
   cursor col-resize
 
+
+// The scroller contains the tree itself. We position it absolutely in
+// the tree component with automatic overflow to enable scrolling.
+
 .c-tree__scroller
   overflow auto
   position absolute
@@ -27,30 +36,58 @@
   bottom 0
   left 0
 
+
+// Node lists are collapsed by default. A node list is expanded when its
+// direct node parent has the 'c-tree__node--expanded' modifier class.
+
 .c-tree__node-list
+  // The selected node 'overlay' is positioned relatively to this
+  position relative
+  // This, combined with 'nowrap' on node labels, ensures that
+  // the tree scrolls horizontally
   min-width -webkit-min-content
-  list-style none
   margin 0
   padding 10px
+  list-style none
 
   // Collapse child node lists
   .c-tree__node-list
-    min-width 0
+    position static
     display none
+    min-width 0
     padding 0
 
   .c-tree__node--expanded > &
     display block
 
+
+// Each node in the tree contains a label and an optional node list
+
 .c-tree__node
   white-space nowrap
-
-  &::before
-    width 16px
-    margin-right 8px
 
   .c-tree__node
     padding-left 20px
 
+// This is an 'underlay' for highligting the currently selected node
+.c-tree__node--selected::before
+  content ""
+  position absolute
+  left 0
+  right 0
+  height 2.2rem
+  background-color rgba(0,0,0,.2)
+
+
+// The node label contains the node's name and icon
+
 .c-tree__node-label
+  // Position relatively so it shows on top of selected underlay
+  position relative
+  display block
   cursor default
+
+  // Size the node icon
+  &::before
+    width 16px
+    margin-right 8px

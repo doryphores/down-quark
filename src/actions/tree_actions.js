@@ -1,8 +1,12 @@
 import alt from "../alt"
 
 class TreeActions {
-  expand(nodePath) {
+  select(nodePath) {
     this.dispatch(nodePath)
+  }
+
+  expand(node) {
+    this.dispatch(node)
   }
 
   collapse(node) {

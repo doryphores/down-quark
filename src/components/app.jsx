@@ -11,7 +11,9 @@ class App extends React.Component {
   }
 
   static getPropsFromStores() {
-    return TreeStore.getState()
+    return {
+      tree: TreeStore.getState(),
+    }
   }
 
   componentDidMount() {
@@ -25,7 +27,8 @@ class App extends React.Component {
   render() {
     return (
       <div className="u-container  u-container--horizontal">
-        <Tree root={this.props.tree}/>
+        <Tree root={this.props.tree.root}
+              selectedPath={this.props.tree.selectedPath}/>
 
         <div className="u-panel  c-workspace">
           <h2>Workspace</h2>
