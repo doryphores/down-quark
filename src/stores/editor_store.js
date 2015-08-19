@@ -3,6 +3,7 @@ import fs from "fs"
 import path from "path"
 import _ from "underscore"
 import FileSystemActions from "../actions/file_system_actions"
+import EditorActions from "../actions/editor_actions"
 import TabActions from "../actions/tab_actions"
 import TreeActions from "../actions/tree_actions"
 import PathWatcher from "pathwatcher"
@@ -16,7 +17,9 @@ class EditorStore {
     this.bindListeners({
       openEditor      : FileSystemActions.OPEN_FILE,
       closeEditor     : FileSystemActions.CLOSE_FILE,
-      setActiveEditor : TabActions.SELECT_TAB
+      setActiveEditor : TabActions.SELECT_TAB,
+      changeContent   : EditorActions.CHANGE_CONTENT,
+      saveFile        : EditorActions.SAVE_FILE
     })
   }
 
@@ -27,7 +30,9 @@ class EditorStore {
       // The file is already open so set it as active
       this.setActiveEditor(filePath)
     } else {
-      fs.readFile(filePath, (err, content) => {
+      fs.readFile(filePath, {
+        encoding: "utf-8"
+      }, (err, content) => {
         if (err) console.log(err)
         else {
           this.editors.push({
@@ -64,9 +69,28 @@ class EditorStore {
       }
     }
 
-    this.unwatch(filePath)
+    this.unwatch(this.editors.splice(fileIndex, 1))
+  }
 
-    this.editors.splice(fileIndex, 1)
+  changeContent(data) {
+    var editor = this.findEditor(data.filePath)
+    editor.content = data.content
+    editor.clean = editor.content === editor.diskContent
+  }
+
+  saveFile() {
+    console.log("SAVE FILE")
+    this.unwatch(this._activeEditor)
+    fs.writeFile(this._activeEditor.path, this._activeEditor.content, {
+      encoding: "utf-8"
+    }, (err) => {
+      if (err) return console.log(err)
+      this._activeEditor.diskContent = this._activeEditor.content
+      this._activeEditor.clean = true
+      this.watch(this._activeEditor)
+      this.emitChange()
+    })
+    return false
   }
 
   setActiveEditor(filePath) {
@@ -92,7 +116,7 @@ class EditorStore {
 
   watch(editor) {
     // Close and delete any existing watchers for this file
-    this.unwatch(editor.path)
+    this.unwatch(editor)
 
     this._watchers[editor.path] = PathWatcher.watch(editor.path, () => {
       fs.readFile(editor.path, (err, content) => {
@@ -101,6 +125,7 @@ class EditorStore {
           this.closeEditor(editor.path)
         } else {
           // File has changed so update it
+          if (editor.clean) editor.content = content
           editor.diskContent = content
           editor.clean = editor.content === editor.diskContent
         }
@@ -109,10 +134,10 @@ class EditorStore {
     })
   }
 
-  unwatch(filePath) {
-    if (this._watchers[filePath]) {
-      this._watchers[filePath].close()
-      delete this._watchers[filePath]
+  unwatch(editor) {
+    if (this._watchers[editor.path]) {
+      this._watchers[editor.path].close()
+      delete this._watchers[editor.path]
     }
   }
 }

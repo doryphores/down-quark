@@ -1,11 +1,13 @@
 import Key from "keymaster"
 import _ from "underscore"
 import FileSystemActions from "../actions/file_system_actions"
+import EditorActions from "../actions/editor_actions"
 
 const COMMAND_MODIFIER = process.platform == "darwin" ? "command+" : "ctrl+"
 
 var commands = {
-  "o": FileSystemActions.selectFolder
+  "o": FileSystemActions.selectFolder,
+  "s": EditorActions.saveFile
 }
 
 module.exports = {

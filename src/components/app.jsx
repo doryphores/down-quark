@@ -5,6 +5,7 @@ import TreeStore from "../stores/tree_store"
 import EditorStore from "../stores/editor_store"
 import Tree from "./tree"
 import TabBar from "./tab_bar"
+import EditorPanes from "./editor_panes"
 
 class App extends React.Component {
   static getStores() {
@@ -35,9 +36,7 @@ class App extends React.Component {
         <div className="u-panel  u-container  u-container--vertical">
           <TabBar editors={this.props.editors}/>
 
-          <div className="u-panel">
-
-          </div>
+          <EditorPanes editors={this.props.editors}/>
         </div>
       </div>
     )
