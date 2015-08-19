@@ -18,7 +18,8 @@ export default function initWindow() {
   var dims = JSON.parse(window.localStorage.getItem("windowDimensions"))
 
   if (dims) {
-    if (dims.maximized) {
+    if (dims.maximized === "true") {
+      remote.getCurrentWindow().show()
       remote.getCurrentWindow().maximize()
     } else {
       window.resizeTo(dims.width, dims.height)
