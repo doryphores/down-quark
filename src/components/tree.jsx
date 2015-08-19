@@ -1,34 +1,34 @@
 import React from "react"
 import classNames from "classnames"
-import TreeStore from "../stores/tree_store"
 import TreeActions from "../actions/tree_actions"
 
 export default class Tree extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = TreeStore.getState()
-  }
-
-  componentDidMount() {
-    TreeStore.listen(this.onChange.bind(this))
-  }
-
-  componentWillUnmount() {
-    TreeStore.unlisten()
-  }
-
-  onChange(state) {
-    this.setState(state)
+  startResize() {
+    document.body.classList.add("is-resizing")
+    var endResize = () => {
+      document.body.classList.remove("is-resizing")
+      document.removeEventListener("mousemove", resize)
+      document.removeEventListener("mouseup", endResize)
+    }
+    var resize = (evt) => {
+      React.findDOMNode(this).style.width = evt.clientX + "px"
+    }
+    document.addEventListener("mouseup", endResize)
+    document.addEventListener("mousemove", resize)
   }
 
   render() {
-    if (this.state.tree === null) return null
+    if (this.props.root === null) return null
 
     return (
       <div className="u-panel  c-tree">
-        <ul className="c-tree__node-list">
-          <TreeNode node={this.state.tree}/>
-        </ul>
+        <div className="c-tree__scroller">
+          <ul className="c-tree__node-list">
+            <TreeNode node={this.props.root}/>
+          </ul>
+        </div>
+        <div className="c-tree__resizer"
+             onMouseDown={this.startResize.bind(this)}/>
       </div>
     )
   }
@@ -42,22 +42,27 @@ class TreeNode extends React.Component {
 
   nodeClasses() {
     return classNames("c-tree__node", {
-      "c-tree__node--file": this.props.node.type === "file",
-      "c-tree__node--folder": this.props.node.type === "folder",
+      "octicon-file-text": this.props.node.type === "file",
+      "octicon-file-directory": this.props.node.type === "dir",
       "c-tree__node--expanded": this.props.node.expanded
     })
   }
 
   render() {
+    var nodeLabel = (
+      <span className="c-tree__node-label"
+            onClick={this.handleClick.bind(this)}>{this.props.node.name}</span>
+    )
+
     if (this.props.node.type === "file") {
-      return <li className={this.nodeClasses()}>{this.props.node.name}</li>
+      return <li className={this.nodeClasses()}>{nodeLabel}</li>
     } else {
       return (
         <li className={this.nodeClasses()}>
-          <span onClick={this.handleClick.bind(this)}>{this.props.node.name}</span>
+          {nodeLabel}
           <ul className="c-tree__node-list">
             {this.props.node.children.map((node) => {
-              return <TreeNode key={node.path} node={node}/>
+              return <TreeNode key={node.name} node={node}/>
             })}
           </ul>
         </li>

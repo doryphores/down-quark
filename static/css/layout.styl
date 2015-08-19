@@ -1,0 +1,32 @@
+html
+  height 100%
+
+body
+  overflow hidden
+  height 100%
+  margin 0
+  padding 0
+
+  &.is-resizing
+    -webkit-user-select none
+
+.o-app
+  height 100%
+
+.u-container
+  display flex
+  align-items stretch
+  height 100%
+  width 100%
+
+.u-container--horizontal
+  flex-direction row
+
+  .u-panel
+    height 100%
+
+.u-container--vertical
+  flex-direction column
+
+  .u-panel
+    width 100%

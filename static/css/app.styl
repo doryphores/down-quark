@@ -1,50 +1,13 @@
-@font-face
-  font-family "Roboto"
-  src url("fonts/Roboto/Roboto-Regular.ttf")
-  font-weight normal
-
 html
-  height 100%
+  font-size 10px
 
 body
-  height 100%
-  margin 0
-  padding 0
-  background black
-  color white
-  font-family Roboto
+  background #9a988d
+  color #292929
+  font-family 'Lucida Grande', 'Segoe UI', Ubuntu, Cantarell, sans-serif
+  -webkit-font-smoothing antialiased
 
-.o-app
-  height 100%
-
-.u-container
-  display flex
-  align-items stretch
-  height 100%
-  width 100%
-
-.u-container--horizontal
-  flex-direction row
-
-  .u-panel
-    height 100%
-
-.u-container--vertical
-  flex-direction column
-
-  .u-panel
-    width 100%
-
-.c-tree
-  height 100%
-  width 200px
-  background-color #dedede
-
-.c-tree__node-list .c-tree__node-list
-  display none
-
-.c-tree__node--expanded > .c-tree__node-list
-  display block
-
-.c-workspace
-  flex 1
+@import "octicons"
+@import "layout"
+@import "tree"
+@import "workspace"

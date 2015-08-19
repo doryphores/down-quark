@@ -1,20 +1,31 @@
 import React from "react"
+import ShortcutManager from "../utils/shortcut_manager"
+import connectToStores from "alt/utils/connectToStores"
+import TreeStore from "../stores/tree_store"
 import Tree from "./tree"
-import {registerCommands} from "../utils/shortcut_manager"
 
-export default class App extends React.Component {
+
+class App extends React.Component {
+  static getStores() {
+    return [TreeStore]
+  }
+
+  static getPropsFromStores() {
+    return TreeStore.getState()
+  }
+
   componentDidMount() {
-    registerCommands()
+    ShortcutManager.registerCommands()
   }
 
   componentWillUnmount() {
-    unregisterCommands()
+    ShortcutManager.unregisterCommands()
   }
 
   render() {
     return (
       <div className="u-container  u-container--horizontal">
-        <Tree />
+        <Tree root={this.props.tree}/>
 
         <div className="u-panel  c-workspace">
           <h2>Workspace</h2>
@@ -23,3 +34,5 @@ export default class App extends React.Component {
     )
   }
 }
+
+export default connectToStores(App)
