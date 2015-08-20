@@ -33,7 +33,7 @@ class App extends React.Component {
         <Tree root={this.props.tree.root}
               selectedPath={this.props.tree.selectedPath}/>
 
-        <div className="u-panel  u-container  u-container--vertical">
+        <div className="u-container  u-container--vertical  u-panel  u-panel--grow">
           <TabBar editors={this.props.editors}/>
 
           <EditorPanes editors={this.props.editors}/>

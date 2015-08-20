@@ -4,7 +4,7 @@ import EditorActions from "../actions/editor_actions"
 
 export default class EditorPanes extends React.Component {
   editorClasses(editor) {
-    return classNames("c-editor", "u-panel", {
+    return classNames("c-editor", "u-panel u-panel--grow", {
       "c-editor--active": editor.active
     })
   }
@@ -15,7 +15,7 @@ export default class EditorPanes extends React.Component {
 
   render() {
     return (
-      <div className="u-panel  u-container  u-container--horizontal  c-editors">
+      <div className="u-panel  u-panel--grow  u-container  u-container--horizontal  c-editors">
         {this.props.editors.map((editor) => {
           return (
             <textarea key={editor.path}
