@@ -55,6 +55,11 @@ class EditorStore {
   }
 
   closeEditor(filePath) {
+    if (this.editors.length === 0) return
+
+    // Close active editor by default
+    if (filePath === undefined) filePath = this._activeEditor.path
+
     var fileIndex = _.findIndex(this.editors, (editor) => {
       return editor.path === filePath
     })

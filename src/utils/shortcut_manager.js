@@ -7,13 +7,17 @@ const COMMAND_MODIFIER = process.platform == "darwin" ? "command+" : "ctrl+"
 
 var commands = {
   "o": FileSystemActions.selectFolder,
+  "w": FileSystemActions.closeFile,
   "s": EditorActions.saveFile
 }
 
 module.exports = {
   registerCommands: () => {
     _.each(commands, (action, shortcut) => {
-      Key(COMMAND_MODIFIER + shortcut, action)
+      Key(COMMAND_MODIFIER + shortcut, (event, _handler) => {
+        event.preventDefault()
+        action()
+      })
     })
   },
 
