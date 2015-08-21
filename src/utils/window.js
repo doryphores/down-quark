@@ -1,5 +1,4 @@
 import remote from "remote"
-import Screen from "screen"
 
 var saveDims = function () {
   window.localStorage.setItem("windowDimensions", JSON.stringify({

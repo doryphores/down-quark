@@ -40,8 +40,6 @@ class Node extends EventEmitter {
   }
 
   reload() {
-    console.log("RELOAD NODE: " + this.path)
-
     // Read node list from file system
     var nodeList = _.difference(fs.readdirSync(this.path), IGNORED_FILES)
 
@@ -69,8 +67,6 @@ class Node extends EventEmitter {
   }
 
   watch() {
-    console.log("START WATCHING: " + this.path)
-
     this.watcher = PathWatcher.watch(this.path, (event) => {
       if (event == "change") this.reload()
     })
@@ -81,8 +77,6 @@ class Node extends EventEmitter {
   }
 
   unwatch() {
-    console.log("STOP WATCHING: " + this.path)
-
     if (this.watcher) {
       this.watcher.close()
       this.watcher = null
@@ -98,5 +92,9 @@ export default class FileTree extends Node {
   constructor(root) {
     super(root)
     this.open()
+  }
+
+  clean() {
+    this.unwatch()
   }
 }

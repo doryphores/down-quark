@@ -17,6 +17,10 @@ class TreeStore {
   }
 
   openFolder(dirname) {
+    // Clean up if a previous folder was open
+    if (this.root) this.root.clean()
+    this.selectedPath = null
+
     this.root = new FileTree(dirname)
     this.root.on("change", this.emitChange.bind(this))
   }
