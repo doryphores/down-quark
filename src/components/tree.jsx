@@ -19,14 +19,14 @@ export default class Tree extends React.Component {
   }
 
   render() {
-    if (this.props.root === null) return null
+    if (this.props.tree.root === null) return null
 
     return (
       <div className="u-panel  c-tree">
         <div className="c-tree__scroller">
           <ul className="c-tree__node-list">
-            <TreeNode node={this.props.root}
-                      selectedPath={this.props.selectedPath}/>
+            <TreeNode node={this.props.tree.root}
+                      selectedPath={this.props.tree.selectedPath}/>
           </ul>
         </div>
         <div className="c-tree__resize-handle"

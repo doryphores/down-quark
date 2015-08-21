@@ -13,7 +13,9 @@ class FileSystemActions {
       properties: ["openDirectory"]
     }, (filenames) => {
       if (filenames) {
-        this.actions.openFolder(filenames[0])
+        this.actions.openFolder({
+          rootPath: filenames[0]
+        })
       }
     })
   }

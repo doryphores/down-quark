@@ -6,7 +6,7 @@ import EventEmitter from "events"
 
 const IGNORED_FILES = [".DS_Store", "Thumbs.db", ".git"]
 
-class Node extends EventEmitter {
+export default class Node extends EventEmitter {
   constructor(p) {
     super()
     this.path = p
@@ -24,10 +24,9 @@ class Node extends EventEmitter {
   open() {
     if (this.type === "file") return
 
-    this.reload()
-
     this.expanded = true
 
+    this.reload()
     this.watch()
   }
 
@@ -61,7 +60,7 @@ class Node extends EventEmitter {
       }
     )
 
-    this.children.forEach((node) => {if (node.expanded) node.reload()})
+    this.children.forEach((node) => { if (node.expanded) node.reload() })
 
     this.emit("change")
   }
@@ -86,15 +85,17 @@ class Node extends EventEmitter {
       if (node.watcher) node.unwatch()
     })
   }
-}
 
-export default class FileTree extends Node {
-  constructor(root) {
-    super(root)
-    this.open()
-  }
+  findNode(nodePath) {
+    var relativePath = path.relative(this.path, nodePath)
 
-  clean() {
-    this.unwatch()
+    if (relativePath === "") return this
+
+    var nextNodeName = relativePath.split("/")[0]
+    var nextNode = _.find(this.children, (n) => {
+      return n.name === nextNodeName
+    })
+
+    return nextNode && nextNode.findNode(nodePath)
   }
 }
