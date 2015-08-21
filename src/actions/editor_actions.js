@@ -1,11 +1,8 @@
 import alt from "../alt"
 
 class EditorActions {
-  changeContent(filePath, content) {
-    this.dispatch({
-      filePath: filePath,
-      content: content
-    })
+  changeContent(data) {
+    this.dispatch(data)
   }
 
   saveFile() {

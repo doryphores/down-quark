@@ -6,7 +6,7 @@ import EditorStore from "../stores/editor_store"
 import FileSystemActions from "../actions/file_system_actions"
 import Tree from "./tree"
 import TabBar from "./tab_bar"
-import EditorPanes from "./editor_panes"
+import Editor from "./editor"
 import Settings from "../utils/settings"
 
 class App extends React.Component {
@@ -47,7 +47,11 @@ class App extends React.Component {
         <div className="u-container  u-container--vertical  u-panel  u-panel--grow">
           <TabBar editors={this.props.editors}/>
 
-          <EditorPanes editors={this.props.editors}/>
+          <div className="u-panel  u-panel--grow  c-editors">
+            {this.props.editors.map((editor) => {
+              return <Editor key={editor.path} editor={editor}/>
+            })}
+          </div>
         </div>
       </div>
     )

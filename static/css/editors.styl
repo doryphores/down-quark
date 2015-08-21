@@ -1,5 +1,29 @@
+.c-editors
+  position relative
+
 .c-editor
-  display none
+  position absolute
+  z-index 1
+  width 100%
+  top 0
+  bottom 0
+  display flex
+  flex-direction row
 
 .c-editor--active
-  display block
+  z-index 2
+
+.c-editor__container
+  position relative
+  flex 1
+
+.CodeMirror
+  position absolute
+  top 0
+  left 0
+  right 0
+  bottom 0
+  height auto
+  padding 10px
+  font 16px/20px Source Code Pro
+  -webkit-font-smoothing auto
