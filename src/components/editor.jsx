@@ -59,7 +59,7 @@ export default class Editor extends React.Component {
   }
 
   panelClasses() {
-    return classNames("c-editor", {
+    return classNames("c-editor  u-container  u-container--horizontal", {
       "c-editor--active": this.props.editor.active
     })
   }
@@ -67,7 +67,8 @@ export default class Editor extends React.Component {
   render() {
     return (
       <div className={this.panelClasses()}>
-        <div className="c-editor__container" ref="editor"/>
+        <div className="c-editor__container  u-panel" ref="editor"/>
+        <div className="c-editor__preview  u-panel"/>
       </div>
     )
   }

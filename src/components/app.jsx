@@ -47,7 +47,7 @@ class App extends React.Component {
         <div className="u-container  u-container--vertical  u-panel  u-panel--grow">
           <TabBar editors={this.props.editors}/>
 
-          <div className="u-panel  u-panel--grow  c-editors">
+          <div className="c-editors  u-panel  u-panel--grow">
             {this.props.editors.map((editor) => {
               return <Editor key={editor.path} editor={editor}/>
             })}
