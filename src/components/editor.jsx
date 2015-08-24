@@ -7,7 +7,7 @@ export default class Editor extends React.Component {
   componentDidMount() {
     this.codeMirror = CodeMirror(React.findDOMNode(this.refs.editor), {
       mode              : "frontmatter_markdown",
-      theme             : "zenburn",
+      theme             : "seti",
       lineWrapping      : true,
       showTrailingSpace : true,
       value             : this.props.editor.content
