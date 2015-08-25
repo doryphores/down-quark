@@ -1,21 +1,15 @@
-import remote from "remote"
-import alt from "../alt"
-import fs from "fs-extra"
-import path from "path"
 import React from "react"
 import ShortcutManager from "../utils/shortcut_manager"
+import SnapshotManager from "../utils/snapshot_manager"
 import connectToStores from "alt/utils/connectToStores"
 import TreeStore from "../stores/tree_store"
 import FileBufferStore from "../stores/file_buffer_store"
 import FileSystemActions from "../actions/file_system_actions"
 import Tree from "./tree"
 import Workspace from "./workspace"
-import Settings from "../utils/settings"
 
-const _cacheFile = path.join(remote.require("app").getPath("appData"),
-  "DownQuark", "snapshot.json")
-
-class App extends React.Component {
+@connectToStores
+export default class App extends React.Component {
   static getStores() {
     return [TreeStore, FileBufferStore]
   }
@@ -29,16 +23,7 @@ class App extends React.Component {
 
   componentDidMount() {
     ShortcutManager.registerCommands()
-
-    // TODO: not sure this is the best place for this
-    // Attempt to read the snapshot file
-    fs.readFile(_cacheFile, {
-      encoding: "utf-8"
-    }, (err, snapshot) => {
-      if (err) return
-      // We have a saved snapshot so bootstrap the stores
-      alt.bootstrap(snapshot)
-    })
+    SnapshotManager.restore()
   }
 
   componentWillUnmount() {
@@ -46,10 +31,7 @@ class App extends React.Component {
   }
 
   componentDidUpdate() {
-    // TODO: not entierly sure this should go here but seems to be best place
-    // to take and save snapshots
-    fs.outputFile(_cacheFile, alt.takeSnapshot())
-    console.log("SNAPSHOT")
+    SnapshotManager.save()
   }
 
   render() {
@@ -62,5 +44,3 @@ class App extends React.Component {
     )
   }
 }
-
-export default connectToStores(App)
