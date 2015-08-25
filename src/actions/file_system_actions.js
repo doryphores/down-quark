@@ -24,10 +24,12 @@ class FileSystemActions {
     this.dispatch(dirname)
   }
 
+  // TODO: this should prob go somewhere else
   openFile(filePath) {
     this.dispatch(filePath)
   }
 
+  // TODO: this should prob go somewhere else
   closeFile(filePath) {
     this.dispatch(filePath)
   }

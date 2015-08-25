@@ -4,10 +4,10 @@ import TabActions from "../actions/tab_actions"
 import FileSystemActions from "../actions/file_system_actions"
 
 export default class TabBar extends React.Component {
-  tabClasses(editor) {
+  tabClasses(buffer) {
     return classNames("c-tab-bar__item", {
-      "c-tab-bar__item--active" : editor.active,
-      "c-tab-bar__item--dirty"  : !editor.clean
+      "c-tab-bar__item--active" : buffer.active,
+      "c-tab-bar__item--dirty"  : !buffer.clean
     })
   }
 
@@ -20,16 +20,16 @@ export default class TabBar extends React.Component {
   }
 
   render() {
-    if (this.props.editors.length === 0) return null
+    if (this.props.fileBuffers.count === 0) return null
 
     return(
       <ul className={classNames(this.props.className, "c-tab-bar")}>
-        {this.props.editors.map((editor) => {
+        {this.props.fileBuffers.buffers.map((buffer) => {
           return (
-            <li key={editor.path}
-                className={this.tabClasses(editor)}
-                onClick={this.handleClick.bind(this, editor.path)}>
-              <span>{editor.name}</span>
+            <li key={buffer.path}
+                className={this.tabClasses(buffer)}
+                onClick={this.handleClick.bind(this, buffer.path)}>
+              <span>{buffer.name}</span>
               <span className="c-tab-bar__close  js-close"/>
             </li>
           )
