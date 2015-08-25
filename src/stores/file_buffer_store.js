@@ -37,7 +37,8 @@ class FileBufferStore {
       closeBuffer      : FileSystemActions.CLOSE_FILE,
       setActiveBuffer  : TabActions.SELECT_TAB,
       updateBuffer     : EditorActions.CHANGE_CONTENT,
-      saveActiveBuffer : EditorActions.SAVE_FILE
+      saveActiveBuffer : EditorActions.SAVE_FILE,
+      closeAll         : FileSystemActions.OPEN_FOLDER
     })
   }
 
@@ -96,6 +97,12 @@ class FileBufferStore {
 
     this.unwatch(this.buffers.splice(index, 1))
     this.count = this.count - 1
+  }
+
+  closeAll() {
+    for (let i = this.buffers.length - 1; i > -1; i--) {
+      this.closeBuffer(this.buffers[i].path)
+    }
   }
 
   updateBuffer(data) {

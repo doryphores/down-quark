@@ -47,7 +47,7 @@ class TreeStore {
 
     // Expand root by default
     if (this.expandedPaths.length === 0) {
-      this.expandedPaths = [rootPath]
+      this.expandedPaths = [this.rootPath]
     }
 
     // Restore expanded nodes

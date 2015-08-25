@@ -9,7 +9,6 @@ const _cacheFile = path.join(remote.require("app").getPath("appData"),
 
 module.exports = {
   save: _.debounce(() => {
-    console.log("SNAPSHOT")
     fs.outputFile(_cacheFile, alt.takeSnapshot())
   }),
 
