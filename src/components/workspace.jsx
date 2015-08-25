@@ -7,18 +7,21 @@ import Editor from "./editor"
 
 export default class Workspace extends React.Component {
   startResize() {
+    var {left, width} = React.findDOMNode(this).getBoundingClientRect()
+    var previewPane = React.findDOMNode(this.refs.previewPane)
+
     document.body.classList.add("is-resizing")
+
     var endResize = () => {
       document.body.classList.remove("is-resizing")
       document.removeEventListener("mousemove", resize)
       document.removeEventListener("mouseup", endResize)
     }
-    var resize = (evt) => {
-      var container = React.findDOMNode(this)
-      var previewPane = React.findDOMNode(this.refs.previewPane)
-      var panelWidth = container.getBoundingClientRect().width - (evt.clientX - container.getBoundingClientRect().left)
-      previewPane.style.width = panelWidth + "px"
+
+    var resize = (e) => {
+      previewPane.style.width = 100 - (e.clientX - left) * 100 / width + "%"
     }
+
     document.addEventListener("mouseup", endResize)
     document.addEventListener("mousemove", resize)
   }

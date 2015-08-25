@@ -6,14 +6,19 @@ import FileSystemActions from "../actions/file_system_actions"
 export default class Tree extends React.Component {
   startResize() {
     document.body.classList.add("is-resizing")
+
+    var DOMNode = React.findDOMNode(this)
+
     var endResize = () => {
       document.body.classList.remove("is-resizing")
       document.removeEventListener("mousemove", resize)
       document.removeEventListener("mouseup", endResize)
     }
+
     var resize = (evt) => {
-      React.findDOMNode(this).style.width = evt.clientX + "px"
+      DOMNode.style.width = evt.clientX + "px"
     }
+
     document.addEventListener("mouseup", endResize)
     document.addEventListener("mousemove", resize)
   }
