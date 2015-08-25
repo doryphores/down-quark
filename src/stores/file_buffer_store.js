@@ -11,6 +11,22 @@ import PathWatcher from "pathwatcher"
 var _watchers = {}
 
 class FileBufferStore {
+  static config = {
+    onSerialize: (data) => {
+      return data.buffers
+    },
+
+    onDeserialize: (data) => {
+      return {
+        buffers: data,
+        count: data.length,
+        activeBuffer: _.find(data, (buffer) => {
+          return buffer.active
+        })
+      }
+    }
+  }
+
   constructor() {
     this.buffers = []
     this.count = 0

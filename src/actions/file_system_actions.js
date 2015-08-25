@@ -12,11 +12,7 @@ class FileSystemActions {
       title: "Open",
       properties: ["openDirectory"]
     }, (filenames) => {
-      if (filenames) {
-        this.actions.openFolder({
-          rootPath: filenames[0]
-        })
-      }
+      if (filenames) this.actions.openFolder(filenames[0])
     })
   }
 
