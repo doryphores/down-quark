@@ -23,7 +23,7 @@ export default class TabBar extends React.Component {
     if (this.props.editors.length === 0) return null
 
     return(
-      <ul className="c-tab-bar  u-panel">
+      <ul className={classNames(this.props.className, "c-tab-bar")}>
         {this.props.editors.map((editor) => {
           return (
             <li key={editor.path}

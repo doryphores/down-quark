@@ -5,7 +5,7 @@ import EditorActions from "../actions/editor_actions"
 
 export default class Editor extends React.Component {
   componentDidMount() {
-    this.codeMirror = CodeMirror(React.findDOMNode(this.refs.editor), {
+    this.codeMirrorInstance = CodeMirror(React.findDOMNode(this), {
       mode              : "frontmatter_markdown",
       theme             : "seti",
       lineWrapping      : true,
@@ -31,45 +31,35 @@ export default class Editor extends React.Component {
     //   });
     // }
 
-    this.codeMirror.on("change", this.handleChange.bind(this))
+    this.codeMirrorInstance.on("change", this.handleChange.bind(this))
 
-    this.codeMirror.focus()
+    this.codeMirrorInstance.focus()
   }
 
   componentWillUnmount() {
-    this.codeMirror.off("change")
+    this.codeMirrorInstance.off("change")
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.editor.active && this.props.editor.active) {
-      this.codeMirror.focus()
+      this.codeMirrorInstance.focus()
     }
 
     // Update editor if the clean content has changed on disk
-    if (this.props.editor.clean && this.props.editor.content !== this.codeMirror.getValue()) {
-      this.codeMirror.setValue(this.props.editor.content)
+    if (this.props.editor.clean &&
+        this.props.editor.content !== this.codeMirrorInstance.getValue()) {
+      this.codeMirrorInstance.setValue(this.props.editor.content)
     }
   }
 
   handleChange() {
     EditorActions.changeContent({
       filePath : this.props.editor.path,
-      content  : this.codeMirror.getValue()
-    })
-  }
-
-  panelClasses() {
-    return classNames("c-editor  u-container  u-container--horizontal", {
-      "c-editor--active": this.props.editor.active
+      content  : this.codeMirrorInstance.getValue()
     })
   }
 
   render() {
-    return (
-      <div className={this.panelClasses()}>
-        <div className="c-editor__container  u-panel" ref="editor"/>
-        <div className="c-editor__preview  u-panel"/>
-      </div>
-    )
+    return <div className="c-editor"/>
   }
 }

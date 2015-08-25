@@ -8,6 +8,8 @@ import TabActions from "../actions/tab_actions"
 import TreeActions from "../actions/tree_actions"
 import PathWatcher from "pathwatcher"
 
+// TODO: rename this to FileBufferStore?
+
 class EditorStore {
   constructor() {
     this.editors = []
@@ -84,7 +86,6 @@ class EditorStore {
   }
 
   saveFile() {
-    console.log("SAVE FILE")
     this.unwatch(this._activeEditor)
     fs.writeFile(this._activeEditor.path, this._activeEditor.content, {
       encoding: "utf-8"

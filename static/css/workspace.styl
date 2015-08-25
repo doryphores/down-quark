@@ -1,2 +1,31 @@
 .c-workspace
-  flex 1
+  position relative
+  z-index 1
+
+.c-workspace__item-list
+  position relative
+
+.c-workspace__item
+  position absolute
+  z-index 1
+  width 100%
+  height auto
+  top 0
+  bottom 0
+
+.c-workspace__item--active
+  z-index 2
+
+.c-preview-panel
+  position relative
+  width 50%
+  overflow auto
+  background-color #fff
+
+.c-preview-panel__resize-handle
+  position absolute
+  top 0
+  bottom 0
+  left 0
+  width 5px
+  cursor col-resize

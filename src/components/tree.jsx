@@ -22,7 +22,7 @@ export default class Tree extends React.Component {
     if (this.props.tree.root === null) return null
 
     return (
-      <div className="u-panel  c-tree">
+      <div className={classNames(this.props.className, "c-tree")}>
         <div className="c-tree__scroller">
           <ul className="c-tree__node-list">
             <TreeNode node={this.props.tree.root}

@@ -21,6 +21,7 @@
     "keymaster": "^1.6.2",
     "pathwatcher": "^5.0.0",
     "react": "^0.13.3",
+    "showdown": "^1.2.2",
     "stylus": "^0.52.0",
     "underscore": "^1.8.3"
   }
