@@ -6,18 +6,13 @@ function getCurrentWindow() {
 }
 
 class FileSystemActions {
-  selectFolder() {
-    this.dispatch()
+  openFolder() {
     remote.require("dialog").showOpenDialog(getCurrentWindow(), {
-      title: "Open",
+      title: "Open folder",
       properties: ["openDirectory"]
     }, (filenames) => {
-      if (filenames) this.actions.openFolder(filenames[0])
+      if (filenames) this.dispatch(filenames[0])
     })
-  }
-
-  openFolder(dirname) {
-    this.dispatch(dirname)
   }
 
   // TODO: this should prob go somewhere else
