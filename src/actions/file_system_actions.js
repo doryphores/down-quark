@@ -19,6 +19,10 @@ class FileSystemActions {
     this.dispatch(filePath)
   }
 
+  newFile() {
+    this.dispatch()
+  }
+
   closeFile() {
     this.dispatch()
   }

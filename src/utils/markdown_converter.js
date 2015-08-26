@@ -8,11 +8,6 @@ var markdownExtensions = function (converter) {
         return md.replace(/---[\s\S]*?---/, "")
       }
     }
-    // {
-    //   type    : "lang",
-    //   regex   : ConfigStore.get("mediaRoot"),
-    //   replace : "file://" + encodeURI(RepoStore.getMediaPath())
-    // }
   ]
 }
 

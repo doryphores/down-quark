@@ -37,6 +37,7 @@ class FileBufferStore {
       closeBuffer     : FileSystemActions.CLOSE_FILE,
       saveBuffer      : FileSystemActions.SAVE,
       saveBuffer      : FileSystemActions.SAVE_AS,
+      createBuffer    : FileSystemActions.NEW_FILE,
       setActiveBuffer : TabActions.SELECT_TAB,
       updateBuffer    : EditorActions.CHANGE_CONTENT,
       closeAll        : FileSystemActions.OPEN_FOLDER
@@ -45,12 +46,28 @@ class FileBufferStore {
     this.on("bootstrap", this.reloadBuffers.bind(this))
   }
 
-  openBuffer(filePath) {
-    var existingBuffer = this.findBuffer(filePath)
+  createBuffer() {
+    this.count = this.buffers.push({
+      path        : "",
+      name        : "untitled",
+      content     : "",
+      diskContent : "",
+      clean       : true,
+      active      : false
+    })
 
-    if (existingBuffer) {
+    this.setActiveBuffer(this.count - 1)
+    this.emitChange()
+  }
+
+  openBuffer(filePath) {
+    var bufferIndex = _.findIndex(this.buffers, (buffer) => {
+      return buffer.path === filePath
+    })
+
+    if (bufferIndex > -1) {
       // The file is already open so set it as active
-      this.setActiveBuffer(filePath)
+      this.setActiveBuffer(bufferIndex)
     } else {
       fs.readFile(filePath, {
         encoding: "utf-8"
@@ -68,7 +85,7 @@ class FileBufferStore {
         })
 
         this.watch(_.last(this.buffers))
-        this.setActiveBuffer(filePath)
+        this.setActiveBuffer(this.count - 1)
         this.emitChange()
       })
       // We are reading the file content asynchronously so do not
@@ -116,7 +133,7 @@ class FileBufferStore {
         this.activeBuffer = null
       } else {
         // Set closest buffer as active
-        this.setActiveBuffer(this.buffers[index ? index - 1 : 1].path)
+        this.setActiveBuffer(index ? index - 1 : 1)
       }
     }
 
@@ -131,12 +148,15 @@ class FileBufferStore {
   }
 
   updateBuffer(data) {
-    var buffer = this.findBuffer(data.filePath)
+    var buffer = this.buffers[data.index]
     buffer.content = data.content
     buffer.clean = buffer.content === buffer.diskContent
   }
 
   saveBuffer(filePath = false) {
+    // Do nothing if we don't have an active buffer
+    if (!this.activeBuffer) return
+
     this.unwatch(this.activeBuffer)
 
     // Use new file path if given (Save as)
@@ -159,18 +179,18 @@ class FileBufferStore {
     return false
   }
 
-  setActiveBuffer(filePath) {
+  setActiveBuffer(index) {
     if (this.activeBuffer) {
       this.activeBuffer.active = false
     }
 
-    this.activeBuffer = this.findBuffer(filePath)
+    this.activeBuffer = this.buffers[index]
 
     if (this.activeBuffer) {
       this.activeBuffer.active = true
     }
 
-    TreeActions.select.defer(filePath)
+    TreeActions.select.defer(this.activeBuffer.path)
   }
 
   findBuffer(filePath) {
@@ -203,7 +223,7 @@ class FileBufferStore {
   }
 
   unwatch(buffer) {
-    if (_watchers[buffer.path]) {
+    if (buffer.path && _watchers[buffer.path]) {
       _watchers[buffer.path].close()
       delete _watchers[buffer.path]
     }

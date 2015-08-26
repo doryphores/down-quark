@@ -36,8 +36,8 @@ export default class Editor extends React.Component {
 
   handleChange() {
     EditorActions.changeContent({
-      filePath : this.props.buffer.path,
-      content  : this.codeMirrorInstance.getValue()
+      index   : this.props.bufferIndex,
+      content : this.codeMirrorInstance.getValue()
     })
   }
 

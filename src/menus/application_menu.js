@@ -15,6 +15,11 @@ const template = [
     label: "File",
     submenu: [
       {
+        label: "New file",
+        accelerator: "CmdOrCtrl+N",
+        click: FileSystemActions.newFile
+      },
+      {
         label: "Open folder...",
         accelerator: "CmdOrCtrl+O",
         click: FileSystemActions.openFolder

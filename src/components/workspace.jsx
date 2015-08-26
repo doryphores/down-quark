@@ -50,10 +50,10 @@ export default class Workspace extends React.Component {
 
         <div className="u-panel u-panel--grow u-container u-container--horizontal">
           <div className="c-workspace__item-list u-panel u-panel--grow">
-            {this.props.fileBuffers.buffers.map((buffer) => {
+            {this.props.fileBuffers.buffers.map((buffer, index) => {
               return (
-                <div key={buffer.path} className={this.itemClasses(buffer)}>
-                  <Editor buffer={buffer}/>
+                <div key={"editor-" + index} className={this.itemClasses(buffer)}>
+                  <Editor buffer={buffer} bufferIndex={index}/>
                 </div>
               )
             })}

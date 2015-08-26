@@ -1,8 +1,8 @@
 import alt from "../alt"
 
 class TabActions {
-  selectTab(filePath) {
-    this.dispatch(filePath)
+  selectTab(tabIndex) {
+    this.dispatch(tabIndex)
   }
 }
 

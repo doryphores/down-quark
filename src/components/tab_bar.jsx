@@ -24,11 +24,11 @@ export default class TabBar extends React.Component {
 
     return(
       <ul className={classNames(this.props.className, "c-tab-bar")}>
-        {this.props.fileBuffers.buffers.map((buffer) => {
+        {this.props.fileBuffers.buffers.map((buffer, index) => {
           return (
-            <li key={buffer.path}
+            <li key={"tab-" + index}
                 className={this.tabClasses(buffer)}
-                onClick={this.handleClick.bind(this, buffer.path)}>
+                onClick={this.handleClick.bind(this, index)}>
               <span>{buffer.name}</span>
               <span className="c-tab-bar__close  js-close"/>
             </li>
