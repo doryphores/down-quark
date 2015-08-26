@@ -15,14 +15,24 @@ class FileSystemActions {
     })
   }
 
-  // TODO: this should prob go somewhere else
   openFile(filePath) {
     this.dispatch(filePath)
   }
 
-  // TODO: this should prob go somewhere else
-  closeFile(filePath) {
-    this.dispatch(filePath)
+  closeFile() {
+    this.dispatch()
+  }
+
+  save() {
+    this.dispatch()
+  }
+
+  saveAs() {
+    remote.require("dialog").showSaveDialog(getCurrentWindow(), {
+      title: "Save as"
+    }, (filename) => {
+      if (filename) this.dispatch(filename)
+    })
   }
 }
 

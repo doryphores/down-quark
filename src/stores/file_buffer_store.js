@@ -33,12 +33,13 @@ class FileBufferStore {
     this.activeBuffer = null
 
     this.bindListeners({
-      openBuffer       : FileSystemActions.OPEN_FILE,
-      closeBuffer      : FileSystemActions.CLOSE_FILE,
-      setActiveBuffer  : TabActions.SELECT_TAB,
-      updateBuffer     : EditorActions.CHANGE_CONTENT,
-      saveActiveBuffer : EditorActions.SAVE_FILE,
-      closeAll         : FileSystemActions.OPEN_FOLDER
+      openBuffer      : FileSystemActions.OPEN_FILE,
+      closeBuffer     : FileSystemActions.CLOSE_FILE,
+      saveBuffer      : FileSystemActions.SAVE,
+      saveBuffer      : FileSystemActions.SAVE_AS,
+      setActiveBuffer : TabActions.SELECT_TAB,
+      updateBuffer    : EditorActions.CHANGE_CONTENT,
+      closeAll        : FileSystemActions.OPEN_FOLDER
     })
 
     this.on("bootstrap", this.reloadBuffers.bind(this))
@@ -108,6 +109,8 @@ class FileBufferStore {
 
     if (index === -1) return
 
+    // TODO: confirm if buffer is dirty
+
     if (filePath === this.activeBuffer.path) {
       if (this.count === 1) {
         this.activeBuffer = null
@@ -133,17 +136,25 @@ class FileBufferStore {
     buffer.clean = buffer.content === buffer.diskContent
   }
 
-  saveActiveBuffer() {
-    console.log("SAVE FILE");
+  saveBuffer(filePath = false) {
     this.unwatch(this.activeBuffer)
-    fs.writeFile(this.activeBuffer.path, this.activeBuffer.content, {
+
+    // Use new file path if given (Save as)
+    filePath = filePath || this.activeBuffer.path
+
+    fs.writeFile(filePath, this.activeBuffer.content, {
       encoding: "utf-8"
     }, (err) => {
       if (err) return console.log(err)
+
+      this.activeBuffer.path = filePath
+      this.activeBuffer.name = path.basename(filePath)
       this.activeBuffer.diskContent = this.activeBuffer.content
       this.activeBuffer.clean = true
       this.watch(this.activeBuffer)
+
       this.emitChange()
+      TreeActions.select.defer(filePath)
     })
     return false
   }
@@ -159,7 +170,6 @@ class FileBufferStore {
       this.activeBuffer.active = true
     }
 
-    // Select active tree node
     TreeActions.select.defer(filePath)
   }
 
@@ -174,11 +184,9 @@ class FileBufferStore {
     this.unwatch(buffer)
 
     _watchers[buffer.path] = PathWatcher.watch(buffer.path, () => {
-      console.log("WATCH UPDATE")
       fs.readFile(buffer.path, {
         encoding: "utf-8"
       }, (err, content) => {
-        console.log("UPDATE")
         if (err) {
           // File is gone so close it if the buffer is clean
           if (buffer.clean) this.closeBuffer(buffer.path)
