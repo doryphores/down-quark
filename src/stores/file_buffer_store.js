@@ -40,6 +40,8 @@ class FileBufferStore {
       saveActiveBuffer : EditorActions.SAVE_FILE,
       closeAll         : FileSystemActions.OPEN_FOLDER
     })
+
+    this.on("bootstrap", this.reloadBuffers.bind(this))
   }
 
   openBuffer(filePath) {
@@ -52,26 +54,46 @@ class FileBufferStore {
       fs.readFile(filePath, {
         encoding: "utf-8"
       }, (err, content) => {
-        if (err) console.log(err)
-        else {
-          this.count = this.buffers.push({
-            path        : filePath,
-            name        : path.basename(filePath),
-            content     : content,
-            diskContent : content,
-            clean       : true,
-            active      : false
-          })
+        // TODO: report error?
+        if (err) return console.log(err)
 
-          this.watch(_.last(this.buffers))
-          this.setActiveBuffer(filePath)
-          this.emitChange()
-        }
+        this.count = this.buffers.push({
+          path        : filePath,
+          name        : path.basename(filePath),
+          content     : content,
+          diskContent : content,
+          clean       : true,
+          active      : false
+        })
+
+        this.watch(_.last(this.buffers))
+        this.setActiveBuffer(filePath)
+        this.emitChange()
       })
       // We are reading the file content asynchronously so do not
       // emit a change event
       return false
     }
+  }
+
+  reloadBuffers() {
+    this.buffers.forEach((buffer) => {
+      this.unwatch(buffer)
+
+      fs.readFile(buffer.path, {
+        encoding: "utf-8"
+      }, (err, content) => {
+        if (err) {
+          this.closeBuffer(buffer.path)
+        } else {
+          buffer.diskContent = content
+          if (buffer.clean) buffer.content = buffer.diskContent
+          buffer.clean = buffer.diskContent === buffer.content
+          this.watch(buffer)
+        }
+        this.emitChange()
+      })
+    })
   }
 
   closeBuffer(filePath) {
@@ -152,10 +174,15 @@ class FileBufferStore {
     this.unwatch(buffer)
 
     _watchers[buffer.path] = PathWatcher.watch(buffer.path, () => {
-      fs.readFile(buffer.path, (err, content) => {
+      console.log("WATCH UPDATE")
+      fs.readFile(buffer.path, {
+        encoding: "utf-8"
+      }, (err, content) => {
+        console.log("UPDATE")
         if (err) {
-          // File is gone so close it
-          this.closeBuffer(buffer.path)
+          // File is gone so close it if the buffer is clean
+          if (buffer.clean) this.closeBuffer(buffer.path)
+          else buffer.diskContent = ""
         } else {
           // File has changed so update it
           if (buffer.clean) buffer.content = content
