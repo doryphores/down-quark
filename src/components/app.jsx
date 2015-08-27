@@ -1,6 +1,6 @@
 import remote from "remote"
 import React from "react"
-import appMenu from "../menus/application_menu"
+import ApplicationMenu from "../menus/application_menu"
 import SnapshotManager from "../utils/snapshot_manager"
 import connectToStores from "alt/utils/connectToStores"
 import TreeStore from "../stores/tree_store"
@@ -24,7 +24,7 @@ export default class App extends React.Component {
 
   componentDidMount() {
     // TODO: is this the right place to set the app menu?
-    remote.require("menu").setApplicationMenu(appMenu)
+    new ApplicationMenu()
     SnapshotManager.restore()
   }
 

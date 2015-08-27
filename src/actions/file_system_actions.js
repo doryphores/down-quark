@@ -1,18 +1,8 @@
 import alt from "../alt"
-import remote from "remote"
-
-function getCurrentWindow() {
-  return remote.getCurrentWindow()
-}
 
 class FileSystemActions {
-  openFolder() {
-    remote.require("dialog").showOpenDialog(getCurrentWindow(), {
-      title: "Open folder",
-      properties: ["openDirectory"]
-    }, (filenames) => {
-      if (filenames) this.dispatch(filenames[0])
-    })
+  openFolder(folderPath) {
+    this.dispatch(folderPath)
   }
 
   openFile(filePath) {
@@ -31,12 +21,8 @@ class FileSystemActions {
     this.dispatch()
   }
 
-  saveAs() {
-    remote.require("dialog").showSaveDialog(getCurrentWindow(), {
-      title: "Save as"
-    }, (filename) => {
-      if (filename) this.dispatch(filename)
-    })
+  saveAs(filePath) {
+    this.dispatch(filePath)
   }
 }
 

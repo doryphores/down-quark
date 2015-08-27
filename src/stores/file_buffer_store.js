@@ -13,7 +13,10 @@ var _watchers = {}
 class FileBufferStore {
   static config = {
     onSerialize: (data) => {
-      return data.buffers
+      // Ignore empty untitled buffers
+      return _.select(data.buffers, (buffer) => {
+        return buffer.content.length || buffer.path
+      })
     },
 
     onDeserialize: (data) => {
@@ -96,6 +99,9 @@ class FileBufferStore {
 
   reloadBuffers() {
     this.buffers.forEach((buffer) => {
+      // Only reload buffers linked to a file on disk
+      if (!buffer.path) return
+
       this.unwatch(buffer)
 
       fs.readFile(buffer.path, {
