@@ -20,7 +20,7 @@ export default class TabBar extends React.Component {
   }
 
   render() {
-    if (this.props.fileBuffers.get("count") === 0) return null
+    if (this.props.fileBuffers.get("buffers").size === 0) return null
 
     return(
       <ul className={classNames(this.props.className, "c-tab-bar")}>

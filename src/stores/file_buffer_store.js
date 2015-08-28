@@ -14,6 +14,7 @@ var _watchers = {}
 class FileBufferStore {
   static config = {
     onSerialize: (data) => {
+      // Ignore empty untitled buffers
       return _.select(data.buffers, (buffer) => {
         return buffer.content.length || buffer.path
       })
@@ -22,7 +23,6 @@ class FileBufferStore {
     onDeserialize: (data) => {
       return {
         buffers: data,
-        count: data.length,
         activeBuffer: _.find(data, (buffer) => {
           return buffer.active
         })
@@ -37,7 +37,6 @@ class FileBufferStore {
   constructor() {
     this.state = {
       buffers      : [],
-      count        : 0,
       activeBuffer : null
     }
 
@@ -56,7 +55,7 @@ class FileBufferStore {
   }
 
   createBuffer() {
-    this.state.count = this.state.buffers.push({
+    this.state.buffers.push({
       path        : "",
       name        : "untitled",
       content     : "",
@@ -65,7 +64,7 @@ class FileBufferStore {
       active      : false
     })
 
-    this.setActiveBuffer(this.state.count - 1)
+    this.setActiveBuffer(this.state.buffers.length - 1)
     this.emitChange()
   }
 
@@ -84,7 +83,7 @@ class FileBufferStore {
         // TODO: report error?
         if (err) return console.log(err)
 
-        this.state.count = this.state.buffers.push({
+        this.state.buffers.push({
           path        : filePath,
           name        : path.basename(filePath),
           content     : content,
@@ -94,7 +93,7 @@ class FileBufferStore {
         })
 
         this.watch(_.last(this.state.buffers))
-        this.setActiveBuffer(this.state.count - 1)
+        this.setActiveBuffer(this.state.buffers.length - 1)
         this.emitChange()
       })
       // We are reading the file content asynchronously so do not
@@ -127,7 +126,7 @@ class FileBufferStore {
   }
 
   closeBuffer(index) {
-    if (this.state.count === 0) return
+    if (this.state.buffers.length === 0) return
 
     // Close active buffer by default
     if (index === undefined) {
@@ -135,7 +134,7 @@ class FileBufferStore {
         return buffer.path === this.state.activeBuffer.path
       })
 
-      if (this.state.count === 1) {
+      if (this.state.buffers.length === 1) {
         this.state.activeBuffer = null
       } else {
         // Set closest buffer as active
@@ -146,7 +145,6 @@ class FileBufferStore {
     // TODO: confirm if buffer is dirty
 
     this.unwatch(this.state.buffers.splice(index, 1))
-    this.state.count = this.state.count - 1
   }
 
   closeAll() {

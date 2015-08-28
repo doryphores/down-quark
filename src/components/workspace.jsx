@@ -42,7 +42,7 @@ export default class Workspace extends React.Component {
   }
 
   render() {
-    if (this.props.fileBuffers.get("count") === 0) return null
+    if (this.props.fileBuffers.get("buffers").size === 0) return null
 
     return (
       <div className={this.componentClasses()}>
