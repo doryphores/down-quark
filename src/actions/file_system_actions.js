@@ -17,12 +17,12 @@ class FileSystemActions {
     this.dispatch(index)
   }
 
-  save() {
+  closeAll() {
     this.dispatch()
   }
 
-  saveAs(filePath) {
-    this.dispatch(filePath)
+  save() {
+    this.dispatch()
   }
 }
 

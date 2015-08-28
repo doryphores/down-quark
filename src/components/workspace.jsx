@@ -4,6 +4,7 @@ import _ from "underscore"
 import MarkdownConverter from "../utils/markdown_converter"
 import TabBar from "./tab_bar"
 import Editor from "./editor"
+import FileBufferStore from "../stores/file_buffer_store"
 
 export default class Workspace extends React.Component {
   startResize() {
@@ -27,7 +28,9 @@ export default class Workspace extends React.Component {
   }
 
   previewContent() {
-    return MarkdownConverter.makeHtml(this.props.fileBuffers.getIn(["activeBuffer", "content"]))
+    var activeBuffer = FileBufferStore.getActiveBuffer()
+    if (activeBuffer === undefined) return ""
+    return MarkdownConverter.makeHtml(activeBuffer.content)
   }
 
   componentClasses() {
@@ -52,7 +55,7 @@ export default class Workspace extends React.Component {
           <div className="c-workspace__item-list u-panel u-panel--grow">
             {this.props.fileBuffers.get("buffers").map((buffer, index) => {
               return (
-                <div key={"editor-" + index} className={this.itemClasses(buffer)}>
+                <div key={buffer.get("uid")} className={this.itemClasses(buffer)}>
                   <Editor buffer={buffer} bufferIndex={index}/>
                 </div>
               )

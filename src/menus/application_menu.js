@@ -7,12 +7,6 @@ var Dialog = remote.require("dialog")
 
 export default class ApplicationMenu {
   constructor() {
-    this.fileBuffers = FileBufferStore.getState()
-
-    FileBufferStore.listen((state) => {
-      this.fileBuffers = state
-    })
-
     Menu.setApplicationMenu(Menu.buildFromTemplate(this.template()))
   }
 
@@ -24,6 +18,13 @@ export default class ApplicationMenu {
           {
             label: "About Down Quark",
             selector: "orderFrontStandardAboutPanel:"
+          },
+          {
+            label: "Quit",
+            accelerator: "CmdOrCtrl+Q",
+            click: () => {
+              remote.require("app").quit()
+            }
           }
         ]
       },
@@ -56,13 +57,15 @@ export default class ApplicationMenu {
             label: "Save",
             accelerator: "CmdOrCtrl+S",
             click: () => {
-              if (this.fileBuffers.activeBuffer.path) {
+              var activeBuffer = FileBufferStore.getActiveBuffer()
+
+              if (activeBuffer && activeBuffer.path) {
                 FileSystemActions.save()
               } else {
                 Dialog.showSaveDialog(remote.getCurrentWindow(), {
                   title       : "Save as"
                 }, (filename) => {
-                  if (filename) FileSystemActions.saveAs(filename)
+                  if (filename) FileSystemActions.save(filename)
                 })
               }
             }
@@ -71,13 +74,15 @@ export default class ApplicationMenu {
             label: "Save As...",
             accelerator: "Shift+CmdOrCtrl+S",
             click: () => {
-              if (!this.fileBuffers.activeBuffer) return
+              var activeBuffer = FileBufferStore.getActiveBuffer()
+
+              if (activeBuffer === undefined) return
 
               Dialog.showSaveDialog(remote.getCurrentWindow(), {
                 title       : "Save as",
-                defaultPath : this.fileBuffers.activeBuffer.path
+                defaultPath : activeBuffer.path
               }, (filename) => {
-                if (filename) FileSystemActions.saveAs(filename)
+                if (filename) FileSystemActions.save(filename)
               })
             }
           },
@@ -89,6 +94,13 @@ export default class ApplicationMenu {
             accelerator: "CmdOrCtrl+W",
             click: () => {
               FileSystemActions.closeFile()
+            }
+          },
+          {
+            label: "Close All",
+            accelerator: "Shift+CmdOrCtrl+W",
+            click: () => {
+              FileSystemActions.closeAll()
             }
           }
         ]
