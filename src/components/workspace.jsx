@@ -45,15 +45,15 @@ export default class Workspace extends React.Component {
   }
 
   render() {
-    if (this.props.fileBuffers.get("buffers").size === 0) return null
+    if (this.props.buffers.size === 0) return null
 
     return (
       <div className={this.componentClasses()}>
-        <TabBar className="u-panel" fileBuffers={this.props.fileBuffers}/>
+        <TabBar className="u-panel" buffers={this.props.buffers}/>
 
         <div className="u-panel u-panel--grow u-container u-container--horizontal">
           <div className="c-workspace__item-list u-panel u-panel--grow">
-            {this.props.fileBuffers.get("buffers").map((buffer, index) => {
+            {this.props.buffers.map((buffer, index) => {
               return (
                 <div key={buffer.get("uid")} className={this.itemClasses(buffer)}>
                   <Editor buffer={buffer} bufferIndex={index}/>

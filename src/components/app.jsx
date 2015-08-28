@@ -17,8 +17,8 @@ export default class App extends React.Component {
 
   static getPropsFromStores() {
     return {
-      tree        : TreeStore.getState(),
-      fileBuffers : FileBufferStore.getState()
+      tree    : TreeStore.getState(),
+      buffers : FileBufferStore.getState().get("buffers")
     }
   }
 
@@ -37,7 +37,7 @@ export default class App extends React.Component {
       <div className="u-container u-container--horizontal">
         <Tree className="u-panel" tree={this.props.tree}/>
         <Workspace className="u-panel u-panel--grow"
-                   fileBuffers={this.props.fileBuffers}/>
+                   buffers={this.props.buffers}/>
       </div>
     )
   }
