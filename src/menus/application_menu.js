@@ -57,17 +57,9 @@ export default class ApplicationMenu {
             label: "Save",
             accelerator: "CmdOrCtrl+S",
             click: () => {
-              var activeBuffer = FileBufferStore.getActiveBuffer()
-
-              if (activeBuffer && activeBuffer.path) {
-                FileSystemActions.save()
-              } else {
-                Dialog.showSaveDialog(remote.getCurrentWindow(), {
-                  title       : "Save as"
-                }, (filename) => {
-                  if (filename) FileSystemActions.save(filename)
-                })
-              }
+              this.save((filename) => {
+                FileSystemActions.save(filename)
+              })
             }
           },
           {
@@ -93,7 +85,26 @@ export default class ApplicationMenu {
             label: "Close Tab",
             accelerator: "CmdOrCtrl+W",
             click: () => {
-              FileSystemActions.closeFile()
+              var activeBuffer = FileBufferStore.getActiveBuffer()
+
+              if (activeBuffer && !activeBuffer.clean) {
+                Dialog.showMessageBox(remote.getCurrentWindow(), {
+                  type: "question",
+                  buttons: ["Save", "Cancel", "Don't save"],
+                  message: `${activeBuffer.name}' has changes, do you want to save them?`,
+                  detail: "Your changes will be lost if you close this item without saving."
+                }, (buttonIndex) => {
+                  if (buttonIndex == 0) {
+                    this.save((filename) => {
+                      FileSystemActions.save(filename, true)
+                    })
+                  } else if (buttonIndex == 2) {
+                    FileSystemActions.closeFile()
+                  }
+                })
+              } else {
+                FileSystemActions.closeFile()
+              }
             }
           },
           {
@@ -125,5 +136,19 @@ export default class ApplicationMenu {
         ]
       }
     ]
+  }
+
+  save(callback) {
+    var activeBuffer = FileBufferStore.getActiveBuffer()
+
+    if (activeBuffer && activeBuffer.path) {
+      callback()
+    } else {
+      Dialog.showSaveDialog(remote.getCurrentWindow(), {
+        title: "Save as"
+      }, (filename) => {
+        if (filename) callback(filename)
+      })
+    }
   }
 }

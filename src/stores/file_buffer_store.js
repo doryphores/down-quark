@@ -160,8 +160,6 @@ class FileBufferStore {
       this.activeBufferIndex--
     }
 
-    // TODO: confirm if buffer is dirty
-
     this.unwatch(this.state.buffers.splice(index, 1))
   }
 
@@ -177,7 +175,7 @@ class FileBufferStore {
     buffer.clean = buffer.content === buffer.diskContent
   }
 
-  saveBuffer(filePath = false) {
+  saveBuffer({filePath = "", closeOnSave = false}) {
     // Do nothing if we don't have an active buffer
     if (this.activeBufferIndex == -1) return
 
@@ -193,14 +191,18 @@ class FileBufferStore {
     }, (err) => {
       if (err) return console.log(err)
 
-      activeBuffer.path = filePath
-      activeBuffer.name = path.basename(filePath)
-      activeBuffer.diskContent = activeBuffer.content
-      activeBuffer.clean = true
-      this.watch(activeBuffer)
+      if (closeOnSave) {
+        this.closeBuffer()
+      } else {
+        activeBuffer.path = filePath
+        activeBuffer.name = path.basename(filePath)
+        activeBuffer.diskContent = activeBuffer.content
+        activeBuffer.clean = true
+        this.watch(activeBuffer)
+        TreeActions.select.defer(filePath)
+      }
 
       this.emitChange()
-      TreeActions.select.defer(filePath)
     })
     return false
   }

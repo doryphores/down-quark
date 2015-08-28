@@ -21,8 +21,11 @@ class FileSystemActions {
     this.dispatch()
   }
 
-  save() {
-    this.dispatch()
+  save(filePath, closeOnSave = false) {
+    this.dispatch({
+      filePath    : filePath,
+      closeOnSave : closeOnSave
+    })
   }
 }
 
