@@ -6,30 +6,30 @@ import FileSystemActions from "../actions/file_system_actions"
 export default class TabBar extends React.Component {
   tabClasses(buffer) {
     return classNames("c-tab-bar__item", {
-      "c-tab-bar__item--active" : buffer.active,
-      "c-tab-bar__item--dirty"  : !buffer.clean
+      "c-tab-bar__item--active" : buffer.get("active"),
+      "c-tab-bar__item--dirty"  : !buffer.get("clean")
     })
   }
 
-  handleClick(filePath, event) {
+  handleClick(index, event) {
     if (event.target.classList.contains("js-close")) {
-      FileSystemActions.closeFile(filePath)
+      FileSystemActions.closeFile(index)
     } else {
-      TabActions.selectTab(filePath)
+      TabActions.selectTab(index)
     }
   }
 
   render() {
-    if (this.props.fileBuffers.count === 0) return null
+    if (this.props.fileBuffers.get("count") === 0) return null
 
     return(
       <ul className={classNames(this.props.className, "c-tab-bar")}>
-        {this.props.fileBuffers.buffers.map((buffer, index) => {
+        {this.props.fileBuffers.get("buffers").map((buffer, index) => {
           return (
             <li key={"tab-" + index}
                 className={this.tabClasses(buffer)}
                 onClick={this.handleClick.bind(this, index)}>
-              <span>{buffer.name}</span>
+              <span>{buffer.get("name")}</span>
               <span className="c-tab-bar__close  js-close"/>
             </li>
           )

@@ -27,7 +27,7 @@ export default class Workspace extends React.Component {
   }
 
   previewContent() {
-    return MarkdownConverter.makeHtml(this.props.fileBuffers.activeBuffer.content)
+    return MarkdownConverter.makeHtml(this.props.fileBuffers.getIn(["activeBuffer", "content"]))
   }
 
   componentClasses() {
@@ -37,12 +37,12 @@ export default class Workspace extends React.Component {
 
   itemClasses(buffer) {
     return classNames("c-workspace__item", {
-      "c-workspace__item--active": buffer.active
+      "c-workspace__item--active": buffer.get("active")
     })
   }
 
   render() {
-    if (this.props.fileBuffers.count === 0) return null
+    if (this.props.fileBuffers.get("count") === 0) return null
 
     return (
       <div className={this.componentClasses()}>
@@ -50,7 +50,7 @@ export default class Workspace extends React.Component {
 
         <div className="u-panel u-panel--grow u-container u-container--horizontal">
           <div className="c-workspace__item-list u-panel u-panel--grow">
-            {this.props.fileBuffers.buffers.map((buffer, index) => {
+            {this.props.fileBuffers.get("buffers").map((buffer, index) => {
               return (
                 <div key={"editor-" + index} className={this.itemClasses(buffer)}>
                   <Editor buffer={buffer} bufferIndex={index}/>

@@ -33,7 +33,9 @@ export default class ApplicationMenu {
           {
             label: "New file",
             accelerator: "CmdOrCtrl+N",
-            click: FileSystemActions.newFile
+            click: () => {
+              FileSystemActions.newFile()
+            }
           },
           {
             label: "Open folder...",
@@ -85,7 +87,9 @@ export default class ApplicationMenu {
           {
             label: "Close Tab",
             accelerator: "CmdOrCtrl+W",
-            click: FileSystemActions.closeFile
+            click: () => {
+              FileSystemActions.closeFile()
+            }
           }
         ]
       },

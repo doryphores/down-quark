@@ -2,6 +2,7 @@ import alt from "../alt"
 import fs from "fs"
 import path from "path"
 import _ from "underscore"
+import Immutable from "immutable"
 import FileSystemActions from "../actions/file_system_actions"
 import EditorActions from "../actions/editor_actions"
 import TabActions from "../actions/tab_actions"
@@ -13,7 +14,6 @@ var _watchers = {}
 class FileBufferStore {
   static config = {
     onSerialize: (data) => {
-      // Ignore empty untitled buffers
       return _.select(data.buffers, (buffer) => {
         return buffer.content.length || buffer.path
       })
@@ -27,13 +27,19 @@ class FileBufferStore {
           return buffer.active
         })
       }
+    },
+
+    getState: (currentState) => {
+      return Immutable.fromJS(currentState)
     }
   }
 
   constructor() {
-    this.buffers = []
-    this.count = 0
-    this.activeBuffer = null
+    this.state = {
+      buffers      : [],
+      count        : 0,
+      activeBuffer : null
+    }
 
     this.bindListeners({
       openBuffer      : FileSystemActions.OPEN_FILE,
@@ -50,7 +56,7 @@ class FileBufferStore {
   }
 
   createBuffer() {
-    this.count = this.buffers.push({
+    this.state.count = this.state.buffers.push({
       path        : "",
       name        : "untitled",
       content     : "",
@@ -59,12 +65,12 @@ class FileBufferStore {
       active      : false
     })
 
-    this.setActiveBuffer(this.count - 1)
+    this.setActiveBuffer(this.state.count - 1)
     this.emitChange()
   }
 
   openBuffer(filePath) {
-    var bufferIndex = _.findIndex(this.buffers, (buffer) => {
+    var bufferIndex = _.findIndex(this.state.buffers, (buffer) => {
       return buffer.path === filePath
     })
 
@@ -78,7 +84,7 @@ class FileBufferStore {
         // TODO: report error?
         if (err) return console.log(err)
 
-        this.count = this.buffers.push({
+        this.state.count = this.state.buffers.push({
           path        : filePath,
           name        : path.basename(filePath),
           content     : content,
@@ -87,8 +93,8 @@ class FileBufferStore {
           active      : false
         })
 
-        this.watch(_.last(this.buffers))
-        this.setActiveBuffer(this.count - 1)
+        this.watch(_.last(this.state.buffers))
+        this.setActiveBuffer(this.state.count - 1)
         this.emitChange()
       })
       // We are reading the file content asynchronously so do not
@@ -98,7 +104,7 @@ class FileBufferStore {
   }
 
   reloadBuffers() {
-    this.buffers.forEach((buffer) => {
+    this.state.buffers.forEach((buffer) => {
       // Only reload buffers linked to a file on disk
       if (!buffer.path) return
 
@@ -120,64 +126,60 @@ class FileBufferStore {
     })
   }
 
-  closeBuffer(filePath) {
-    if (this.count === 0) return
+  closeBuffer(index) {
+    if (this.state.count === 0) return
 
     // Close active buffer by default
-    if (filePath === undefined) filePath = this.activeBuffer.path
+    if (index === undefined) {
+      index = _.findIndex(this.state.buffers, (buffer) => {
+        return buffer.path === this.state.activeBuffer.path
+      })
 
-    var index = _.findIndex(this.buffers, (buffer) => {
-      return buffer.path === filePath
-    })
-
-    if (index === -1) return
-
-    // TODO: confirm if buffer is dirty
-
-    if (filePath === this.activeBuffer.path) {
-      if (this.count === 1) {
-        this.activeBuffer = null
+      if (this.state.count === 1) {
+        this.state.activeBuffer = null
       } else {
         // Set closest buffer as active
         this.setActiveBuffer(index ? index - 1 : 1)
       }
     }
 
-    this.unwatch(this.buffers.splice(index, 1))
-    this.count = this.count - 1
+    // TODO: confirm if buffer is dirty
+
+    this.unwatch(this.state.buffers.splice(index, 1))
+    this.state.count = this.state.count - 1
   }
 
   closeAll() {
-    for (let i = this.buffers.length - 1; i > -1; i--) {
-      this.closeBuffer(this.buffers[i].path)
+    for (let i = this.state.buffers.length - 1; i > -1; i--) {
+      this.closeBuffer(this.state.buffers[i].path)
     }
   }
 
   updateBuffer(data) {
-    var buffer = this.buffers[data.index]
+    var buffer = this.state.buffers[data.index]
     buffer.content = data.content
     buffer.clean = buffer.content === buffer.diskContent
   }
 
   saveBuffer(filePath = false) {
     // Do nothing if we don't have an active buffer
-    if (!this.activeBuffer) return
+    if (!this.state.activeBuffer) return
 
-    this.unwatch(this.activeBuffer)
+    this.unwatch(this.state.activeBuffer)
 
     // Use new file path if given (Save as)
-    filePath = filePath || this.activeBuffer.path
+    filePath = filePath || this.state.activeBuffer.path
 
-    fs.writeFile(filePath, this.activeBuffer.content, {
+    fs.writeFile(filePath, this.state.activeBuffer.content, {
       encoding: "utf-8"
     }, (err) => {
       if (err) return console.log(err)
 
-      this.activeBuffer.path = filePath
-      this.activeBuffer.name = path.basename(filePath)
-      this.activeBuffer.diskContent = this.activeBuffer.content
-      this.activeBuffer.clean = true
-      this.watch(this.activeBuffer)
+      this.state.activeBuffer.path = filePath
+      this.state.activeBuffer.name = path.basename(filePath)
+      this.state.activeBuffer.diskContent = this.state.activeBuffer.content
+      this.state.activeBuffer.clean = true
+      this.watch(this.state.activeBuffer)
 
       this.emitChange()
       TreeActions.select.defer(filePath)
@@ -186,23 +188,17 @@ class FileBufferStore {
   }
 
   setActiveBuffer(index) {
-    if (this.activeBuffer) {
-      this.activeBuffer.active = false
+    if (this.state.activeBuffer) {
+      this.state.activeBuffer.active = false
     }
 
-    this.activeBuffer = this.buffers[index]
+    this.state.activeBuffer = this.state.buffers[index]
 
-    if (this.activeBuffer) {
-      this.activeBuffer.active = true
+    if (this.state.activeBuffer) {
+      this.state.activeBuffer.active = true
     }
 
-    TreeActions.select.defer(this.activeBuffer.path)
-  }
-
-  findBuffer(filePath) {
-    return _.find(this.buffers, (buffer) => {
-      return buffer.path === filePath
-    })
+    TreeActions.select.defer(this.state.activeBuffer.path)
   }
 
   watch(buffer) {

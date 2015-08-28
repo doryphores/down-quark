@@ -13,8 +13,8 @@ class FileSystemActions {
     this.dispatch()
   }
 
-  closeFile() {
-    this.dispatch()
+  closeFile(index) {
+    this.dispatch(index)
   }
 
   save() {
