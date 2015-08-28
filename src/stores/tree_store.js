@@ -1,5 +1,6 @@
 import alt from "../alt"
 import _ from "underscore"
+import remote from "remote"
 import FileSystemActions from "../actions/file_system_actions"
 import FileTree from "../utils/file_tree"
 import TreeActions from "../actions/tree_actions"
@@ -33,7 +34,8 @@ class TreeStore {
       openFolder   : FileSystemActions.OPEN_FOLDER,
       expandNode   : TreeActions.EXPAND,
       collapseNode : TreeActions.COLLAPSE,
-      selectNode   : TreeActions.SELECT
+      selectNode   : TreeActions.SELECT,
+      deleteNode   : FileSystemActions.DELETE
     })
 
     // When the store is bootstrapped, we need to reload the root node
@@ -84,6 +86,11 @@ class TreeStore {
 
   selectNode(nodePath) {
     this.selectedPath = nodePath
+  }
+
+  deleteNode(nodePath) {
+    remote.require("shell").moveItemToTrash(nodePath)
+    this.preventDefault()
   }
 }
 

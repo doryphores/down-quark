@@ -27,6 +27,10 @@ class FileSystemActions {
       closeOnSave : closeOnSave
     })
   }
+
+  delete(filePath) {
+    this.dispatch(filePath)
+  }
 }
 
 export default alt.createActions(FileSystemActions)

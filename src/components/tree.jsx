@@ -2,6 +2,7 @@ import React from "react"
 import classNames from "classnames"
 import TreeActions from "../actions/tree_actions"
 import FileSystemActions from "../actions/file_system_actions"
+import TreeMenu from "../menus/tree_menu"
 
 export default class Tree extends React.Component {
   startResize() {
@@ -55,6 +56,12 @@ class TreeNode extends React.Component {
     FileSystemActions.openFile(this.props.node.path)
   }
 
+  handleContextMenu() {
+    TreeActions.select(this.props.node.path)
+    var menu = new TreeMenu(this.props.node)
+    menu.show()
+  }
+
   nodeClasses() {
     return classNames("c-tree__node", {
       "c-tree__node--expanded": this.props.node.expanded,
@@ -73,7 +80,8 @@ class TreeNode extends React.Component {
     var nodeLabel = (
       <span className={this.labelClasses()}
             onClick={this.handleClick.bind(this)}
-            onDoubleClick={this.handleDoubleClick.bind(this)}>
+            onDoubleClick={this.handleDoubleClick.bind(this)}
+            onContextMenu={this.handleContextMenu.bind(this)}>
         {this.props.node.name}
       </span>
     )
