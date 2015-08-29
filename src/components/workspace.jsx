@@ -5,11 +5,18 @@ import MarkdownConverter from "../utils/markdown_converter"
 import TabBar from "./tab_bar"
 import Editor from "./editor"
 import FileBufferStore from "../stores/file_buffer_store"
+import LocalStorageManager from "../utils/local_storage_manager"
 
 export default class Workspace extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { previewStyles: {} }
+    var previewWidth = LocalStorageManager.get("previewWidth")
+    if (previewWidth) this.state.previewStyles.width = previewWidth
+  }
+
   startResize() {
     var {left, width} = React.findDOMNode(this).getBoundingClientRect()
-    var previewPane = React.findDOMNode(this.refs.previewPane)
 
     document.body.classList.add("is-resizing")
 
@@ -17,14 +24,25 @@ export default class Workspace extends React.Component {
       document.body.classList.remove("is-resizing")
       document.removeEventListener("mousemove", resize)
       document.removeEventListener("mouseup", endResize)
+      LocalStorageManager.set("previewWidth", this.state.previewStyles.width)
     }
 
     var resize = (e) => {
-      previewPane.style.width = 100 - (e.clientX - left) * 100 / width + "%"
+      this.setWidth((100 - (e.clientX - left) * 100 / width).toString() + "%")
     }
 
     document.addEventListener("mouseup", endResize)
     document.addEventListener("mousemove", resize)
+  }
+
+  setWidth(width) {
+    if (width === undefined) return
+
+    this.setState({
+      previewStyles: {
+        width: width
+      }
+    })
   }
 
   previewContent() {
@@ -61,7 +79,7 @@ export default class Workspace extends React.Component {
               )
             })}
           </div>
-          <div className="c-preview-panel u-panel" ref="previewPane">
+          <div className="c-preview-panel u-panel" style={this.state.previewStyles}>
             <div className="c-preview-panel__content"
                  dangerouslySetInnerHTML={{__html: this.previewContent()}}/>
             <div className="c-preview-panel__resize-handle"

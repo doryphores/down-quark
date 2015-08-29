@@ -1,20 +1,21 @@
 import remote from "remote"
+import LocalStorageManager from "../utils/local_storage_manager"
 
 var saveDims = function () {
-  window.localStorage.setItem("windowDimensions", JSON.stringify({
-    x: window.screenX,
-    y: window.screenY,
-    width: window.outerWidth,
-    height: window.outerHeight,
-    maximized: remote.getCurrentWindow().isMaximized()
-  }))
+  LocalStorageManager.set("windowDimensions", {
+    x         : window.screenX,
+    y         : window.screenY,
+    width     : window.outerWidth,
+    height    : window.outerHeight,
+    maximized : remote.getCurrentWindow().isMaximized()
+  })
 }
 
 export default function initWindow() {
   window.addEventListener("unload", saveDims)
   window.addEventListener("resize", saveDims)
 
-  var dims = JSON.parse(window.localStorage.getItem("windowDimensions"))
+  var dims = LocalStorageManager.get("windowDimensions")
 
   if (dims) {
     if (dims.maximized === "true") {

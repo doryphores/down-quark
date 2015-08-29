@@ -3,32 +3,51 @@ import classNames from "classnames"
 import TreeActions from "../actions/tree_actions"
 import FileSystemActions from "../actions/file_system_actions"
 import TreeMenu from "../menus/tree_menu"
+import LocalStorageManager from "../utils/local_storage_manager"
 
 export default class Tree extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { treeStyles: {} }
+    var treeWidth = LocalStorageManager.get("treeWidth")
+    if (treeWidth) this.state.treeStyles.width = treeWidth
+  }
+
+  componentDidMount() {
+    var treeWidth = LocalStorageManager.get("treeWidth")
+  }
+
   startResize() {
     document.body.classList.add("is-resizing")
-
-    var DOMNode = React.findDOMNode(this)
 
     var endResize = () => {
       document.body.classList.remove("is-resizing")
       document.removeEventListener("mousemove", resize)
       document.removeEventListener("mouseup", endResize)
+      LocalStorageManager.set("treeWidth", this.state.treeStyles.width)
     }
 
-    var resize = (evt) => {
-      DOMNode.style.width = evt.clientX + "px"
-    }
+    var resize = (evt) => this.setWidth(evt.clientX)
 
     document.addEventListener("mouseup", endResize)
     document.addEventListener("mousemove", resize)
+  }
+
+  setWidth(width) {
+    if (width === undefined) return
+
+    this.setState({
+      treeStyles: {
+        width: width
+      }
+    })
   }
 
   render() {
     if (this.props.tree.root === null) return null
 
     return (
-      <div className={classNames(this.props.className, "c-tree")}>
+      <div className={classNames(this.props.className, "c-tree")} style={this.state.treeStyles}>
         <div className="c-tree__scroller">
           <ul className="c-tree__node-list">
             <TreeNode node={this.props.tree.root}
