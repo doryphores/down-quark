@@ -166,7 +166,9 @@ class FileBufferStore {
         // Set closest buffer as active
         this.setActiveBuffer(index ? index - 1 : 1)
       }
-    } else if (index > this.activeBufferIndex) {
+    }
+
+    if (index < this.activeBufferIndex) {
       this.activeBufferIndex--
     }
 
