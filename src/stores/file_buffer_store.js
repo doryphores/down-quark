@@ -33,13 +33,13 @@ class FileBufferStore {
     this.watchers = {}
 
     this.bindListeners({
-      openBuffer      : FileSystemActions.OPEN_FILE,
-      closeBuffer     : FileSystemActions.CLOSE_FILE,
+      openBuffer      : FileSystemActions.OPEN,
+      closeBuffer     : FileSystemActions.CLOSE,
       saveBuffer      : [
         FileSystemActions.SAVE,
         FileSystemActions.SAVE_AS
       ],
-      createBuffer    : FileSystemActions.NEW_FILE,
+      createBuffer    : FileSystemActions.NEW,
       setActiveBuffer : TabActions.SELECT_TAB,
       updateBuffer    : EditorActions.CHANGE_CONTENT,
       closeAll        : [

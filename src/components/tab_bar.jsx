@@ -13,7 +13,7 @@ export default class TabBar extends React.Component {
 
   handleClick(index, event) {
     if (event.target.classList.contains("js-close")) {
-      FileSystemActions.closeFile(index)
+      FileSystemActions.close(index)
     } else {
       TabActions.selectTab(index)
     }

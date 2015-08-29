@@ -72,7 +72,7 @@ class TreeNode extends React.Component {
 
   handleDoubleClick() {
     if (this.props.node.type === "dir") return
-    FileSystemActions.openFile(this.props.node.path)
+    FileSystemActions.open(this.props.node.path)
   }
 
   handleContextMenu() {

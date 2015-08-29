@@ -33,7 +33,7 @@ export default class ApplicationMenu {
             label: "New file",
             accelerator: "CmdOrCtrl+N",
             click: () => {
-              FileSystemActions.newFile()
+              FileSystemActions.new()
             }
           },
           {
@@ -67,7 +67,7 @@ export default class ApplicationMenu {
             label: "Close Tab",
             accelerator: "CmdOrCtrl+W",
             click: () => {
-              FileSystemActions.closeFile()
+              FileSystemActions.close()
             }
           },
           {

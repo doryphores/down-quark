@@ -7,15 +7,15 @@ class FileSystemActions {
     Dialogs.selectFolder().then((folderPath) => this.dispatch(folderPath))
   }
 
-  openFile(filePath) {
+  open(filePath) {
     this.dispatch(filePath)
   }
 
-  newFile() {
+  new() {
     this.dispatch()
   }
 
-  closeFile(index) {
+  close(index) {
     let FileBufferStore = require("../stores/file_buffer_store")
     let buffer = FileBufferStore.getBuffer(index)
 
