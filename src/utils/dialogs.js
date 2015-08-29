@@ -30,8 +30,8 @@ module.exports = {
   confirmClose(name, path) {
     return new Promise((resolve, reject) => {
       Dialog.showMessageBox(remote.getCurrentWindow(), {
-        type: "question",
         buttons: ["Save", "Cancel", "Don't save"],
+        title: "Save Changes",
         message: `'${name}' has changes, do you want to save them?`,
         detail: "Your changes will be lost if you close this item without saving."
       }, (buttonIndex) => {

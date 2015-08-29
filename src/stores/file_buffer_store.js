@@ -3,6 +3,7 @@ import fs from "fs"
 import path from "path"
 import _ from "underscore"
 import Immutable from "immutable"
+import MarkdownConverter from "../utils/markdown_converter"
 import FileSystemActions from "../actions/file_system_actions"
 import EditorActions from "../actions/editor_actions"
 import TabActions from "../actions/tab_actions"
@@ -51,9 +52,15 @@ class FileBufferStore {
     this.on("bootstrap", this.reloadBuffers.bind(this))
 
     this.exportPublicMethods({
-      getBuffer       : this.getBuffer.bind(this),
-      getActiveBuffer : this.getActiveBuffer.bind(this)
+      getBuffer         : this.getBuffer.bind(this),
+      getActiveBuffer   : this.getActiveBuffer.bind(this),
+      getPreviewContent : this.getPreviewContent.bind(this)
     })
+  }
+
+  getPreviewContent() {
+    if (this.activeBufferIndex == -1) return ""
+    return MarkdownConverter.makeHtml(this.getActiveBuffer().content)
   }
 
   getBuffer(index) {

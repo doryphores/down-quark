@@ -1,7 +1,5 @@
 import React from "react"
 import classNames from "classnames"
-import _ from "underscore"
-import MarkdownConverter from "../utils/markdown_converter"
 import TabBar from "./tab_bar"
 import Editor from "./editor"
 import FileBufferStore from "../stores/file_buffer_store"
@@ -46,9 +44,7 @@ export default class Workspace extends React.Component {
   }
 
   previewContent() {
-    var activeBuffer = FileBufferStore.getActiveBuffer()
-    if (activeBuffer === undefined) return ""
-    return MarkdownConverter.makeHtml(activeBuffer.content)
+    return FileBufferStore.getPreviewContent()
   }
 
   componentClasses() {
