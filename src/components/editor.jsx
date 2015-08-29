@@ -2,7 +2,6 @@ import React from "react"
 import CodeMirror from "../utils/code_mirror_setup"
 import classNames from "classnames"
 import EditorActions from "../actions/editor_actions"
-import _ from "underscore"
 
 export default class Editor extends React.Component {
   componentDidMount() {
@@ -18,7 +17,7 @@ export default class Editor extends React.Component {
 
     if (this.props.buffer.get("active")) {
       this.codeMirrorInstance.focus()
-      _.defer(() => this.codeMirrorInstance.refresh(), 100)
+      setTimeout(() => this.codeMirrorInstance.refresh(), 100)
     }
   }
 
