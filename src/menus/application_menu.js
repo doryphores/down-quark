@@ -1,9 +1,7 @@
 import remote from "remote"
 import FileSystemActions from "../actions/file_system_actions"
-import FileBufferStore from "../stores/file_buffer_store"
 
-var Menu   = remote.require("menu")
-var Dialog = remote.require("dialog")
+const Menu = remote.require("menu")
 
 export default class ApplicationMenu {
   constructor() {
@@ -42,12 +40,7 @@ export default class ApplicationMenu {
             label: "Open folder...",
             accelerator: "CmdOrCtrl+O",
             click: () => {
-              Dialog.showOpenDialog(remote.getCurrentWindow(), {
-                title: "Open folder",
-                properties: ["openDirectory"]
-              }, (filenames) => {
-                if (filenames) FileSystemActions.openFolder(filenames[0])
-              })
+              FileSystemActions.openFolder()
             }
           },
           {
@@ -57,25 +50,14 @@ export default class ApplicationMenu {
             label: "Save",
             accelerator: "CmdOrCtrl+S",
             click: () => {
-              this.save((filename) => {
-                FileSystemActions.save(filename)
-              })
+              FileSystemActions.save()
             }
           },
           {
             label: "Save As...",
             accelerator: "Shift+CmdOrCtrl+S",
             click: () => {
-              var activeBuffer = FileBufferStore.getActiveBuffer()
-
-              if (activeBuffer === undefined) return
-
-              Dialog.showSaveDialog(remote.getCurrentWindow(), {
-                title       : "Save as",
-                defaultPath : activeBuffer.path
-              }, (filename) => {
-                if (filename) FileSystemActions.save(filename)
-              })
+              FileSystemActions.saveAs()
             }
           },
           {
@@ -85,26 +67,7 @@ export default class ApplicationMenu {
             label: "Close Tab",
             accelerator: "CmdOrCtrl+W",
             click: () => {
-              var activeBuffer = FileBufferStore.getActiveBuffer()
-
-              if (activeBuffer && !activeBuffer.clean) {
-                Dialog.showMessageBox(remote.getCurrentWindow(), {
-                  type: "question",
-                  buttons: ["Save", "Cancel", "Don't save"],
-                  message: `${activeBuffer.name}' has changes, do you want to save them?`,
-                  detail: "Your changes will be lost if you close this item without saving."
-                }, (buttonIndex) => {
-                  if (buttonIndex == 0) {
-                    this.save((filename) => {
-                      FileSystemActions.save(filename, true)
-                    })
-                  } else if (buttonIndex == 2) {
-                    FileSystemActions.closeFile()
-                  }
-                })
-              } else {
-                FileSystemActions.closeFile()
-              }
+              FileSystemActions.closeFile()
             }
           },
           {
@@ -136,19 +99,5 @@ export default class ApplicationMenu {
         ]
       }
     ]
-  }
-
-  save(callback) {
-    var activeBuffer = FileBufferStore.getActiveBuffer()
-
-    if (activeBuffer && activeBuffer.path) {
-      callback()
-    } else {
-      Dialog.showSaveDialog(remote.getCurrentWindow(), {
-        title: "Save as"
-      }, (filename) => {
-        if (filename) callback(filename)
-      })
-    }
   }
 }

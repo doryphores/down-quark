@@ -9,8 +9,6 @@ import TabActions from "../actions/tab_actions"
 import TreeActions from "../actions/tree_actions"
 import PathWatcher from "pathwatcher"
 
-var _watchers = {}
-
 class FileBufferStore {
   static config = {
     onSerialize: (data) => {
@@ -21,9 +19,7 @@ class FileBufferStore {
     },
 
     onDeserialize: (data) => {
-      return {
-        buffers: data
-      }
+      return { buffers: data }
     },
 
     getState: (currentState) => {
@@ -32,16 +28,17 @@ class FileBufferStore {
   }
 
   constructor() {
-    this.state = {
-      buffers      : []
-    }
-
+    this.state = { buffers: [] }
     this.activeBufferIndex = -1
+    this.watchers = {}
 
     this.bindListeners({
       openBuffer      : FileSystemActions.OPEN_FILE,
       closeBuffer     : FileSystemActions.CLOSE_FILE,
-      saveBuffer      : FileSystemActions.SAVE,
+      saveBuffer      : [
+        FileSystemActions.SAVE,
+        FileSystemActions.SAVE_AS
+      ],
       createBuffer    : FileSystemActions.NEW_FILE,
       setActiveBuffer : TabActions.SELECT_TAB,
       updateBuffer    : EditorActions.CHANGE_CONTENT,
@@ -54,8 +51,14 @@ class FileBufferStore {
     this.on("bootstrap", this.reloadBuffers.bind(this))
 
     this.exportPublicMethods({
-      getActiveBuffer: this.getActiveBuffer.bind(this)
+      getBuffer       : this.getBuffer.bind(this),
+      getActiveBuffer : this.getActiveBuffer.bind(this)
     })
+  }
+
+  getBuffer(index) {
+    if (index === undefined) index = this.activeBufferIndex
+    return this.state.buffers[index]
   }
 
   getActiveBuffer() {
@@ -63,8 +66,12 @@ class FileBufferStore {
     return this.state.buffers[this.activeBufferIndex]
   }
 
+  findBufferIndex(filePath) {
+    return _.findIndex(this.state.buffers, buffer => buffer.path === filePath)
+  }
+
   getUID() {
-    return "buffer-" + Date.now().toString()
+    return `buffer-${Date.now().toString()}-${this.state.buffers.length}`
   }
 
   createBuffer() {
@@ -82,9 +89,7 @@ class FileBufferStore {
   }
 
   openBuffer(filePath) {
-    var bufferIndex = _.findIndex(this.state.buffers, (buffer) => {
-      return buffer.path === filePath
-    })
+    var bufferIndex = this.findBufferIndex(filePath)
 
     if (bufferIndex > -1) {
       // The file is already open so set it as active
@@ -147,8 +152,6 @@ class FileBufferStore {
     // Close active buffer by default
     if (index === undefined) index = this.activeBufferIndex
 
-    var activeBuffer = this.getActiveBuffer()
-
     if (index === this.activeBufferIndex) {
       if (this.state.buffers.length === 1) {
         this.activeBufferIndex = -1
@@ -170,35 +173,34 @@ class FileBufferStore {
   }
 
   updateBuffer(data) {
-    var buffer = this.state.buffers[data.index]
+    let buffer = this.state.buffers[data.index]
     buffer.content = data.content
     buffer.clean = buffer.content === buffer.diskContent
   }
 
-  saveBuffer({filePath = "", closeOnSave = false}) {
-    // Do nothing if we don't have an active buffer
-    if (this.activeBufferIndex == -1) return
+  saveBuffer({index, filePath = "", closeOnSave = false} = {}) {
+    let buffer = this.getBuffer(index)
 
-    var activeBuffer = this.getActiveBuffer()
+    if (!buffer) return
 
-    this.unwatch(activeBuffer)
+    this.unwatch(buffer)
 
     // Use new file path if given (Save as)
-    filePath = filePath || activeBuffer.path
+    filePath = filePath || buffer.path
 
-    fs.writeFile(filePath, activeBuffer.content, {
+    fs.writeFile(filePath, buffer.content, {
       encoding: "utf-8"
     }, (err) => {
       if (err) return console.log(err)
 
       if (closeOnSave) {
-        this.closeBuffer()
+        this.closeBuffer(index)
       } else {
-        activeBuffer.path = filePath
-        activeBuffer.name = path.basename(filePath)
-        activeBuffer.diskContent = activeBuffer.content
-        activeBuffer.clean = true
-        this.watch(activeBuffer)
+        buffer.path = filePath
+        buffer.name = path.basename(filePath)
+        buffer.diskContent = buffer.content
+        buffer.clean = true
+        this.watch(buffer)
         TreeActions.select.defer(filePath)
       }
 
@@ -226,13 +228,13 @@ class FileBufferStore {
     // Close and delete any existing watchers for this file
     this.unwatch(buffer)
 
-    _watchers[buffer.path] = PathWatcher.watch(buffer.path, () => {
+    this.watchers[buffer.path] = PathWatcher.watch(buffer.path, () => {
       fs.readFile(buffer.path, {
         encoding: "utf-8"
       }, (err, content) => {
         if (err) {
           // File is gone so close it if the buffer is clean
-          if (buffer.clean) this.closeBuffer(buffer.path)
+          if (buffer.clean) this.closeBuffer(this.findBufferIndex(buffer.path))
           else buffer.diskContent = ""
         } else {
           // File has changed so update it
@@ -246,9 +248,9 @@ class FileBufferStore {
   }
 
   unwatch(buffer) {
-    if (buffer.path && _watchers[buffer.path]) {
-      _watchers[buffer.path].close()
-      delete _watchers[buffer.path]
+    if (buffer.path && this.watchers[buffer.path]) {
+      this.watchers[buffer.path].close()
+      delete this.watchers[buffer.path]
     }
   }
 }

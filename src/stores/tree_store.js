@@ -41,6 +41,14 @@ class TreeStore {
     // When the store is bootstrapped, we need to reload the root node
     // from the restored root path
     this.on("bootstrap", this.setRoot.bind(this))
+
+    this.exportPublicMethods({
+      getRootPath : this.getRootPath.bind(this)
+    })
+  }
+
+  getRootPath() {
+    return this.rootPath
   }
 
   setRoot() {
