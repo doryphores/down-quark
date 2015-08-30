@@ -4,8 +4,10 @@
   "description": "Electron based markdown editor",
   "main": "index.js",
   "scripts": {
-    "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run build-css && electron .",
+    "build-css": "mkdirp static/css && stylus static/stylus/app.styl -o static/css/ -c -m",
+    "watch-css": "mkdirp static/css && stylus static/stylus/app.styl -o static/css/ -w -m",
+    "watch": "npm run build-css && (npm run watch-css & electron .)"
   },
   "author": "Martin Laine",
   "license": "ISC",
