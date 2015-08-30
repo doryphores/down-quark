@@ -5,11 +5,17 @@
   "main": "index.js",
   "scripts": {
     "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "package": "node scripts/package.js"
   },
   "author": "Martin Laine",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/doryphores/down-quark"
+  },
   "license": "ISC",
   "devDependencies": {
+    "electron-packager": "^5.0.2",
     "electron-prebuilt": "^0.30.4",
     "electron-rebuild": "^0.2.5"
   },
