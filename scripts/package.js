@@ -14,7 +14,7 @@ packager({
   arch: os.arch(),
   version: pkgjson.devDependencies["electron-prebuilt"],
   ignore: [
-    "^/(dist|src|stylus)($|/)",
+    "^/(docs|dist|src|stylus)($|/)",
     "^/node_modules/\.bin($|/)",
     "/node_modules/.*/(docs|test)($|/)"
   ],
