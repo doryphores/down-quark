@@ -12,6 +12,8 @@ export default class Node extends EventEmitter {
     this.path = p
     this.name = path.basename(p)
     this.expanded = false
+    this.selected = false
+    this.version = 0
 
     if (fs.statSync(p).isDirectory()) {
       this.type = "dir"
@@ -19,6 +21,28 @@ export default class Node extends EventEmitter {
     } else {
       this.type = "file"
     }
+  }
+
+  memo() {
+    let memo = {
+      path     : this.path,
+      name     : this.name,
+      expanded : this.expanded,
+      selected : this.selected,
+      version  : this.version,
+      type     : this.type
+    }
+
+    if (this.type == "dir") {
+      memo.children = this.children.map(n => n.memo())
+    }
+
+    return memo
+  }
+
+  emitChange() {
+    this.version++
+    this.emit("change")
   }
 
   open() {
@@ -35,10 +59,27 @@ export default class Node extends EventEmitter {
 
     this.expanded = false
 
+    this.emitChange()
+
     this.unwatch()
   }
 
-  reload() {
+  select() {
+    this.selected = true
+    this.emitChange()
+  }
+
+  unselect() {
+    this.selected = false
+    this.emitChange()
+  }
+
+  changeSelection(from, to) {
+    if (from) this.findNode(from).unselect()
+    this.findNode(to).select()
+  }
+
+  reload(recursive = true) {
     // Read node list from file system
     var nodeList = _.difference(fs.readdirSync(this.path), IGNORED_FILES)
 
@@ -50,7 +91,7 @@ export default class Node extends EventEmitter {
       _.difference(nodeList, _.pluck(this.children, "name")).map((p) => {
         var node = new Node(path.join(this.path, p))
         // Ensure "change" events bubble up the tree
-        node.on("change", this.emit.bind(this, "change"))
+        node.on("change", this.emitChange.bind(this))
         return node
       })
     ).sort(
@@ -60,14 +101,16 @@ export default class Node extends EventEmitter {
       }
     )
 
-    this.children.forEach((node) => { if (node.expanded) node.reload() })
+    if (recursive) {
+      this.children.forEach((node) => { if (node.expanded) node.reload() })
+    }
 
-    this.emit("change")
+    this.emitChange()
   }
 
   watch() {
     this.watcher = PathWatcher.watch(this.path, (event) => {
-      if (event == "change") this.reload()
+      if (event == "change") this.reload(false)
     })
 
     this.children.forEach((node) => {

@@ -21,14 +21,23 @@ class TreeStore {
         selectedPath  : data.selectedPath,
         expandedPaths : data.expandedPaths
       }
+    },
+
+    getState: (currentState) => {
+      return {
+        selectedPath: currentState.selectedPath,
+        root: currentState.root && currentState.root.memo()
+      }
     }
   }
 
   constructor() {
-    this.rootPath = ""
-    this.root = null
-    this.selectedPath = null
-    this.expandedPaths = []
+    this.state = {
+      rootPath      : "",
+      expandedPaths : [],
+      root          : null,
+      selectedPath  : null
+    }
 
     this.bindListeners({
       openFolder   : FileSystemActions.OPEN_FOLDER,
@@ -48,52 +57,58 @@ class TreeStore {
   }
 
   getRootPath() {
-    return this.rootPath
+    return this.state.rootPath
   }
 
   setRoot() {
-    this.root = new FileTree(this.rootPath)
-    this.root.on("change", this.emitChange.bind(this))
+    this.state.root = new FileTree(this.state.rootPath)
+    this.state.root.on("change", _.debounce(this.emitChange.bind(this), 100))
 
     // Expand root by default
-    if (this.expandedPaths.length === 0) {
-      this.expandedPaths = [this.rootPath]
+    if (this.state.expandedPaths.length === 0) {
+      this.state.expandedPaths = [this.state.rootPath]
     }
 
     // Restore expanded nodes
-    this.expandedPaths = _.compact(this.expandedPaths.sort().map((p) => {
-      let n = this.root.findNode(p)
+    this.state.expandedPaths = _.compact(this.state.expandedPaths.sort().map((p) => {
+      let n = this.state.root.findNode(p)
       if (!n) return false
       n.open()
       return p
     }))
+
+    if (this.state.selectedPath) {
+      this.state.root.changeSelection(null, this.state.selectedPath)
+    }
   }
 
   openFolder(rootPath) {
     // Stop watching file system if a previous folder was open
-    if (this.root) this.root.unwatch()
+    if (this.state.root) this.state.root.unwatch()
 
-    this.rootPath = rootPath
-    this.selectedPath = null
-    this.expandedPaths = []
+    this.state.rootPath = rootPath
+    this.state.selectedPath = null
+    this.state.expandedPaths = []
 
     this.setRoot()
   }
 
-  expandNode(node) {
-    node.open()
-    if (this.expandedPaths.indexOf(node.path) === -1) {
-      this.expandedPaths.push(node.path)
+  expandNode(nodePath) {
+    this.state.root.findNode(nodePath).open()
+    if (this.state.expandedPaths.indexOf(nodePath) === -1) {
+      this.state.expandedPaths.push(nodePath)
     }
   }
 
-  collapseNode(node) {
-    node.close()
-    this.expandedPaths = _.without(this.expandedPaths, node.path)
+  collapseNode(nodePath) {
+    this.state.root.findNode(nodePath).close()
+    this.state.expandedPaths = _.without(this.state.expandedPaths, nodePath)
   }
 
   selectNode(nodePath) {
-    this.selectedPath = nodePath
+    if (nodePath == this.state.selectedPath) return
+    this.state.root.changeSelection(this.state.selectedPath, nodePath)
+    this.state.selectedPath = nodePath
   }
 
   deleteNode(nodePath) {

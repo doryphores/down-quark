@@ -62,10 +62,14 @@ export default class Tree extends React.Component {
 }
 
 class TreeNode extends React.Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.node.version != this.props.node.version
+  }
+
   handleClick() {
     if (this.props.node.type === "dir") {
       var action = this.props.node.expanded ? "collapse" : "expand"
-      TreeActions[action](this.props.node)
+      TreeActions[action](this.props.node.path)
     }
     TreeActions.select(this.props.node.path)
   }
@@ -84,7 +88,7 @@ class TreeNode extends React.Component {
   nodeClasses() {
     return classNames("c-tree__node", {
       "c-tree__node--expanded": this.props.node.expanded,
-      "c-tree__node--selected": this.props.node.path === this.props.selectedPath
+      "c-tree__node--selected": this.props.node.selected
     })
   }
 
