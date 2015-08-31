@@ -4,9 +4,11 @@
   "description": "Electron based markdown editor",
   "main": "index.js",
   "scripts": {
-    "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "package": "node scripts/package.js"
+    "start": "npm run build-css && electron .",
+    "package": "npm run build-css && node scripts/package.js",
+    "build-css": "mkdirp static/css && stylus static/stylus/app.styl -o static/css/ -c -m",
+    "watch-css": "mkdirp static/css && stylus static/stylus/app.styl -o static/css/ -w -m",
+    "watch": "npm run build-css && (npm run watch-css & electron .)"
   },
   "author": "Martin Laine",
   "repository": {
@@ -17,7 +19,9 @@
   "devDependencies": {
     "electron-packager": "^5.0.2",
     "electron-prebuilt": "^0.30.4",
-    "electron-rebuild": "^0.2.5"
+    "electron-rebuild": "^0.2.5",
+    "stylus": "^0.52.0",
+    "mkdirp": "^0.5.1"
   },
   "dependencies": {
     "alt": "^0.17.1",
@@ -29,7 +33,6 @@
     "pathwatcher": "^5.0.0",
     "react": "^0.13.3",
     "showdown": "^1.2.2",
-    "stylus": "^0.52.0",
     "underscore": "^1.8.3"
   }
 }
