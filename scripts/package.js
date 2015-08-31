@@ -7,7 +7,7 @@ packager({
   name: "DownQuark",
   platform: "linux",
   arch: "x64",
-  version: "0.30.4",
+  version: "0.30.6",
   ignore: [
     "dist",
     "node_modules/(electron-rebuild|\.bin)($|/)",
