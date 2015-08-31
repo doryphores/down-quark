@@ -5,13 +5,13 @@
   "main": "index.js",
   "scripts": {
     "install-deps": "npm install && electron-rebuild",
-    "start": "npm run build-css && npm run build-js && electron .",
+    "start": "npm run build-css -- -m && npm run build-js -- -s && electron .",
     "package": "npm run build-css && npm run build-js && node scripts/package.js",
     "build-js": "mkdirp static/js && babel src --out-dir static/js --stage 0",
-    "watch-js": "mkdirp static/js && babel src --out-dir static/js -w --stage 0",
+    "watch-js": "mkdirp static/js && babel src --out-dir static/js -w --stage 0 -s",
     "build-css": "mkdirp static/css && stylus stylus/app.styl -o static/css/ -c",
-    "watch-css": "mkdirp static/css && stylus stylus/app.styl -o static/css/ -w",
-    "watch": "npm run build-css -- -m && npm run build-js -- -s && (npm run watch-css -- -m & npm run watch-js -- -s & electron .)"
+    "watch-css": "mkdirp static/css && stylus stylus/app.styl -o static/css/ -w -m",
+    "watch": "npm run watch-css & npm run watch-js"
   },
   "author": "Martin Laine",
   "repository": {

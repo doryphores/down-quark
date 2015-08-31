@@ -20,7 +20,13 @@ runtime:
 npm run install-deps
 ```
 
-To start **Down Quark** and watch for CSS and JS changes:
+To start **Down Quark**:
+
+```
+npm start
+```
+
+To watch for JS and CSS changes:
 
 ```
 npm run watch
