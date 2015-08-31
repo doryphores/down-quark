@@ -9,11 +9,12 @@ packager({
   arch: "x64",
   version: "0.30.6",
   ignore: [
-    "dist",
-    "node_modules/(electron-rebuild|\.bin)($|/)",
-    "node_modules/.*/(docs|test)($|/)"
+    "^/dist($|/)",
+    "^/node_modules/\.bin($|/)",
+    "/node_modules/.*/(docs|test)($|/)"
   ],
   asar: true,
+  prune: true,
   overwrite: true
 }, function (err, appPath) {
   console.log("All done!")
