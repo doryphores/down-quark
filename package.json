@@ -4,6 +4,7 @@
   "description": "Electron based markdown editor",
   "main": "index.js",
   "scripts": {
+    "install-deps": "npm install && electron-rebuild",
     "start": "npm run build-css && electron .",
     "package": "npm run build-css && node scripts/package.js",
     "build-css": "mkdirp static/css && stylus static/stylus/app.styl -o static/css/ -c -m",
@@ -20,7 +21,6 @@
     "electron-packager": "^5.0.2",
     "electron-prebuilt": "0.30.6",
     "electron-rebuild": "^0.2.5",
-    "stylus": "^0.52.0",
     "mkdirp": "^0.5.1"
   },
   "dependencies": {
@@ -33,6 +33,7 @@
     "pathwatcher": "^5.0.0",
     "react": "^0.13.3",
     "showdown": "^1.2.2",
+    "stylus": "^0.52.0",
     "underscore": "^1.8.3"
   }
 }

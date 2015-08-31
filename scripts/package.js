@@ -3,7 +3,7 @@ var path = require("path")
 
 packager({
   dir: path.resolve(__dirname + "/.."),
-  out: path.resolve(__dirname + "/../dist/"),
+  out: path.resolve(__dirname + "/../dist"),
   name: "DownQuark",
   platform: "linux",
   arch: "x64",
