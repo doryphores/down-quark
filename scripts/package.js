@@ -1,15 +1,20 @@
 var packager = require("electron-packager")
 var path = require("path")
+var pkgjson = require("../package.json")
+var os = require("os")
+
+var projectDir = path.resolve(path.join(__dirname, ".."))
 
 packager({
-  dir: path.resolve(__dirname + "/.."),
-  out: path.resolve(__dirname + "/../dist"),
-  name: "DownQuark",
-  platform: "linux",
-  arch: "x64",
-  version: "0.30.6",
+  dir: projectDir,
+  out: path.join(projectDir, "dist"),
+  appVersion: pkgjson.version,
+  name: pkgjson.name,
+  platform: os.platform(),
+  arch: os.arch(),
+  version: pkgjson.devDependencies["electron-prebuilt"],
   ignore: [
-    "^/dist($|/)",
+    "^/(dist|src|stylus)($|/)",
     "^/node_modules/\.bin($|/)",
     "/node_modules/.*/(docs|test)($|/)"
   ],
