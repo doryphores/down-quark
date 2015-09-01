@@ -9,12 +9,8 @@ export default class Tree extends React.Component {
   constructor(props) {
     super(props)
     this.state = { treeStyles: {} }
-    var treeWidth = LocalStorageManager.get("treeWidth")
+    let treeWidth = LocalStorageManager.get("treeWidth")
     if (treeWidth) this.state.treeStyles.width = treeWidth
-  }
-
-  componentDidMount() {
-    var treeWidth = LocalStorageManager.get("treeWidth")
   }
 
   startResize() {
@@ -44,14 +40,13 @@ export default class Tree extends React.Component {
   }
 
   render() {
-    if (this.props.tree.root === null) return null
+    if (this.props.tree.root == null) return null
 
     return (
       <div className={classNames(this.props.className, "c-tree")} style={this.state.treeStyles}>
         <div className="c-tree__scroller">
           <ul className="c-tree__node-list">
-            <TreeNode node={this.props.tree.root}
-                      selectedPath={this.props.tree.selectedPath}/>
+            <TreeNode node={this.props.tree.root}/>
           </ul>
         </div>
         <div className="c-tree__resize-handle"
@@ -67,21 +62,21 @@ class TreeNode extends React.Component {
   }
 
   handleClick() {
-    if (this.props.node.type === "dir") {
-      var action = this.props.node.expanded ? "collapse" : "expand"
+    if (this.props.node.type == "dir") {
+      let action = this.props.node.expanded ? "collapse" : "expand"
       TreeActions[action](this.props.node.path)
     }
     TreeActions.select(this.props.node.path)
   }
 
   handleDoubleClick() {
-    if (this.props.node.type === "dir") return
+    if (this.props.node.type == "dir") return
     FileSystemActions.open(this.props.node.path)
   }
 
   handleContextMenu() {
     TreeActions.select(this.props.node.path)
-    var menu = new TreeMenu(this.props.node)
+    let menu = new TreeMenu(this.props.node)
     menu.show()
   }
 
@@ -99,33 +94,29 @@ class TreeNode extends React.Component {
     })
   }
 
-  render() {
-    var nodeLabel = (
-      <span className={this.labelClasses()}
-            onClick={this.handleClick.bind(this)}
-            onDoubleClick={this.handleDoubleClick.bind(this)}
-            onContextMenu={this.handleContextMenu.bind(this)}>
-        {this.props.node.name}
-      </span>
-    )
-
-    if (this.props.node.type === "file") {
-      return <li className={this.nodeClasses()}>{nodeLabel}</li>
-    } else {
+  renderChildren() {
+    if (this.props.node.type == "dir" && this.props.node.children.length) {
       return (
-        <li className={this.nodeClasses()}>
-          {nodeLabel}
-          <ul className="c-tree__node-list">
-            {this.props.node.children.map((node) => {
-              return (
-                <TreeNode key={node.name}
-                          node={node}
-                          selectedPath={this.props.selectedPath}/>
-              )
-            })}
-          </ul>
-        </li>
+        <ul className="c-tree__node-list">
+          {this.props.node.children.map((node) => {
+            return <TreeNode key={node.name} node={node}/>
+          })}
+        </ul>
       )
     }
+  }
+
+  render() {
+    return (
+      <li className={this.nodeClasses()}>
+        <span className={this.labelClasses()}
+              onClick={this.handleClick.bind(this)}
+              onDoubleClick={this.handleDoubleClick.bind(this)}
+              onContextMenu={this.handleContextMenu.bind(this)}>
+          {this.props.node.name}
+        </span>
+        {this.renderChildren()}
+      </li>
+    )
   }
 }
