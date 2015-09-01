@@ -73,6 +73,13 @@ class FileSystemActions {
   delete(filePath) {
     this.dispatch(filePath)
   }
+
+  move(nodePath, newPath) {
+    this.dispatch({
+      nodePath : nodePath,
+      newPath  : newPath
+    })
+  }
 }
 
 export default alt.createActions(FileSystemActions)

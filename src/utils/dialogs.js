@@ -15,10 +15,10 @@ module.exports = {
     })
   },
 
-  saveAs(defaultPath) {
+  saveAs(defaultPath, title = "Save as") {
     return new Promise((resolve, reject) => {
       Dialog.showSaveDialog(remote.getCurrentWindow(), {
-        title       : "Save as",
+        title       : title,
         defaultPath : defaultPath
       }, filename => {
         if (filename) resolve(filename)

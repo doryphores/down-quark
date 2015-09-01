@@ -25,6 +25,14 @@ export default class TreeMenu {
             FileSystemActions.delete(this.node.path)
           })
         }
+      },
+      {
+        label: "Move",
+        click: () => {
+          Dialogs.saveAs(this.node.path, "Move").then((newPath) => {
+            FileSystemActions.move(this.node.path, newPath)
+          })
+        }
       }
     ]
   }

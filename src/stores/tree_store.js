@@ -1,6 +1,7 @@
 import alt from "../alt"
 import _ from "underscore"
 import remote from "remote"
+import fs from "fs-extra"
 import FileSystemActions from "../actions/file_system_actions"
 import FileTree from "../utils/file_tree"
 import TreeActions from "../actions/tree_actions"
@@ -44,7 +45,8 @@ class TreeStore {
       expandNode   : TreeActions.EXPAND,
       collapseNode : TreeActions.COLLAPSE,
       selectNode   : TreeActions.SELECT,
-      deleteNode   : FileSystemActions.DELETE
+      deleteNode   : FileSystemActions.DELETE,
+      moveNode     : FileSystemActions.MOVE
     })
 
     // When the store is bootstrapped, we need to reload the root node
@@ -112,6 +114,13 @@ class TreeStore {
 
   deleteNode(nodePath) {
     remote.require("shell").moveItemToTrash(nodePath)
+    this.preventDefault()
+  }
+
+  moveNode({nodePath, newPath} = {}) {
+    let node = this.state.root.findNode(nodePath)
+    if (node.type == "dir") node.unwatch()
+    fs.move(nodePath, newPath, {})
     this.preventDefault()
   }
 }
