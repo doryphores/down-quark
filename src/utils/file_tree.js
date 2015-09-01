@@ -74,9 +74,19 @@ export default class Node extends EventEmitter {
     this.emitChange()
   }
 
-  changeSelection(from, to) {
-    if (from) this.findNode(from).unselect()
-    this.findNode(to).select()
+  changeSelection(fromPath, toPath) {
+    if (fromPath) {
+      let fromNode = this.findNode(fromPath)
+      if (fromNode) fromNode.unselect()
+    }
+    if (toPath) {
+      let toNode = this.findNode(toPath)
+      if (toNode) {
+        toNode.select()
+        return toPath
+      }
+    }
+    return null
   }
 
   reload(recursive = true) {

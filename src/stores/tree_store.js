@@ -77,9 +77,8 @@ class TreeStore {
       return p
     }))
 
-    if (this.state.selectedPath) {
-      this.state.root.changeSelection(null, this.state.selectedPath)
-    }
+    this.state.selectedPath = this.state.root.changeSelection(null,
+      this.state.selectedPath)
   }
 
   openFolder(rootPath) {
@@ -107,8 +106,8 @@ class TreeStore {
 
   selectNode(nodePath) {
     if (nodePath == this.state.selectedPath) return
-    this.state.root.changeSelection(this.state.selectedPath, nodePath)
-    this.state.selectedPath = nodePath
+    this.state.selectedPath = this.state.root.changeSelection(
+      this.state.selectedPath, nodePath)
   }
 
   deleteNode(nodePath) {
