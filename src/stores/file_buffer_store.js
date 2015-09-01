@@ -2,6 +2,7 @@ import alt from "../alt"
 import fs from "fs"
 import path from "path"
 import _ from "underscore"
+import async from "async"
 import Immutable from "immutable"
 import MarkdownConverter from "../utils/markdown_converter"
 import FileSystemActions from "../actions/file_system_actions"
@@ -102,9 +103,7 @@ class FileBufferStore {
       // The file is already open so set it as active
       this.setActiveBuffer(bufferIndex)
     } else {
-      fs.readFile(filePath, {
-        encoding: "utf-8"
-      }, (err, content) => {
+      fs.readFile(filePath, "utf-8", (err, content) => {
         // TODO: report error?
         if (err) return console.log(err)
 
@@ -129,18 +128,17 @@ class FileBufferStore {
   }
 
   reloadBuffers() {
-    this.state.buffers.forEach((buffer, index) => {
+    async.forEachOf(this.state.buffers, (buffer, index, done) => {
       if (buffer.active) this.activeBufferIndex = index
 
       // Only reload buffers linked to a file on disk
-      if (!buffer.path) return
+      if (!buffer.path) return next()
 
       this.unwatch(buffer)
 
-      fs.readFile(buffer.path, {
-        encoding: "utf-8"
-      }, (err, content) => {
+      fs.readFile(buffer.path, "utf-8", (err, content) => {
         if (err) {
+          // File does not exist anymore so close the buffer
           this.closeBuffer(buffer.path)
         } else {
           buffer.diskContent = content
@@ -148,8 +146,15 @@ class FileBufferStore {
           buffer.clean = buffer.diskContent === buffer.content
           this.watch(buffer)
         }
-        this.emitChange()
+
+        done()
       })
+    }, () => {
+      // Ensure we set an active buffer
+      if (this.activeBufferIndex == -1 && this.state.buffers.length) {
+        this.setActiveBuffer(0)
+      }
+      this.emitChange()
     })
   }
 
@@ -197,9 +202,7 @@ class FileBufferStore {
     // Use new file path if given (Save as)
     filePath = filePath || buffer.path
 
-    fs.writeFile(filePath, buffer.content, {
-      encoding: "utf-8"
-    }, (err) => {
+    fs.writeFile(filePath, buffer.content, "utf-8", (err) => {
       if (err) return console.log(err)
 
       if (closeOnSave) {
@@ -238,9 +241,7 @@ class FileBufferStore {
     this.unwatch(buffer)
 
     this.watchers[buffer.path] = PathWatcher.watch(buffer.path, () => {
-      fs.readFile(buffer.path, {
-        encoding: "utf-8"
-      }, (err, content) => {
+      fs.readFile(buffer.path, "utf-8", (err, content) => {
         if (err) {
           // File is gone so close it if the buffer is clean
           if (buffer.clean) this.closeBuffer(this.findBufferIndex(buffer.path))

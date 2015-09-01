@@ -13,9 +13,7 @@ module.exports = {
   }),
 
   restore: () => {
-    fs.readFile(_cacheFile, {
-      encoding: "utf-8"
-    }, (err, snapshot) => {
+    fs.readFile(_cacheFile, "utf-8", (err, snapshot) => {
       if (err) return
       alt.bootstrap(snapshot)
     })
