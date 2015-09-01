@@ -1,11 +1,9 @@
-import remote from "remote"
 import React from "react"
 import ApplicationMenu from "../menus/application_menu"
 import SnapshotManager from "../utils/snapshot_manager"
 import connectToStores from "alt/utils/connectToStores"
 import TreeStore from "../stores/tree_store"
 import FileBufferStore from "../stores/file_buffer_store"
-import FileSystemActions from "../actions/file_system_actions"
 import Tree from "./tree"
 import Workspace from "./workspace"
 
