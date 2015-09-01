@@ -9,12 +9,12 @@ export default class Workspace extends React.Component {
   constructor(props) {
     super(props)
     this.state = { previewStyles: {} }
-    var previewWidth = LocalStorageManager.get("previewWidth")
+    let previewWidth = LocalStorageManager.get("previewWidth")
     if (previewWidth) this.state.previewStyles.width = previewWidth
   }
 
   startResize() {
-    var {left, width} = React.findDOMNode(this).getBoundingClientRect()
+    let {left, width} = React.findDOMNode(this).getBoundingClientRect()
 
     document.body.classList.add("is-resizing")
 
@@ -43,10 +43,6 @@ export default class Workspace extends React.Component {
     })
   }
 
-  previewContent() {
-    return FileBufferStore.getPreviewContent()
-  }
-
   componentClasses() {
     return classNames(this.props.className,
       "c-workspace u-container u-container--vertical")
@@ -59,7 +55,7 @@ export default class Workspace extends React.Component {
   }
 
   render() {
-    if (this.props.buffers.size === 0) return null
+    if (!this.props.buffers.size) return null
 
     return (
       <div className={this.componentClasses()}>
@@ -77,7 +73,7 @@ export default class Workspace extends React.Component {
           </div>
           <div className="c-preview-panel u-panel" style={this.state.previewStyles}>
             <div className="c-preview-panel__content"
-                 dangerouslySetInnerHTML={{__html: this.previewContent()}}/>
+                 dangerouslySetInnerHTML={{__html: FileBufferStore.getPreviewContent()}}/>
             <div className="c-preview-panel__resize-handle"
                  onMouseDown={this.startResize.bind(this)}/>
           </div>

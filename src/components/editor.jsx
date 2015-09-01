@@ -28,7 +28,7 @@ export default class Editor extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     // Update content if it's clean and content has changed on disk
     if (this.props.buffer.get("clean") &&
-        this.props.buffer.get("content") !== this.codeMirrorInstance.getValue()) {
+      this.props.buffer.get("content") !== this.codeMirrorInstance.getValue()) {
       this.codeMirrorInstance.setValue(this.props.buffer.get("content"))
     }
 
