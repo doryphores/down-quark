@@ -39,5 +39,17 @@ module.exports = {
         else resolve(buttonIndex == 0)
       })
     })
+  },
+
+  confirmDelete(path) {
+    return new Promise((resolve, reject) => {
+      Dialog.showMessageBox(remote.getCurrentWindow(), {
+        buttons: ["Move to Trash", "Cancel"],
+        message: "Are you sure you want to delete the selected item?",
+        detail: `You are deleting: '${path}'`
+      }, (buttonIndex) => {
+        if (buttonIndex == 0) resolve()
+      })
+    })
   }
 }
