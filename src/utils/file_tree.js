@@ -6,8 +6,8 @@ import EventEmitter from "events"
 
 const IGNORED_FILES = [".DS_Store", "Thumbs.db", ".git"]
 
-export default class Node extends EventEmitter {
-  constructor(p) {
+class Node extends EventEmitter {
+  constructor(p, parent = null) {
     super()
     this.path = p
     this.name = path.basename(p)
@@ -20,6 +20,11 @@ export default class Node extends EventEmitter {
       this.children = []
     } else {
       this.type = "file"
+    }
+
+    if (parent) {
+      // Ensure "change" events bubble up the tree
+      this.on("change", () => parent.emitChange())
     }
   }
 
@@ -47,20 +52,15 @@ export default class Node extends EventEmitter {
 
   open() {
     if (this.type === "file") return
-
     this.expanded = true
-
     this.reload()
     this.watch()
   }
 
   close() {
     if (this.type === "file") return
-
     this.expanded = false
-
     this.emitChange()
-
     this.unwatch()
   }
 
@@ -74,24 +74,9 @@ export default class Node extends EventEmitter {
     this.emitChange()
   }
 
-  changeSelection(fromPath, toPath) {
-    if (fromPath) {
-      let fromNode = this.findNode(fromPath)
-      if (fromNode) fromNode.unselect()
-    }
-    if (toPath) {
-      let toNode = this.findNode(toPath)
-      if (toNode) {
-        toNode.select()
-        return toPath
-      }
-    }
-    return null
-  }
-
   reload(recursive = true) {
     // Read node list from file system
-    var nodeList = _.difference(fs.readdirSync(this.path), IGNORED_FILES)
+    let nodeList = _.difference(fs.readdirSync(this.path), IGNORED_FILES)
 
     // Update node list and sort
     this.children = _.union(
@@ -99,26 +84,25 @@ export default class Node extends EventEmitter {
         return nodeList.indexOf(node.name) === -1
       }),
       _.difference(nodeList, _.pluck(this.children, "name")).map((p) => {
-        var node = new Node(path.join(this.path, p))
-        // Ensure "change" events bubble up the tree
-        node.on("change", this.emitChange.bind(this))
-        return node
+        return new Node(path.join(this.path, p), this)
       })
-    ).sort(
-      function nodeCompare(a, b) {
-        if (a.type == b.type) return a.name.localeCompare(b.name)
-        return a.type == "dir" ? -1 : 1
-      }
-    )
+    ).sort((a, b) => {
+      if (a.type == b.type) return a.name.localeCompare(b.name)
+      return a.type == "dir" ? -1 : 1
+    })
 
     if (recursive) {
-      this.children.forEach((node) => { if (node.expanded) node.reload() })
+      this.children.forEach((node) => {
+        if (node.expanded) node.reload()
+      })
     }
 
     this.emitChange()
   }
 
   watch() {
+    if (this.type == "file") return
+
     this.watcher = PathWatcher.watch(this.path, (event) => {
       if (event == "change") this.reload(false)
     })
@@ -129,26 +113,74 @@ export default class Node extends EventEmitter {
   }
 
   unwatch() {
+    if (this.type == "file") return
+
     if (this.watcher) {
       this.watcher.close()
       this.watcher = null
     }
 
-    this.children.forEach((node) => {
-      if (node.watcher) node.unwatch()
+    this.children.forEach(node => {
+      if (node.type == "dir") node.unwatch()
     })
   }
 
   findNode(nodePath) {
-    var relativePath = path.relative(this.path, nodePath)
+    let relativePath = path.relative(this.path, nodePath)
 
     if (relativePath === "") return this
 
-    var nextNodeName = relativePath.split("/")[0]
-    var nextNode = _.find(this.children, (n) => {
+    let nextNodeName = relativePath.split("/")[0]
+    let nextNode = _.find(this.children, (n) => {
       return n.name === nextNodeName
     })
 
     return nextNode && nextNode.findNode(nodePath)
+  }
+
+  getExpandedPaths() {
+    if (this.type == "file") return []
+    return _.union(
+      this.expanded ? [this.path] : [],
+      _.flatten(this.children.filter(n => n.expanded).
+        map(n => n.getExpandedPaths()))
+    )
+  }
+}
+
+export default class RootNode extends Node {
+  constructor(p, {expandedPaths, selectedPath} = {}) {
+    super(p)
+
+    this._selectedNode = null
+
+    expandedPaths = expandedPaths || [this.path]
+
+    // Restore expanded nodes (root is expanded by default)
+    expandedPaths.sort().forEach((p) => {
+      let n = this.findNode(p)
+      if (n) n.open()
+    })
+
+    if (selectedPath) this.changeSelection(selectedPath)
+
+    this.on("change", () => {
+      if (this._selectedNode && !this.findNode(this._selectedNode.path)) {
+        this._selectedNode = null
+      }
+    })
+  }
+
+  getSelectedPath() {
+    return this._selectedNode ? this._selectedNode.path : null
+  }
+
+  changeSelection(nodePath) {
+    if (this._selectedNode) this._selectedNode.unselect()
+    let node = this.findNode(nodePath)
+    if (!node) return null
+    node.select()
+    this._selectedNode = node
+    return nodePath
   }
 }

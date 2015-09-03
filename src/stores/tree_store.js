@@ -11,37 +11,32 @@ class TreeStore {
     onSerialize: (data) => {
       return {
         rootPath      : data.root.path,
-        selectedPath  : data.selectedPath,
-        expandedPaths : data.expandedPaths
+        selectedPath  : data.root.getSelectedPath(),
+        expandedPaths : data.root.getExpandedPaths()
       }
     },
 
     onDeserialize: (data) => {
       return {
-        rootPath      : data.rootPath,
-        selectedPath  : data.selectedPath,
-        expandedPaths : data.expandedPaths
+        root: new FileTree(data.rootPath, {
+          expandedPaths: data.expandedPaths,
+          selectedPath : data.selectedPath
+        })
       }
     },
 
     getState: (currentState) => {
       return {
-        selectedPath: currentState.selectedPath,
         root: currentState.root && currentState.root.memo()
       }
     }
   }
 
   constructor() {
-    this.state = {
-      rootPath      : "",
-      expandedPaths : [],
-      root          : null,
-      selectedPath  : null
-    }
+    this.state = { root: null }
 
     this.bindListeners({
-      openFolder   : FileSystemActions.OPEN_FOLDER,
+      setRoot      : FileSystemActions.OPEN_FOLDER,
       expandNode   : TreeActions.EXPAND,
       collapseNode : TreeActions.COLLAPSE,
       selectNode   : TreeActions.SELECT,
@@ -54,74 +49,45 @@ class TreeStore {
     this.on("bootstrap", this.setRoot.bind(this))
 
     this.exportPublicMethods({
-      getRootPath : this.getRootPath.bind(this)
+      getRootPath: this.getRootPath.bind(this)
     })
   }
 
   getRootPath() {
-    return this.state.rootPath
+    return this.state.root && this.state.root.path
   }
 
-  setRoot() {
-    this.state.root = new FileTree(this.state.rootPath)
-    this.state.root.on("change", _.debounce(this.emitChange.bind(this), 100))
-
-    // Expand root by default
-    if (this.state.expandedPaths.length === 0) {
-      this.state.expandedPaths = [this.state.rootPath]
+  setRoot(rootPath) {
+    if (rootPath) {
+      // Stop watching file system if a previous folder was open
+      if (this.state.root) this.state.root.unwatch()
+      delete this.state.root
+      this.state.root = new FileTree(rootPath)
     }
 
-    // Restore expanded nodes
-    this.state.expandedPaths = _.compact(this.state.expandedPaths.sort().map((p) => {
-      let n = this.state.root.findNode(p)
-      if (!n) return false
-      n.open()
-      return p
-    }))
-
-    this.state.selectedPath = this.state.root.changeSelection(null,
-      this.state.selectedPath)
-  }
-
-  openFolder(rootPath) {
-    // Stop watching file system if a previous folder was open
-    if (this.state.root) this.state.root.unwatch()
-
-    this.state.rootPath = rootPath
-    this.state.selectedPath = null
-    this.state.expandedPaths = []
-
-    this.setRoot()
+    this.state.root.on("change", _.debounce(this.emitChange.bind(this), 100))
   }
 
   expandNode(nodePath) {
     this.state.root.findNode(nodePath).open()
-    if (this.state.expandedPaths.indexOf(nodePath) === -1) {
-      this.state.expandedPaths.push(nodePath)
-    }
   }
 
   collapseNode(nodePath) {
     this.state.root.findNode(nodePath).close()
-    this.state.expandedPaths = _.without(this.state.expandedPaths, nodePath)
   }
 
   selectNode(nodePath) {
-    if (nodePath == this.state.selectedPath) return
-    this.state.selectedPath = this.state.root.changeSelection(
-      this.state.selectedPath, nodePath)
+    this.state.root.changeSelection(nodePath)
   }
 
   deleteNode(nodePath) {
+    this.state.root.findNode(nodePath).unwatch()
     remote.require("shell").moveItemToTrash(nodePath)
-    this.preventDefault()
   }
 
   moveNode({nodePath, newPath} = {}) {
-    let node = this.state.root.findNode(nodePath)
-    if (node.type == "dir") node.unwatch()
+    this.state.root.findNode(nodePath).unwatch()
     fs.move(nodePath, newPath, {})
-    this.preventDefault()
   }
 }
 
