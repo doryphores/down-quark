@@ -4,7 +4,9 @@ import path from "path"
 import _ from "underscore"
 import async from "async"
 import Immutable from "immutable"
-import MarkdownConverter from "../utils/markdown_converter"
+import { getShowdownConverter } from "../utils/markdown_converter"
+import ProjectStore from "./project_store"
+import ProjectActions from "../actions/project_actions"
 import FileSystemActions from "../actions/file_system_actions"
 import EditorActions from "../actions/editor_actions"
 import TabActions from "../actions/tab_actions"
@@ -30,11 +32,15 @@ class FileBufferStore {
   }
 
   constructor() {
-    this.state = { buffers: [] }
+    this.state = {
+      buffers: []
+    }
     this.activeBufferIndex = -1
     this.watchers = {}
+    this.converter = null
 
     this.bindListeners({
+      setConverter    : [ProjectActions.OPEN, ProjectActions.RELOAD],
       openBuffer      : FileSystemActions.OPEN,
       closeBuffer     : FileSystemActions.CLOSE,
       saveBuffer      : [
@@ -59,9 +65,14 @@ class FileBufferStore {
     })
   }
 
+  setConverter() {
+    this.waitFor(ProjectStore)
+    this.converter = getShowdownConverter(ProjectStore.getState().mediaPath)
+  }
+
   getPreviewContent() {
-    if (this.activeBufferIndex == -1) return ""
-    return MarkdownConverter.makeHtml(this.getActiveBuffer().content)
+    if (this.activeBufferIndex == -1 || !this.converter) return ""
+    return this.converter.makeHtml(this.getActiveBuffer().content)
   }
 
   getBuffer(index) {

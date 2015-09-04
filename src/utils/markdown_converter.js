@@ -1,14 +1,21 @@
 import showdown from "showdown"
 
-var markdownExtensions = function (converter) {
-  return [
-    {
-      type   : "lang",
-      filter : (md) => {
-        return md.replace(/---[\s\S]*?---/, "")
-      }
-    }
-  ]
+module.exports = {
+  getShowdownConverter: (mediaPath) => {
+    return new showdown.Converter({
+      extensions: [
+        (converter) => [
+          {
+            type   : "lang",
+            filter : md => md.replace(/---[\s\S]*?---/, "")
+          },
+          {
+            type    : "lang",
+            regex   : /(!\[.*?\]\()((?!http)\/?)/g,
+            replace : `$1file://${encodeURI(mediaPath)}/`
+          }
+        ]
+      ]
+    })
+  }
 }
-
-export default new showdown.Converter({extensions: [markdownExtensions]})
