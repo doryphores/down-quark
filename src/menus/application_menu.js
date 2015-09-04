@@ -1,5 +1,6 @@
 import remote from "remote"
 import FileSystemActions from "../actions/file_system_actions"
+import ProjectActions from "../actions/project_actions"
 
 const Menu = remote.require("menu")
 
@@ -40,7 +41,7 @@ export default class ApplicationMenu {
             label: "Open folder...",
             accelerator: "CmdOrCtrl+O",
             click: () => {
-              FileSystemActions.openFolder()
+              ProjectActions.open()
             }
           },
           {

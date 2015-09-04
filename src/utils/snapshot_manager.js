@@ -10,12 +10,12 @@ const _cacheFile = path.join(remote.require("app").getPath("appData"),
 module.exports = {
   save: _.debounce(() => {
     fs.outputFile(_cacheFile, alt.takeSnapshot())
-  }),
+  }, 200),
 
-  restore: () => {
+  restore: (done) => {
     fs.readFile(_cacheFile, "utf-8", (err, snapshot) => {
-      if (err) return
-      alt.bootstrap(snapshot)
+      if (!err) alt.bootstrap(snapshot)
+      done()
     })
   }
 }

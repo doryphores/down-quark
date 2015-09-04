@@ -39,15 +39,21 @@ export default class Tree extends React.Component {
     })
   }
 
+  renderNodeList(rootNode) {
+    return (
+      <ul className="c-tree__node-list">
+        <TreeNode node={rootNode}/>
+      </ul>
+    )
+  }
+
   render() {
     if (this.props.tree.root == null) return null
 
     return (
       <div className={classNames(this.props.className, "c-tree")} style={this.state.treeStyles}>
         <div className="c-tree__scroller">
-          <ul className="c-tree__node-list">
-            <TreeNode node={this.props.tree.root}/>
-          </ul>
+          {this.renderNodeList(this.props.tree.root)}
         </div>
         <div className="c-tree__resize-handle"
              onMouseDown={this.startResize.bind(this)}/>

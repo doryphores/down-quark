@@ -2,6 +2,8 @@ import alt from "../alt"
 import _ from "underscore"
 import remote from "remote"
 import fs from "fs-extra"
+import ProjectStore from "./project_store"
+import ProjectActions from "../actions/project_actions"
 import FileSystemActions from "../actions/file_system_actions"
 import FileTree from "../utils/file_tree"
 import TreeActions from "../actions/tree_actions"
@@ -36,7 +38,7 @@ class TreeStore {
     this.state = { root: null }
 
     this.bindListeners({
-      setRoot      : FileSystemActions.OPEN_FOLDER,
+      setRoot      : [ProjectActions.OPEN, ProjectActions.RELOAD],
       expandNode   : TreeActions.EXPAND,
       collapseNode : TreeActions.COLLAPSE,
       selectNode   : TreeActions.SELECT,
@@ -46,7 +48,7 @@ class TreeStore {
 
     // When the store is bootstrapped, we need to reload the root node
     // from the restored root path
-    this.on("bootstrap", this.setRoot.bind(this))
+    this.on("bootstrap", this.listenForChanges.bind(this))
 
     this.exportPublicMethods({
       getRootPath: this.getRootPath.bind(this)
@@ -57,14 +59,27 @@ class TreeStore {
     return this.state.root && this.state.root.path
   }
 
-  setRoot(rootPath) {
-    if (rootPath) {
-      // Stop watching file system if a previous folder was open
-      if (this.state.root) this.state.root.unwatch()
+  setRoot() {
+    this.waitFor(ProjectStore)
+
+    let rootPath = ProjectStore.getState().contentPath
+
+    if (this.state.root && this.state.root.path == rootPath) return
+
+    if (this.state.root) {
+      // Clean up previous tree root
+      this.state.root.unwatch()
       delete this.state.root
-      this.state.root = new FileTree(rootPath)
     }
 
+    this.setState({
+      root: new FileTree(rootPath)
+    })
+
+    this.listenForChanges()
+  }
+
+  listenForChanges() {
     this.state.root.on("change", _.debounce(this.emitChange.bind(this), 100))
   }
 
@@ -80,11 +95,13 @@ class TreeStore {
     this.state.root.changeSelection(nodePath)
   }
 
+  // TODO: move to ProjectStore
   deleteNode(nodePath) {
     this.state.root.findNode(nodePath).unwatch()
     remote.require("shell").moveItemToTrash(nodePath)
   }
 
+  // TODO: move to ProjectStore
   moveNode({nodePath, newPath} = {}) {
     this.state.root.findNode(nodePath).unwatch()
     fs.move(nodePath, newPath, {})
