@@ -13,7 +13,7 @@ class Node extends EventEmitter {
     this.name = path.basename(p)
     this.expanded = false
     this.selected = false
-    this.version = Date.now().toString()
+    this.version = Date.now()
 
     if (fs.statSync(p).isDirectory()) {
       this.type = "dir"
@@ -29,11 +29,9 @@ class Node extends EventEmitter {
   }
 
   memo() {
-    if (this.memoObj && this.memoObj.version === this.version) {
-      return this.memoObj
-    }
+    if (this._memo && this._memo.version === this.version) return this._memo
 
-    this.memoObj = {
+    this._memo = {
       path     : this.path,
       name     : this.name,
       expanded : this.expanded,
@@ -43,10 +41,10 @@ class Node extends EventEmitter {
     }
 
     if (this.type == "dir") {
-      this.memoObj.children = this.children.map(n => n.memo())
+      this._memo.children = this.children.map(n => n.memo())
     }
 
-    return this.memoObj
+    return this._memo
   }
 
   emitChange() {
