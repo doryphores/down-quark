@@ -99,12 +99,14 @@ class TreeStore {
 
   // TODO: move to ProjectStore
   deleteNode(nodePath) {
+    // TODO: handle unwatching in file tree object
     this.state.root.findNode(nodePath).unwatch()
     remote.require("shell").moveItemToTrash(nodePath)
   }
 
   // TODO: move to ProjectStore
   moveNode({nodePath, newPath} = {}) {
+    // TODO: handle unwatching in file tree object
     this.state.root.findNode(nodePath).unwatch()
     fs.move(nodePath, newPath, {})
   }

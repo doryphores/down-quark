@@ -14,6 +14,8 @@ import TreeActions from "../actions/tree_actions"
 import PathWatcher from "pathwatcher"
 
 class FileBufferStore {
+  static displayName = "FileBufferStore"
+
   static config = {
     onSerialize: (data) => {
       // Ignore empty untitled buffers
@@ -276,4 +278,4 @@ class FileBufferStore {
   }
 }
 
-export default alt.createStore(FileBufferStore, "FileBufferStore")
+export default alt.createStore(FileBufferStore)

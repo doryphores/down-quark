@@ -77,13 +77,20 @@ class Node extends EventEmitter {
   }
 
   reload(recursive = true) {
+    // TODO: delete node if read dir fails
+
     // Read node list from file system
     let nodeList = _.difference(fs.readdirSync(this.path), IGNORED_FILES)
 
     // Update node list and sort
     this.children = _.union(
       _.reject(this.children, (node) => {
-        return nodeList.indexOf(node.name) === -1
+        if (nodeList.indexOf(node.name) == -1) {
+          // This node no longer exists so unwatch it
+          node.unwatch()
+          return true
+        }
+        return false
       }),
       _.difference(nodeList, _.pluck(this.children, "name")).map((p) => {
         return new Node(path.join(this.path, p), this)
@@ -109,9 +116,7 @@ class Node extends EventEmitter {
       if (event == "change") this.reload(false)
     })
 
-    this.children.forEach((node) => {
-      if (node.expanded) node.watch()
-    })
+    this.children.forEach(node => node.expanded && node.watch())
   }
 
   unwatch() {
