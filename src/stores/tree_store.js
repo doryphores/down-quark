@@ -9,6 +9,8 @@ import FileTree from "../utils/file_tree"
 import TreeActions from "../actions/tree_actions"
 
 class TreeStore {
+  static displayName = "TreeStore"
+
   static config = {
     onSerialize: (data) => {
       return {
@@ -84,11 +86,11 @@ class TreeStore {
   }
 
   expandNode(nodePath) {
-    this.state.root.findNode(nodePath).open()
+    this.state.root.expand(nodePath)
   }
 
   collapseNode(nodePath) {
-    this.state.root.findNode(nodePath).close()
+    this.state.root.collapse(nodePath)
   }
 
   selectNode(nodePath) {
@@ -108,4 +110,4 @@ class TreeStore {
   }
 }
 
-export default alt.createStore(TreeStore, "TreeStore")
+export default alt.createStore(TreeStore)

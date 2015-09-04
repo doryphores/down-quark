@@ -185,4 +185,12 @@ export default class RootNode extends Node {
     this._selectedNode = node
     return nodePath
   }
+
+  expand(nodePath) {
+    this.findNode(nodePath).open()
+  }
+
+  collapse(nodePath) {
+    this.findNode(nodePath).close()
+  }
 }
