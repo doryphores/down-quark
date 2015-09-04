@@ -58,7 +58,7 @@ export default class Tree extends React.Component {
 
 class TreeNode extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.node.version != this.props.node.version
+    return nextProps.node !== this.props.node
   }
 
   handleClick() {
