@@ -13,6 +13,15 @@ export default class Workspace extends React.Component {
     if (previewWidth) this.state.previewStyles.width = previewWidth
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    // TODO: can this be moved to store?
+    let prevActiveIndex = this.props.buffers.findIndex(b => b.get("active"))
+    let currentActiveIndex = prevProps.buffers.findIndex(b => b.get("active"))
+    if (prevActiveIndex != currentActiveIndex) {
+      React.findDOMNode(this.refs.previewPane).scrollTop = 0
+    }
+  }
+
   startResize() {
     let {left, width} = React.findDOMNode(this).getBoundingClientRect()
 
@@ -72,7 +81,8 @@ export default class Workspace extends React.Component {
             })}
           </div>
           <div className="c-preview-panel u-panel" style={this.state.previewStyles}>
-            <div className="c-preview-panel__content"
+            <div ref="previewPane"
+                 className="c-preview-panel__content"
                  dangerouslySetInnerHTML={{__html: FileBufferStore.getPreviewContent()}}/>
             <div className="c-preview-panel__resize-handle"
                  onMouseDown={this.startResize.bind(this)}/>
