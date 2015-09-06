@@ -10,12 +10,12 @@ export default class Editor extends React.Component {
       theme             : "material",
       lineWrapping      : true,
       showTrailingSpace : true,
-      value             : this.props.buffer.get("content")
+      value             : this.props.buffer.content
     })
 
     this.codeMirrorInstance.on("change", this.handleChange.bind(this))
 
-    if (this.props.buffer.get("active")) {
+    if (this.props.buffer.active) {
       this.codeMirrorInstance.focus()
       setTimeout(() => this.codeMirrorInstance.refresh(), 100)
     }
@@ -25,18 +25,22 @@ export default class Editor extends React.Component {
     this.codeMirrorInstance.off("change")
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.buffer !== this.props.buffer
+  }
+
   componentDidUpdate(prevProps, prevState) {
     // Update content if it's clean and content has changed on disk
-    if (this.props.buffer.get("clean") &&
-      this.props.buffer.get("content") !== this.codeMirrorInstance.getValue()) {
-      this.codeMirrorInstance.setValue(this.props.buffer.get("content"))
+    if (this.props.buffer.clean &&
+      this.props.buffer.content !== this.codeMirrorInstance.getValue()) {
+      this.codeMirrorInstance.setValue(this.props.buffer.content)
     }
 
-    if (this.props.buffer.get("active")) {
+    if (this.props.buffer.active) {
       this.codeMirrorInstance.focus()
 
       // Refresh editor if it has just gained focus
-      if (!prevProps.buffer.get("active")) {
+      if (!prevProps.buffer.active) {
         this.codeMirrorInstance.refresh()
       }
     }
@@ -44,7 +48,7 @@ export default class Editor extends React.Component {
 
   handleChange() {
     EditorActions.changeContent({
-      index   : this.props.bufferIndex,
+      id      : this.props.buffer.id,
       content : this.codeMirrorInstance.getValue()
     })
   }

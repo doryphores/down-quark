@@ -35,8 +35,7 @@ module.exports = {
         message: `'${name}' has changes, do you want to save them?`,
         detail: "Your changes will be lost if you close this item without saving."
       }, (buttonIndex) => {
-        if (buttonIndex == 1) reject()
-        else resolve(buttonIndex == 0)
+        if (buttonIndex != 1) resolve(buttonIndex == 0)
       })
     })
   },

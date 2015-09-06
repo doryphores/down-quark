@@ -16,8 +16,8 @@ class FileSystemActions {
   }
 
   close(index) {
-    let FileBufferStore = require("../stores/file_buffer_store")
-    let buffer = FileBufferStore.getBuffer(index)
+    let BufferStore = require("../stores/buffer_store")
+    let buffer = BufferStore.getBuffer(index)
 
     if (!buffer) return
 
@@ -39,12 +39,12 @@ class FileSystemActions {
   }
 
   save(index, closeOnSave = false) {
-    let FileBufferStore = require("../stores/file_buffer_store")
-    let buffer = FileBufferStore.getBuffer(index)
+    let BufferStore = require("../stores/buffer_store")
+    let buffer = BufferStore.getBuffer(index)
 
     if (buffer === undefined) return
 
-    if (buffer.path) {
+    if (buffer.filePath) {
       this.dispatch({
         index       : index,
         closeOnSave : closeOnSave

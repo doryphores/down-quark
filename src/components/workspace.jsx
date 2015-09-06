@@ -1,8 +1,9 @@
 import React from "react"
 import classNames from "classnames"
+import _ from "underscore"
 import TabBar from "./tab_bar"
 import Editor from "./editor"
-import FileBufferStore from "../stores/file_buffer_store"
+import BufferStore from "../stores/buffer_store"
 import LocalStorageManager from "../utils/local_storage_manager"
 
 export default class Workspace extends React.Component {
@@ -13,11 +14,20 @@ export default class Workspace extends React.Component {
     if (previewWidth) this.state.previewStyles.width = previewWidth
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.state.previewStyles != nextState.previewStyles) return true
+    if (nextProps.bufferStore.activeBufferIndex != this.props.bufferStore.activeBufferIndex) return true
+    if (nextProps.bufferStore.buffers.length != this.props.bufferStore.buffers.length) return true
+    return _.some(nextProps.bufferStore.buffers, (b, i) => {
+      return b !== this.props.bufferStore.buffers[i]
+    })
+  }
+
   componentDidUpdate(prevProps, prevState) {
-    // TODO: can this be moved to store?
-    let prevActiveIndex = this.props.buffers.findIndex(b => b.get("active"))
-    let currentActiveIndex = prevProps.buffers.findIndex(b => b.get("active"))
-    if (prevActiveIndex != currentActiveIndex) {
+    if (
+      this.props.bufferStore.activeBufferIndex > -1 &&
+      prevProps.bufferStore.activeBufferIndex != this.props.bufferStore.activeBufferIndex
+    ) {
       React.findDOMNode(this.refs.previewPane).scrollTop = 0
     }
   }
@@ -59,23 +69,23 @@ export default class Workspace extends React.Component {
 
   itemClasses(buffer) {
     return classNames("c-workspace__item", {
-      "c-workspace__item--active": buffer.get("active")
+      "c-workspace__item--active": buffer.active
     })
   }
 
   render() {
-    if (!this.props.buffers.size) return null
+    if (!this.props.bufferStore.buffers.length) return null
 
     return (
       <div className={this.componentClasses()}>
-        <TabBar className="u-panel" buffers={this.props.buffers}/>
+        <TabBar className="u-panel" buffers={this.props.bufferStore.buffers}/>
 
         <div className="u-panel u-panel--grow u-container u-container--horizontal">
           <div className="c-workspace__item-list u-panel u-panel--grow">
-            {this.props.buffers.map((buffer, index) => {
+            {this.props.bufferStore.buffers.map((buffer, index) => {
               return (
-                <div key={buffer.get("uid")} className={this.itemClasses(buffer)}>
-                  <Editor buffer={buffer} bufferIndex={index}/>
+                <div key={buffer.id} className={this.itemClasses(buffer)}>
+                  <Editor buffer={buffer}/>
                 </div>
               )
             })}
@@ -83,7 +93,7 @@ export default class Workspace extends React.Component {
           <div className="c-preview-panel u-panel" style={this.state.previewStyles}>
             <div ref="previewPane"
                  className="c-preview-panel__content"
-                 dangerouslySetInnerHTML={{__html: FileBufferStore.getPreviewContent()}}/>
+                 dangerouslySetInnerHTML={{__html: BufferStore.getPreviewContent()}}/>
             <div className="c-preview-panel__resize-handle"
                  onMouseDown={this.startResize.bind(this)}/>
           </div>
