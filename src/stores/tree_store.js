@@ -5,7 +5,7 @@ import fs from "fs-extra"
 import ProjectStore from "./project_store"
 import ProjectActions from "../actions/project_actions"
 import FileSystemActions from "../actions/file_system_actions"
-import FileTree from "../utils/file_tree"
+import RootNode from "../models/root_node"
 import TreeActions from "../actions/tree_actions"
 
 class TreeStore {
@@ -22,7 +22,7 @@ class TreeStore {
 
     onDeserialize: (data) => {
       return {
-        root: new FileTree(data.rootPath, {
+        root: new RootNode(data.rootPath, {
           expandedPaths: data.expandedPaths,
           selectedPath : data.selectedPath
         })
@@ -75,7 +75,7 @@ class TreeStore {
     }
 
     this.setState({
-      root: new FileTree(rootPath)
+      root: new RootNode(rootPath)
     })
 
     this.listenForChanges()
