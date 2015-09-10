@@ -5,34 +5,34 @@ export default class BufferActions {
     this.dispatch(filePath)
   }
 
-  save(index, closeOnSave = false) {
+  save(index) {
     let buffer = this.alt.getStore("BufferStore").getBuffer(index)
 
-    if (buffer === undefined) return
+    if (!buffer) return Promise.reject("Attempting to save a buffer that does not exist")
 
-    if (buffer.filePath) {
-      this.dispatch({
-        index       : index,
-        closeOnSave : closeOnSave
-      })
-    } else {
-      let rootPath = this.alt.getStore("ProjectStore").getState().contentPath
-
-      Dialogs.saveAs(rootPath).then((filename) => {
-        this.dispatch({
-          index       : index,
-          filePath    : filename,
-          closeOnSave : closeOnSave
+    return new Promise((resolve, reject) => {
+      if (buffer.filePath) {
+        this.dispatch({ index: index })
+        resolve()
+      } else {
+        this.alt.getActions("BufferActions").saveAs(index).then(() => {
+          resolve()
         })
-      })
-    }
+      }
+    })
   }
 
-  saveAs() {
-    let rootPath = this.alt.getStore("ProjectStore").getState().contentPath
+  saveAs(index) {
+    if (this.alt.getStore("BufferStore").getBuffer(index) === undefined) {
+      return Promise.reject("Attempting to save a buffer that does not exist")
+    }
 
-    Dialogs.saveAs(rootPath).then((filename) => {
-      this.dispatch({ filePath: filename })
+    let rootPath = this.alt.getStore("ProjectStore").getState().contentPath
+    return Dialogs.saveAs(rootPath).then((filename) => {
+      this.dispatch({
+        index    : index,
+        filePath : filename
+      })
     })
   }
 

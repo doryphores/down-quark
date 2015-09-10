@@ -5,7 +5,11 @@ export default class ProjectActions {
     this.dispatch()
   }
 
-  open(folderPath) {
-    Dialogs.selectFolder().then((folderPath) => this.dispatch(folderPath))
+  open() {
+    Dialogs.selectFolder().then((folderPath) => {
+      this.alt.getActions("TabActions").closeAll().then(() => {
+        this.dispatch(folderPath)
+      })
+    })
   }
 }

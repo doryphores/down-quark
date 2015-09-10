@@ -57,8 +57,7 @@ export default class BufferStore {
                             ],
       newBuffer           : TabActions.NEW,
       setActiveBuffer     : TabActions.SELECT,
-      updateBufferContent : BufferActions.CHANGE_CONTENT,
-      closeAll            : TabActions.CLOSE_ALL
+      updateBufferContent : BufferActions.CHANGE_CONTENT
     })
 
     this.exportPublicMethods({
@@ -117,12 +116,6 @@ export default class BufferStore {
     this.state.buffers.splice(index, 1)[0].cleanup()
   }
 
-  closeAll() {
-    for (let i = this.state.buffers.length - 1; i >= 0; i--) {
-      this.closeBuffer(i)
-    }
-  }
-
   setActiveBuffer(index) {
     if (index == this.state.activeBufferIndex) return
     if (this.state.activeBufferIndex > -1) {
@@ -138,8 +131,7 @@ export default class BufferStore {
     if (buffer) buffer.updateContent(content)
   }
 
-  saveBuffer({index, filePath, closeOnSave = false} = {}) {
+  saveBuffer({index, filePath} = {}) {
     this.getBuffer(index).save(filePath)
-    if (closeOnSave) this.closeBuffer(index)
   }
 }

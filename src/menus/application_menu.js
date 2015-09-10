@@ -74,7 +74,7 @@ export default class ApplicationMenu {
             label: "Close All",
             accelerator: "Shift+CmdOrCtrl+W",
             click: () => {
-              this.flux.getActions("BufferActions").closeAll()
+              this.flux.getActions("TabActions").closeAll()
             }
           }
         ]
