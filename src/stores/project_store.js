@@ -16,8 +16,7 @@ export default class ProjectStore {
     const ProjectActions = this.alt.getActions("ProjectActions")
 
     this.bindListeners({
-      setRoot    : ProjectActions.OPEN,
-      loadConfig : ProjectActions.RELOAD
+      setRoot: ProjectActions.OPEN
     })
   }
 

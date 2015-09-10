@@ -1,14 +1,12 @@
 import React from "react"
 import BaseComponent from "./base_component"
 import ApplicationMenu from "../menus/application_menu"
-import SnapshotManager from "../utils/snapshot_manager"
 import Tree from "./tree"
 import Workspace from "./workspace"
 
 export default class App extends BaseComponent {
   constructor(props, context) {
     super(props, context)
-    this.snapshotManager = SnapshotManager(this.context.flux)
     this.state = this.getStoreState()
   }
 
@@ -18,11 +16,6 @@ export default class App extends BaseComponent {
 
     // TODO: is this the right place to set the app menu?
     new ApplicationMenu(this.context.flux)
-    this.snapshotManager.restore(this.context.flux.getActions("ProjectActions").reload)
-  }
-
-  componentDidUpdate() {
-    this.snapshotManager.save()
   }
 
   getStoreState() {

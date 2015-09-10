@@ -45,10 +45,6 @@ export default class BufferStore {
     const TabActions = this.alt.getActions("TabActions")
 
     this.bindListeners({
-      setConverter        : [
-                              ProjectActions.OPEN,
-                              ProjectActions.RELOAD
-                            ],
       openBuffer          : BufferActions.OPEN,
       closeBuffer         : TabActions.CLOSE,
       saveBuffer          : [
@@ -64,11 +60,16 @@ export default class BufferStore {
       getBuffer         : this.getBuffer.bind(this),
       getPreviewContent : this.getPreviewContent.bind(this)
     })
+
+    this.setConverter()
+
+    this.alt.getStore("ProjectStore").listen(() => {
+      this.setConverter()
+    })
   }
 
   setConverter() {
     const ProjectStore = this.alt.getStore("ProjectStore")
-    this.waitFor(ProjectStore)
     this.converter = getShowdownConverter(ProjectStore.getState().mediaPath)
   }
 
