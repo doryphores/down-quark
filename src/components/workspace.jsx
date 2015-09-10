@@ -1,15 +1,12 @@
 import React from "react"
+import BaseComponent from "./base_component"
 import classNames from "classnames"
 import _ from "underscore"
 import TabBar from "./tab_bar"
 import Editor from "./editor"
 import LocalStorageManager from "../utils/local_storage_manager"
 
-export default class Workspace extends React.Component {
-  static contextTypes = {
-    flux : React.PropTypes.object
-  }
-
+export default class Workspace extends BaseComponent {
   constructor(props, context) {
     super(props, context)
     this.state = { previewStyles: {} }

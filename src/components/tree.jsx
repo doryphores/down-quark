@@ -1,13 +1,10 @@
 import React from "react"
+import BaseComponent from "./base_component"
 import classNames from "classnames"
 import TreeMenu from "../menus/tree_menu"
 import LocalStorageManager from "../utils/local_storage_manager"
 
-export default class Tree extends React.Component {
-  static contextTypes = {
-    flux : React.PropTypes.object
-  }
-
+export default class Tree extends BaseComponent {
   constructor(props, context) {
     super(props, context)
     this.state = { treeStyles: {} }
@@ -64,11 +61,7 @@ export default class Tree extends React.Component {
   }
 }
 
-class TreeNode extends React.Component {
-  static contextTypes = {
-    flux: React.PropTypes.object
-  }
-
+class TreeNode extends BaseComponent {
   shouldComponentUpdate(nextProps, nextState) {
     return nextProps.node !== this.props.node
   }

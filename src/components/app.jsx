@@ -1,14 +1,11 @@
 import React from "react"
+import BaseComponent from "./base_component"
 import ApplicationMenu from "../menus/application_menu"
 import SnapshotManager from "../utils/snapshot_manager"
 import Tree from "./tree"
 import Workspace from "./workspace"
 
-export default class App extends React.Component {
-  static contextTypes = {
-    flux : React.PropTypes.object
-  }
-
+export default class App extends BaseComponent {
   constructor(props, context) {
     super(props, context)
     this.snapshotManager = SnapshotManager(this.context.flux)

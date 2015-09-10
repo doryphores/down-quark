@@ -1,12 +1,9 @@
 import React from "react"
+import BaseComponent from "./base_component"
 import CodeMirror from "../utils/code_mirror_setup"
 import classNames from "classnames"
 
-export default class Editor extends React.Component {
-  static contextTypes = {
-    flux : React.PropTypes.object
-  }
-
+export default class Editor extends BaseComponent {
   componentDidMount() {
     this.codeMirrorInstance = CodeMirror(React.findDOMNode(this), {
       mode              : "frontmatter_markdown",

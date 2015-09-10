@@ -1,12 +1,9 @@
 import React from "react"
+import BaseComponent from "./base_component"
 import classNames from "classnames"
 import _ from "underscore"
 
-export default class TabBar extends React.Component {
-  static contextTypes = {
-    flux : React.PropTypes.object
-  }
-
+export default class TabBar extends BaseComponent {
   shouldComponentUpdate(nextProps, nextState) {
     if (nextProps.buffers.length != this.props.buffers.length) return true
     return _.some(nextProps.buffers, (b, i) => {
