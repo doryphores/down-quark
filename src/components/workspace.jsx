@@ -14,15 +14,6 @@ export default class Workspace extends BaseComponent {
     if (previewWidth) this.state.previewStyles.width = previewWidth
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if (this.state.previewStyles != nextState.previewStyles) return true
-    if (nextProps.bufferStore.activeBufferIndex != this.props.bufferStore.activeBufferIndex) return true
-    if (nextProps.bufferStore.buffers.length != this.props.bufferStore.buffers.length) return true
-    return _.some(nextProps.bufferStore.buffers, (b, i) => {
-      return b !== this.props.bufferStore.buffers[i]
-    })
-  }
-
   componentDidUpdate(prevProps, prevState) {
     if (
       this.props.bufferStore.activeBufferIndex > -1 &&
