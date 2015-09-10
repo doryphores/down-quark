@@ -35,9 +35,7 @@ export default class BufferStore {
     }
 
     this.on("bootstrap", () => {
-      this.state.buffers.forEach((buffer) => {
-        buffer.on("change", this.emitChange.bind(this))
-      })
+      this.state.buffers.forEach(this.listenToBuffer.bind(this))
     })
 
     const ProjectActions = this.alt.getActions("ProjectActions")
@@ -83,9 +81,17 @@ export default class BufferStore {
     return this.converter.makeHtml(this.getBuffer().content)
   }
 
+  listenToBuffer(buffer) {
+    buffer.on("change", this.emitChange.bind(this))
+    buffer.on("delete", () => {
+      let index = _.findIndex(this.state.buffers, b => b.id == buffer.id)
+      if (index > -1) this.closeBuffer(index)
+    })
+  }
+
   addBuffer(buffer) {
     this.setActiveBuffer(this.state.buffers.push(buffer) - 1)
-    buffer.on("change", this.emitChange.bind(this))
+    this.listenToBuffer(buffer)
   }
 
   newBuffer() {

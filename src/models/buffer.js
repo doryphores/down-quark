@@ -21,8 +21,7 @@ export default class Buffer extends EventEmitter {
 
     if (this.filePath) {
       this.name = path.basename(this.filePath)
-      this.read()
-      this.watch()
+      if (this.read()) this.watch()
     }
   }
 
@@ -32,12 +31,16 @@ export default class Buffer extends EventEmitter {
       if (this.clean) this.content = this.diskContent
     } else {
       this.diskContent = ""
-      this.filePath = ""
-      this.name = "untitled"
+      if (this.clean) {
+        this.clean = false
+        this.version++
+        return false
+      }
     }
 
     this.clean = this.content == this.diskContent
     this.version++
+    return true
   }
 
   save(p) {
@@ -73,8 +76,14 @@ export default class Buffer extends EventEmitter {
 
   watch() {
     this.watcher = PathWatcher.watch(this.filePath, (event) => {
-      this.read()
-      this.emit("change")
+      if (event == "delete") this.emit("delete")
+      else {
+        if (this.read()) {
+          this.emit("change")
+        } else {
+          this.emit("delete")
+        }
+      }
     })
   }
 

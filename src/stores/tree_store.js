@@ -111,6 +111,8 @@ export default class TreeStore {
   moveNode({nodePath, newPath} = {}) {
     // TODO: handle unwatching in file tree object
     this.state.root.findNode(nodePath).unwatch()
-    fs.move(nodePath, newPath, {})
+    fs.move(nodePath, newPath, (err) => {
+      if (err) console.log(err)
+    })
   }
 }
