@@ -1,35 +1,8 @@
-import remote from "remote"
 import Dialogs from "../utils/dialogs"
 
-export default class FileSystemActions {
+export default class BufferActions {
   open(filePath) {
     this.dispatch(filePath)
-  }
-
-  new() {
-    this.dispatch()
-  }
-
-  close(index) {
-    let buffer = this.alt.getStore("BufferStore").getBuffer(index)
-
-    if (!buffer) return
-
-    if (!buffer.clean) {
-      Dialogs.confirmClose(buffer.name).then((save) => {
-        if (save) {
-          this.actions.save(index, true)
-        } else {
-          this.dispatch(index)
-        }
-      })
-    } else {
-      this.dispatch(index)
-    }
-  }
-
-  closeAll() {
-    this.dispatch()
   }
 
   save(index, closeOnSave = false) {
@@ -63,14 +36,10 @@ export default class FileSystemActions {
     })
   }
 
-  delete(filePath) {
-    this.dispatch(filePath)
-  }
-
-  move(nodePath, newPath) {
+  changeContent({id, content} = {}) {
     this.dispatch({
-      nodePath : nodePath,
-      newPath  : newPath
+      id      : id,
+      content : content
     })
   }
 }

@@ -22,7 +22,7 @@ export default class TreeMenu {
         label: "Delete",
         click: () => {
           Dialogs.confirmDelete(this.node.path).then(() => {
-            this.flux.getActions("FileSystemActions").delete(this.node.path)
+            this.flux.getActions("TreeActions").delete(this.node.path)
           })
         }
       },
@@ -30,7 +30,7 @@ export default class TreeMenu {
         label: "Move",
         click: () => {
           Dialogs.saveAs(this.node.path, "Move").then((newPath) => {
-            this.flux.getActions("FileSystemActions").move(this.node.path, newPath)
+            this.flux.getActions("TreeActions").move(this.node.path, newPath)
           })
         }
       }

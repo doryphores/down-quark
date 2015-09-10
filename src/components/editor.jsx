@@ -50,7 +50,7 @@ export default class Editor extends React.Component {
   }
 
   handleChange() {
-    this.context.flux.getActions("EditorActions").changeContent({
+    this.context.flux.getActions("BufferActions").changeContent({
       id      : this.props.buffer.id,
       content : this.codeMirrorInstance.getValue()
     })

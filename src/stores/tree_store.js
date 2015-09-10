@@ -36,15 +36,17 @@ export default class TreeStore {
 
     const ProjectActions = this.alt.getActions("ProjectActions")
     const TreeActions = this.alt.getActions("TreeActions")
-    const FileSystemActions = this.alt.getActions("FileSystemActions")
 
     this.bindListeners({
-      setRoot      : [ProjectActions.OPEN, ProjectActions.RELOAD],
+      setRoot      : [
+                       ProjectActions.OPEN,
+                       ProjectActions.RELOAD
+                     ],
       expandNode   : TreeActions.EXPAND,
       collapseNode : TreeActions.COLLAPSE,
       selectNode   : TreeActions.SELECT,
-      deleteNode   : FileSystemActions.DELETE,
-      moveNode     : FileSystemActions.MOVE
+      deleteNode   : TreeActions.DELETE,
+      moveNode     : TreeActions.MOVE
     })
 
     // When the store is bootstrapped, we need to reload the root node

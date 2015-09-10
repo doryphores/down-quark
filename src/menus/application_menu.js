@@ -33,7 +33,7 @@ export default class ApplicationMenu {
             label: "New file",
             accelerator: "CmdOrCtrl+N",
             click: () => {
-              this.flux.getActions("FileSystemActions").new()
+              this.flux.getActions("TabActions").new()
             }
           },
           {
@@ -50,14 +50,14 @@ export default class ApplicationMenu {
             label: "Save",
             accelerator: "CmdOrCtrl+S",
             click: () => {
-              this.flux.getActions("FileSystemActions").save()
+              this.flux.getActions("BufferActions").save()
             }
           },
           {
             label: "Save As...",
             accelerator: "Shift+CmdOrCtrl+S",
             click: () => {
-              this.flux.getActions("FileSystemActions").saveAs()
+              this.flux.getActions("BufferActions").saveAs()
             }
           },
           {
@@ -67,14 +67,14 @@ export default class ApplicationMenu {
             label: "Close Tab",
             accelerator: "CmdOrCtrl+W",
             click: () => {
-              this.flux.getActions("FileSystemActions").close()
+              this.flux.getActions("TabActions").close()
             }
           },
           {
             label: "Close All",
             accelerator: "Shift+CmdOrCtrl+W",
             click: () => {
-              this.flux.getActions("FileSystemActions").closeAll()
+              this.flux.getActions("BufferActions").closeAll()
             }
           }
         ]

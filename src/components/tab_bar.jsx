@@ -23,9 +23,9 @@ export default class TabBar extends React.Component {
 
   handleClick(index, event) {
     if (event.target.classList.contains("js-close")) {
-      this.context.flux.getActions("FileSystemActions").close(index)
+      this.context.flux.getActions("TabActions").close(index)
     } else {
-      this.context.flux.getActions("TabActions").selectTab(index)
+      this.context.flux.getActions("TabActions").select(index)
     }
   }
 

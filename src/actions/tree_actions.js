@@ -10,4 +10,15 @@ export default class TreeActions {
   collapse(node) {
     this.dispatch(node)
   }
+
+  delete(filePath) {
+    this.dispatch(filePath)
+  }
+
+  move(nodePath, newPath) {
+    this.dispatch({
+      nodePath : nodePath,
+      newPath  : newPath
+    })
+  }
 }
