@@ -1,15 +1,8 @@
-import alt from "../alt"
 import _ from "underscore"
 import Buffer from "../models/buffer"
 import {getShowdownConverter} from "../utils/markdown_converter"
-import ProjectStore from "./project_store"
-import ProjectActions from "../actions/project_actions"
-import FileSystemActions from "../actions/file_system_actions"
-import EditorActions from "../actions/editor_actions"
-import TabActions from "../actions/tab_actions"
-import TreeActions from "../actions/tree_actions"
 
-class BufferStore {
+export default class BufferStore {
   static displayName = "BufferStore"
 
   static config = {
@@ -47,6 +40,12 @@ class BufferStore {
       })
     })
 
+    const ProjectActions = this.alt.getActions("ProjectActions")
+    const FileSystemActions = this.alt.getActions("FileSystemActions")
+    const EditorActions = this.alt.getActions("EditorActions")
+    const TabActions = this.alt.getActions("TabActions")
+    const TreeActions = this.alt.getActions("TreeActions")
+
     this.bindListeners({
       setConverter    : [ProjectActions.OPEN, ProjectActions.RELOAD],
       openBuffer      : FileSystemActions.OPEN,
@@ -71,6 +70,7 @@ class BufferStore {
   }
 
   setConverter() {
+    const ProjectStore = this.alt.getStore("ProjectStore")
     this.waitFor(ProjectStore)
     this.converter = getShowdownConverter(ProjectStore.getState().mediaPath)
   }
@@ -145,5 +145,3 @@ class BufferStore {
     if (closeOnSave) this.closeBuffer(index)
   }
 }
-
-export default alt.createStore(BufferStore)

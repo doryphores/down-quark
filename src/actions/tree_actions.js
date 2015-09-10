@@ -1,6 +1,4 @@
-import alt from "../alt"
-
-class TreeActions {
+export default class TreeActions {
   select(nodePath) {
     this.dispatch(nodePath)
   }
@@ -13,5 +11,3 @@ class TreeActions {
     this.dispatch(node)
   }
 }
-
-export default alt.createActions(TreeActions)

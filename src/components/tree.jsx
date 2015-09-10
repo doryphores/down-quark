@@ -1,13 +1,15 @@
 import React from "react"
 import classNames from "classnames"
-import TreeActions from "../actions/tree_actions"
-import FileSystemActions from "../actions/file_system_actions"
 import TreeMenu from "../menus/tree_menu"
 import LocalStorageManager from "../utils/local_storage_manager"
 
 export default class Tree extends React.Component {
-  constructor(props) {
-    super(props)
+  static contextTypes = {
+    flux : React.PropTypes.object
+  }
+
+  constructor(props, context) {
+    super(props, context)
     this.state = { treeStyles: {} }
     let treeWidth = LocalStorageManager.get("treeWidth")
     if (treeWidth) this.state.treeStyles.width = treeWidth
@@ -63,6 +65,10 @@ export default class Tree extends React.Component {
 }
 
 class TreeNode extends React.Component {
+  static contextTypes = {
+    flux: React.PropTypes.object
+  }
+
   shouldComponentUpdate(nextProps, nextState) {
     return nextProps.node !== this.props.node
   }
@@ -70,19 +76,19 @@ class TreeNode extends React.Component {
   handleClick() {
     if (this.props.node.type == "dir") {
       let action = this.props.node.expanded ? "collapse" : "expand"
-      TreeActions[action](this.props.node.path)
+      this.context.flux.getActions("TreeActions")[action](this.props.node.path)
     }
-    TreeActions.select(this.props.node.path)
+    this.context.flux.getActions("TreeActions").select(this.props.node.path)
   }
 
   handleDoubleClick() {
     if (this.props.node.type == "dir") return
-    FileSystemActions.open(this.props.node.path)
+    this.context.flux.getActions("FileSystemActions").open(this.props.node.path)
   }
 
   handleContextMenu() {
-    TreeActions.select(this.props.node.path)
-    let menu = new TreeMenu(this.props.node)
+    this.context.flux.getActions("TreeActions").select(this.props.node.path)
+    let menu = new TreeMenu(this.context.flux, this.props.node)
     menu.show()
   }
 

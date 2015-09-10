@@ -1,42 +1,50 @@
 import React from "react"
 import ApplicationMenu from "../menus/application_menu"
 import SnapshotManager from "../utils/snapshot_manager"
-import connectToStores from "alt/utils/connectToStores"
-import TreeStore from "../stores/tree_store"
-import BufferStore from "../stores/buffer_store"
-import ProjectActions from "../actions/project_actions"
 import Tree from "./tree"
 import Workspace from "./workspace"
 
-@connectToStores
 export default class App extends React.Component {
-  static getStores() {
-    return [TreeStore, BufferStore]
+  static contextTypes = {
+    flux : React.PropTypes.object
   }
 
-  static getPropsFromStores() {
-    return {
-      tree   : TreeStore.getState(),
-      bufferStore : BufferStore.getState()
-    }
+  constructor(props, context) {
+    super(props, context)
+    this.snapshotManager = SnapshotManager(this.context.flux)
+    this.state = this.getStoreState()
   }
 
   componentDidMount() {
+    this.context.flux.getStore("TreeStore").listen(this.handleChange.bind(this))
+    this.context.flux.getStore("BufferStore").listen(this.handleChange.bind(this))
+
     // TODO: is this the right place to set the app menu?
-    new ApplicationMenu()
-    SnapshotManager.restore(ProjectActions.reload)
+    new ApplicationMenu(this.context.flux)
+    this.snapshotManager.restore(this.context.flux.getActions("ProjectActions").reload)
   }
 
   componentDidUpdate() {
-    SnapshotManager.save()
+    this.snapshotManager.save()
+  }
+
+  getStoreState() {
+    return {
+      tree        : this.context.flux.getStore("TreeStore").getState(),
+      bufferStore : this.context.flux.getStore("BufferStore").getState()
+    }
+  }
+
+  handleChange() {
+    this.setState(this.getStoreState())
   }
 
   render() {
     return (
       <div className="u-container u-container--horizontal">
-        <Tree className="u-panel" tree={this.props.tree}/>
+        <Tree className="u-panel" tree={this.state.tree}/>
         <Workspace className="u-panel u-panel--grow"
-                   bufferStore={this.props.bufferStore}/>
+                   bufferStore={this.state.bufferStore}/>
       </div>
     )
   }

@@ -1,9 +1,5 @@
-import alt from "../alt"
-
-class EditorActions {
+export default class EditorActions {
   changeContent(data) {
     this.dispatch(data)
   }
 }
-
-export default alt.createActions(EditorActions)

@@ -1,11 +1,10 @@
 import remote from "remote"
-import FileSystemActions from "../actions/file_system_actions"
-import ProjectActions from "../actions/project_actions"
 
 const Menu = remote.require("menu")
 
 export default class ApplicationMenu {
-  constructor() {
+  constructor(flux) {
+    this.flux = flux
     Menu.setApplicationMenu(Menu.buildFromTemplate(this.template()))
   }
 
@@ -34,14 +33,14 @@ export default class ApplicationMenu {
             label: "New file",
             accelerator: "CmdOrCtrl+N",
             click: () => {
-              FileSystemActions.new()
+              this.flux.getActions("FileSystemActions").new()
             }
           },
           {
             label: "Open folder...",
             accelerator: "CmdOrCtrl+O",
             click: () => {
-              ProjectActions.open()
+              this.flux.getActions("ProjectActions").open()
             }
           },
           {
@@ -51,14 +50,14 @@ export default class ApplicationMenu {
             label: "Save",
             accelerator: "CmdOrCtrl+S",
             click: () => {
-              FileSystemActions.save()
+              this.flux.getActions("FileSystemActions").save()
             }
           },
           {
             label: "Save As...",
             accelerator: "Shift+CmdOrCtrl+S",
             click: () => {
-              FileSystemActions.saveAs()
+              this.flux.getActions("FileSystemActions").saveAs()
             }
           },
           {
@@ -68,14 +67,14 @@ export default class ApplicationMenu {
             label: "Close Tab",
             accelerator: "CmdOrCtrl+W",
             click: () => {
-              FileSystemActions.close()
+              this.flux.getActions("FileSystemActions").close()
             }
           },
           {
             label: "Close All",
             accelerator: "Shift+CmdOrCtrl+W",
             click: () => {
-              FileSystemActions.closeAll()
+              this.flux.getActions("FileSystemActions").closeAll()
             }
           }
         ]

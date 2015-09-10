@@ -1,14 +1,9 @@
-import alt from "../alt"
 import _ from "underscore"
 import remote from "remote"
 import fs from "fs-extra"
-import ProjectStore from "./project_store"
-import ProjectActions from "../actions/project_actions"
-import FileSystemActions from "../actions/file_system_actions"
 import RootNode from "../models/root_node"
-import TreeActions from "../actions/tree_actions"
 
-class TreeStore {
+export default class TreeStore {
   static displayName = "TreeStore"
 
   static config = {
@@ -39,6 +34,10 @@ class TreeStore {
   constructor() {
     this.state = { root: null }
 
+    const ProjectActions = this.alt.getActions("ProjectActions")
+    const TreeActions = this.alt.getActions("TreeActions")
+    const FileSystemActions = this.alt.getActions("FileSystemActions")
+
     this.bindListeners({
       setRoot      : [ProjectActions.OPEN, ProjectActions.RELOAD],
       expandNode   : TreeActions.EXPAND,
@@ -62,6 +61,8 @@ class TreeStore {
   }
 
   setRoot() {
+    const ProjectStore = this.alt.getStore("ProjectStore")
+
     this.waitFor(ProjectStore)
 
     let rootPath = ProjectStore.getState().contentPath
@@ -111,5 +112,3 @@ class TreeStore {
     fs.move(nodePath, newPath, {})
   }
 }
-
-export default alt.createStore(TreeStore)

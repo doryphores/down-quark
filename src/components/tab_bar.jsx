@@ -1,10 +1,12 @@
 import React from "react"
 import classNames from "classnames"
 import _ from "underscore"
-import TabActions from "../actions/tab_actions"
-import FileSystemActions from "../actions/file_system_actions"
 
 export default class TabBar extends React.Component {
+  static contextTypes = {
+    flux : React.PropTypes.object
+  }
+
   shouldComponentUpdate(nextProps, nextState) {
     if (nextProps.buffers.length != this.props.buffers.length) return true
     return _.some(nextProps.buffers, (b, i) => {
@@ -21,9 +23,9 @@ export default class TabBar extends React.Component {
 
   handleClick(index, event) {
     if (event.target.classList.contains("js-close")) {
-      FileSystemActions.close(index)
+      this.context.flux.getActions("FileSystemActions").close(index)
     } else {
-      TabActions.selectTab(index)
+      this.context.flux.getActions("TabActions").selectTab(index)
     }
   }
 

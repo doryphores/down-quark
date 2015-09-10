@@ -1,21 +1,22 @@
 import _ from "underscore"
 import remote from "remote"
-import alt from "../alt"
 import fs from "fs-extra"
 import path from "path"
 
 const _cacheFile = path.join(remote.require("app").getPath("appData"),
   "DownQuark", "snapshot.json")
 
-module.exports = {
-  save: _.debounce(() => {
-    fs.outputFile(_cacheFile, alt.takeSnapshot())
-  }, 200),
+export default function SnapshotManager(flux) {
+  return {
+    save: _.debounce(() => {
+      fs.outputFile(_cacheFile, flux.takeSnapshot())
+    }, 200),
 
-  restore: (done) => {
-    fs.readFile(_cacheFile, "utf-8", (err, snapshot) => {
-      if (!err) alt.bootstrap(snapshot)
-      done()
-    })
+    restore: (done) => {
+      fs.readFile(_cacheFile, "utf-8", (err, snapshot) => {
+        if (!err) flux.bootstrap(snapshot)
+        done()
+      })
+    }
   }
 }

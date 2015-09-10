@@ -3,12 +3,15 @@ import classNames from "classnames"
 import _ from "underscore"
 import TabBar from "./tab_bar"
 import Editor from "./editor"
-import BufferStore from "../stores/buffer_store"
 import LocalStorageManager from "../utils/local_storage_manager"
 
 export default class Workspace extends React.Component {
-  constructor(props) {
-    super(props)
+  static contextTypes = {
+    flux : React.PropTypes.object
+  }
+
+  constructor(props, context) {
+    super(props, context)
     this.state = { previewStyles: {} }
     let previewWidth = LocalStorageManager.get("previewWidth")
     if (previewWidth) this.state.previewStyles.width = previewWidth
@@ -73,6 +76,10 @@ export default class Workspace extends React.Component {
     })
   }
 
+  previewContent() {
+    return this.context.flux.getStore("BufferStore").getPreviewContent()
+  }
+
   render() {
     if (!this.props.bufferStore.buffers.length) return null
 
@@ -93,7 +100,7 @@ export default class Workspace extends React.Component {
           <div className="c-preview-panel u-panel" style={this.state.previewStyles}>
             <div ref="previewPane"
                  className="c-preview-panel__content"
-                 dangerouslySetInnerHTML={{__html: BufferStore.getPreviewContent()}}/>
+                 dangerouslySetInnerHTML={{__html: this.previewContent()}}/>
             <div className="c-preview-panel__resize-handle"
                  onMouseDown={this.startResize.bind(this)}/>
           </div>

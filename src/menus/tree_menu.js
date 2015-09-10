@@ -1,11 +1,11 @@
 import remote from "remote"
-import FileSystemActions from "../actions/file_system_actions"
 import Dialogs from "../utils/dialogs"
 
 var Menu   = remote.require("menu")
 
 export default class TreeMenu {
-  constructor(node) {
+  constructor(flux, node) {
+    this.flux = flux
     this.node = node
     this.menu = Menu.buildFromTemplate(this.template())
   }
@@ -22,7 +22,7 @@ export default class TreeMenu {
         label: "Delete",
         click: () => {
           Dialogs.confirmDelete(this.node.path).then(() => {
-            FileSystemActions.delete(this.node.path)
+            this.flux.getActions("FileSystemActions").delete(this.node.path)
           })
         }
       },
@@ -30,7 +30,7 @@ export default class TreeMenu {
         label: "Move",
         click: () => {
           Dialogs.saveAs(this.node.path, "Move").then((newPath) => {
-            FileSystemActions.move(this.node.path, newPath)
+            this.flux.getActions("FileSystemActions").move(this.node.path, newPath)
           })
         }
       }

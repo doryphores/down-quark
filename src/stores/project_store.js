@@ -1,10 +1,8 @@
-import alt from "../alt"
 import fs from "fs-extra"
 import path from "path"
 import _ from "underscore"
-import ProjectActions from "../actions/project_actions"
 
-class ProjectStore {
+export default class ProjectStore {
   static displayName = "ProjectStore"
 
   constructor() {
@@ -14,6 +12,8 @@ class ProjectStore {
       mediaPath: "",
       shortcuts: {}
     }
+
+    const ProjectActions = this.alt.getActions("ProjectActions")
 
     this.bindListeners({
       setRoot    : ProjectActions.OPEN,
@@ -42,5 +42,3 @@ class ProjectStore {
     }
   }
 }
-
-export default alt.createStore(ProjectStore)

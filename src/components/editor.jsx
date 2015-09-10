@@ -1,9 +1,12 @@
 import React from "react"
 import CodeMirror from "../utils/code_mirror_setup"
 import classNames from "classnames"
-import EditorActions from "../actions/editor_actions"
 
 export default class Editor extends React.Component {
+  static contextTypes = {
+    flux : React.PropTypes.object
+  }
+
   componentDidMount() {
     this.codeMirrorInstance = CodeMirror(React.findDOMNode(this), {
       mode              : "frontmatter_markdown",
@@ -47,7 +50,7 @@ export default class Editor extends React.Component {
   }
 
   handleChange() {
-    EditorActions.changeContent({
+    this.context.flux.getActions("EditorActions").changeContent({
       id      : this.props.buffer.id,
       content : this.codeMirrorInstance.getValue()
     })

@@ -1,8 +1,7 @@
-import alt from "../alt"
 import remote from "remote"
 import Dialogs from "../utils/dialogs"
 
-class FileSystemActions {
+export default class FileSystemActions {
   openFolder(folderPath) {
     Dialogs.selectFolder().then((folderPath) => this.dispatch(folderPath))
   }
@@ -16,8 +15,7 @@ class FileSystemActions {
   }
 
   close(index) {
-    let BufferStore = require("../stores/buffer_store")
-    let buffer = BufferStore.getBuffer(index)
+    let buffer = this.alt.getStore("BufferStore").getBuffer(index)
 
     if (!buffer) return
 
@@ -39,8 +37,7 @@ class FileSystemActions {
   }
 
   save(index, closeOnSave = false) {
-    let BufferStore = require("../stores/buffer_store")
-    let buffer = BufferStore.getBuffer(index)
+    let buffer = this.alt.getStore("BufferStore").getBuffer(index)
 
     if (buffer === undefined) return
 
@@ -50,9 +47,9 @@ class FileSystemActions {
         closeOnSave : closeOnSave
       })
     } else {
-      let TreeStore = require("../stores/tree_store")
+      let rootPath = this.alt.getStore("ProjectStore").getState().contentPath
 
-      Dialogs.saveAs(TreeStore.getRootPath()).then((filename) => {
+      Dialogs.saveAs(rootPath).then((filename) => {
         this.dispatch({
           index       : index,
           filePath    : filename,
@@ -63,9 +60,9 @@ class FileSystemActions {
   }
 
   saveAs() {
-    let TreeStore = require("../stores/tree_store")
+    let rootPath = this.alt.getStore("ProjectStore").getState().contentPath
 
-    Dialogs.saveAs(TreeStore.getRootPath()).then((filename) => {
+    Dialogs.saveAs(rootPath).then((filename) => {
       this.dispatch({ filePath: filename })
     })
   }
@@ -81,5 +78,3 @@ class FileSystemActions {
     })
   }
 }
-
-export default alt.createActions(FileSystemActions)
