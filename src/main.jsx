@@ -1,6 +1,6 @@
 import initWindow from "./utils/window"
 import React from "react"
-import Flux from "./alt"
+import Flux from "./flux"
 import withAltContext from "alt/utils/withAltContext"
 import App from "./components/app"
 
