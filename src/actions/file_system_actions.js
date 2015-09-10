@@ -2,10 +2,6 @@ import remote from "remote"
 import Dialogs from "../utils/dialogs"
 
 export default class FileSystemActions {
-  openFolder(folderPath) {
-    Dialogs.selectFolder().then((folderPath) => this.dispatch(folderPath))
-  }
-
   open(filePath) {
     this.dispatch(filePath)
   }

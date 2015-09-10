@@ -10,7 +10,6 @@ module.exports = {
         properties: ["openDirectory"]
       }, (filenames) => {
         if (filenames) resolve(filenames[0])
-        else reject()
       })
     })
   },
@@ -22,7 +21,6 @@ module.exports = {
         defaultPath : defaultPath
       }, filename => {
         if (filename) resolve(filename)
-        else reject()
       })
     })
   },

@@ -47,20 +47,20 @@ export default class BufferStore {
     const TreeActions = this.alt.getActions("TreeActions")
 
     this.bindListeners({
-      setConverter    : [ProjectActions.OPEN, ProjectActions.RELOAD],
-      openBuffer      : FileSystemActions.OPEN,
-      closeBuffer     : FileSystemActions.CLOSE,
-      saveBuffer      : [
-        FileSystemActions.SAVE,
-        FileSystemActions.SAVE_AS
-      ],
-      newBuffer       : FileSystemActions.NEW,
-      setActiveBuffer : TabActions.SELECT_TAB,
+      setConverter        : [
+                              ProjectActions.OPEN,
+                              ProjectActions.RELOAD
+                            ],
+      openBuffer          : FileSystemActions.OPEN,
+      closeBuffer         : FileSystemActions.CLOSE,
+      saveBuffer          : [
+                              FileSystemActions.SAVE,
+                              FileSystemActions.SAVE_AS
+                            ],
+      newBuffer           : FileSystemActions.NEW,
+      setActiveBuffer     : TabActions.SELECT_TAB,
       updateBufferContent : EditorActions.CHANGE_CONTENT,
-      closeAll        : [
-        FileSystemActions.OPEN_FOLDER,
-        FileSystemActions.CLOSE_ALL
-      ]
+      closeAll            : FileSystemActions.CLOSE_ALL
     })
 
     this.exportPublicMethods({
