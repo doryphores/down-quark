@@ -1,3 +1,5 @@
+import Dialogs from "../utils/dialogs"
+
 export default class TreeActions {
   select(nodePath) {
     this.dispatch(nodePath)
@@ -11,14 +13,18 @@ export default class TreeActions {
     this.dispatch(node)
   }
 
-  delete(filePath) {
-    this.dispatch(filePath)
+  delete(nodePath) {
+    Dialogs.confirmDelete(nodePath).then(() => {
+      this.dispatch(nodePath)
+    })
   }
 
-  move(nodePath, newPath) {
-    this.dispatch({
-      nodePath : nodePath,
-      newPath  : newPath
+  move(nodePath) {
+    Dialogs.saveAs(nodePath, "Move").then((newPath) => {
+      this.dispatch({
+        nodePath : nodePath,
+        newPath  : newPath
+      })
     })
   }
 }
