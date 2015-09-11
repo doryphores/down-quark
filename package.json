@@ -18,7 +18,7 @@
     "type": "git",
     "url": "https://github.com/doryphores/down-quark"
   },
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "electron-packager": "^5.1.0",
     "electron-prebuilt": "0.30.6",
