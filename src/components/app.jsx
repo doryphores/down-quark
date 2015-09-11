@@ -3,6 +3,8 @@ import BaseComponent from "./base_component"
 import ApplicationMenu from "../menus/application_menu"
 import Tree from "./tree"
 import Workspace from "./workspace"
+import remote from "remote"
+import path from "path"
 
 export default class App extends BaseComponent {
   constructor(props, context) {
@@ -16,6 +18,7 @@ export default class App extends BaseComponent {
 
     // TODO: is this the right place to set the app menu?
     new ApplicationMenu(this.context.flux)
+    this.updateTitle()
   }
 
   getStoreState() {
@@ -27,6 +30,24 @@ export default class App extends BaseComponent {
 
   handleChange() {
     this.setState(this.getStoreState())
+    this.updateTitle()
+  }
+
+  updateTitle() {
+    const win = remote.getCurrentWindow()
+    const activeBuffer = this.context.flux.getStore("BufferStore").getBuffer()
+    let title = "Down Quark"
+
+    if (activeBuffer) {
+      if (activeBuffer.filePath) {
+        win.setRepresentedFilename(activeBuffer.filePath)
+        title = `${activeBuffer.name} - ${path.dirname(activeBuffer.filePath)} - ${title}`
+      } else {
+        title = `${activeBuffer.name} - ${title}`
+      }
+    }
+
+    win.setTitle(title)
   }
 
   render() {
