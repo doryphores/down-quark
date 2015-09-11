@@ -2,6 +2,8 @@ import React from "react"
 import BaseComponent from "./base_component"
 import CodeMirror from "../utils/code_mirror_setup"
 import classNames from "classnames"
+import EditorMenu from "../menus/editor_menu"
+import EditorCommands from "../utils/editor_commands"
 
 export default class Editor extends BaseComponent {
   componentDidMount() {
@@ -16,6 +18,7 @@ export default class Editor extends BaseComponent {
     this.codeMirrorInstance.on("change", this.handleChange.bind(this))
 
     if (this.props.buffer.active) {
+      EditorCommands.bind(this.codeMirrorInstance)
       this.codeMirrorInstance.focus()
       setTimeout(() => this.codeMirrorInstance.refresh(), 100)
     }
@@ -23,6 +26,7 @@ export default class Editor extends BaseComponent {
 
   componentWillUnmount() {
     this.codeMirrorInstance.off("change")
+    EditorCommands.unbind(this.codeMirrorInstance)
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -39,10 +43,15 @@ export default class Editor extends BaseComponent {
     if (this.props.buffer.active) {
       this.codeMirrorInstance.focus()
 
-      // Refresh editor if it has just gained focus
       if (!prevProps.buffer.active) {
+        EditorCommands.bind(this.codeMirrorInstance)
+        // Refresh editor if it has just gained focus
         this.codeMirrorInstance.refresh()
       }
+    }
+
+    if (!this.props.buffer.active && prevProps.buffer.active) {
+      EditorCommands.unbind(this.codeMirrorInstance)
     }
   }
 
@@ -53,7 +62,12 @@ export default class Editor extends BaseComponent {
     })
   }
 
+  showMenu() {
+    if (!this.menu) this.menu = new EditorMenu()
+    this.menu.show()
+  }
+
   render() {
-    return <div className="c-editor"/>
+    return <div className="c-editor" onContextMenu={this.showMenu.bind(this)}/>
   }
 }

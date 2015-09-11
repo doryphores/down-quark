@@ -1,11 +1,13 @@
 import remote from "remote"
+import EditorCommands from "../utils/editor_commands"
 
 const Menu = remote.require("menu")
 
 export default class ApplicationMenu {
   constructor(flux) {
     this.flux = flux
-    Menu.setApplicationMenu(Menu.buildFromTemplate(this.template()))
+    this.menu = Menu.buildFromTemplate(this.template())
+    Menu.setApplicationMenu(this.menu)
   }
 
   template() {
@@ -80,6 +82,56 @@ export default class ApplicationMenu {
         ]
       },
       {
+        label: "Edit",
+        submenu: [
+          {
+            label: "Undo",
+            accelerator: "CmdOrCtrl+Z",
+            click: () => {
+              EditorCommands.send("undo")
+            }
+          },
+          {
+            label: "Redo",
+            accelerator: "CmdOrCtrl+Shift+Z",
+            click: () => {
+              EditorCommands.send("redo")
+            }
+          },
+          {
+            type: "separator"
+          },
+          {
+            label: "Cut",
+            accelerator: "CmdOrCtrl+X",
+            click: () => {
+              EditorCommands.send("cut")
+            }
+          },
+          {
+            label: "Copy",
+            accelerator: "CmdOrCtrl+C",
+            click: () => {
+              EditorCommands.send("copy")
+            }
+          },
+          {
+            label: "Paste",
+            accelerator: "CmdOrCtrl+V",
+            click: () => {
+              EditorCommands.send("paste")
+            }
+          },
+          {
+            label: "Select all",
+            accelerator: "CmdOrCtrl+A",
+            click: () => {
+              EditorCommands.send("selectAll")
+            }
+          }
+        ]
+      },
+      {
         label: "View",
         submenu: [
           {
@@ -91,7 +143,7 @@ export default class ApplicationMenu {
           },
           {
             label: "Toggle DevTools",
-            accelerator: "Alt+CmdOrCtrl+I",
+            accelerator: process.platform == "darwin" ? "Alt+Command+I" : "Ctrl+Shift+I",
             click: () => {
               remote.getCurrentWindow().toggleDevTools()
             }
