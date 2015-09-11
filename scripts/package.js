@@ -5,16 +5,19 @@ var os = require("os")
 
 var projectDir = path.resolve(path.join(__dirname, ".."))
 
+var icon = os.platform() == "darwin" ? "icon.icns" : "icon.png"
+
 packager({
   dir: projectDir,
   out: path.join(projectDir, "dist"),
+  name: "Down Quark",
   appVersion: pkgjson.version,
-  name: pkgjson.name,
+  icon: path.join(projectDir, "static", "images", icon),
   platform: os.platform(),
   arch: os.arch(),
   version: pkgjson.devDependencies["electron-prebuilt"],
   ignore: [
-    "^/(docs|dist|src|stylus)($|/)",
+    "^/(docs|dist|src|stylus|psd)($|/)",
     "^/node_modules/\.bin($|/)",
     "/node_modules/.*/(docs|test)($|/)"
   ],

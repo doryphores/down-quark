@@ -21,7 +21,8 @@ app.on("ready", function() {
     width: 800,
     height: 600,
     show: false,
-    "auto-hide-menu-bar": true
+    "auto-hide-menu-bar": true,
+    icon: __dirname + "/static/images/icon.png"
   });
 
   // and load the index.html of the app.
