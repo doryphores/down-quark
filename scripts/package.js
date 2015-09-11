@@ -10,7 +10,7 @@ var icon = os.platform() == "darwin" ? "icon.icns" : "icon.png"
 packager({
   dir: projectDir,
   out: path.join(projectDir, "dist"),
-  name: "Down Quark",
+  name: pkgjson.productName,
   appVersion: pkgjson.version,
   icon: path.join(projectDir, "static", "images", icon),
   platform: os.platform(),

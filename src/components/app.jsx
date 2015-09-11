@@ -36,7 +36,7 @@ export default class App extends BaseComponent {
   updateTitle() {
     const win = remote.getCurrentWindow()
     const activeBuffer = this.context.flux.getStore("BufferStore").getBuffer()
-    let title = "Down Quark"
+    let title = remote.require("app").getName()
 
     if (activeBuffer) {
       if (activeBuffer.filePath) {

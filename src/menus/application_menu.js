@@ -11,21 +11,7 @@ export default class ApplicationMenu {
   }
 
   template() {
-    return [
-      {
-        label: "Down Quark",
-        submenu: [
-          {
-            label: "About Down Quark",
-            selector: "orderFrontStandardAboutPanel:"
-          },
-          {
-            label: "Quit",
-            accelerator: "CmdOrCtrl+Q",
-            click: () => remote.getCurrentWindow().close()
-          }
-        ]
-      },
+    let template = [
       {
         label: "File",
         submenu: [
@@ -136,5 +122,29 @@ export default class ApplicationMenu {
         ]
       }
     ]
+
+    if (process.platform == "darwin") {
+      let appName = remote.require("app").getName()
+
+      template.unshift({
+        label: appName,
+        submenu: [
+          {
+            label: "About " + appName,
+            selector: "orderFrontStandardAboutPanel:"
+          },
+          {
+            type: "separator"
+          },
+          {
+            label: "Quit",
+            accelerator: "CmdOrCtrl+Q",
+            click: () => remote.getCurrentWindow().close()
+          }
+        ]
+      })
+    }
+
+    return template
   }
 }
