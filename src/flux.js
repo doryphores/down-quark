@@ -45,7 +45,13 @@ export default class Flux extends Alt {
 
   restoreSnapshot() {
     if (fs.existsSync(SNAPSHOT_FILE)) {
-      this.bootstrap(fs.readFileSync(SNAPSHOT_FILE, "utf-8"))
+      try {
+        this.bootstrap(fs.readFileSync(SNAPSHOT_FILE, "utf-8"))
+      } catch(e) {
+        // Log the error but carry on as normal. This could be due
+        // to a corrupt or incompatible snapshot file
+        console.error("An error occurred while restoring snapshot:", e)
+      }
     }
   }
 }
