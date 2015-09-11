@@ -25,6 +25,16 @@ const COMMANDS = {
 
   selectAll: (editorInstance) => {
     editorInstance.execCommand("selectAll")
+  },
+
+  bold: (editorInstance) => {
+    let selection = editorInstance.getSelection()
+    editorInstance.replaceSelection(`**${selection}**`)
+  },
+
+  italic: (editorInstance) => {
+    let selection = editorInstance.getSelection()
+    editorInstance.replaceSelection(`*${selection}*`)
   }
 }
 

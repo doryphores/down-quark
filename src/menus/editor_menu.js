@@ -16,42 +16,41 @@ export default class EditorMenu {
     return [
       {
         label: "Undo",
-        click: () => {
-          EditorCommands.send("undo")
-        }
+        click: () => EditorCommands.send("undo")
       },
       {
         label: "Redo",
-        click: () => {
-          EditorCommands.send("redo")
-        }
+        click: () => EditorCommands.send("redo")
       },
       {
         type: "separator"
       },
       {
         label: "Cut",
-        click: () => {
-          EditorCommands.send("cut")
-        }
+        click: () => EditorCommands.send("cut")
       },
       {
         label: "Copy",
-        click: () => {
-          EditorCommands.send("copy")
-        }
+        click: () => EditorCommands.send("copy")
       },
       {
         label: "Paste",
-        click: () => {
-          EditorCommands.send("paste")
-        }
+        click: () => EditorCommands.send("paste")
       },
       {
         label: "Select all",
-        click: () => {
-          EditorCommands.send("selectAll")
-        }
+        click: () => EditorCommands.send("selectAll")
+      },
+      {
+        type: "separator"
+      },
+      {
+        label: "Bold",
+        click: () => EditorCommands.send("bold")
+      },
+      {
+        label: "Italic",
+        click: () => EditorCommands.send("italic")
       }
     ]
   }

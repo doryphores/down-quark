@@ -22,9 +22,7 @@ export default class ApplicationMenu {
           {
             label: "Quit",
             accelerator: "CmdOrCtrl+Q",
-            click: () => {
-              remote.require("app").quit()
-            }
+            click: () => remote.getCurrentWindow().close()
           }
         ]
       },
@@ -34,16 +32,12 @@ export default class ApplicationMenu {
           {
             label: "New file",
             accelerator: "CmdOrCtrl+N",
-            click: () => {
-              this.flux.getActions("TabActions").new()
-            }
+            click: () => this.flux.getActions("TabActions").new()
           },
           {
             label: "Open folder...",
             accelerator: "CmdOrCtrl+O",
-            click: () => {
-              this.flux.getActions("ProjectActions").open()
-            }
+            click: () => this.flux.getActions("ProjectActions").open()
           },
           {
             type: "separator"
@@ -51,16 +45,12 @@ export default class ApplicationMenu {
           {
             label: "Save",
             accelerator: "CmdOrCtrl+S",
-            click: () => {
-              this.flux.getActions("BufferActions").save()
-            }
+            click: () => this.flux.getActions("BufferActions").save()
           },
           {
             label: "Save As...",
             accelerator: "Shift+CmdOrCtrl+S",
-            click: () => {
-              this.flux.getActions("BufferActions").saveAs()
-            }
+            click: () => this.flux.getActions("BufferActions").saveAs()
           },
           {
             type: "separator"
@@ -68,16 +58,12 @@ export default class ApplicationMenu {
           {
             label: "Close Tab",
             accelerator: "CmdOrCtrl+W",
-            click: () => {
-              this.flux.getActions("TabActions").close()
-            }
+            click: () => this.flux.getActions("TabActions").close()
           },
           {
             label: "Close All",
             accelerator: "Shift+CmdOrCtrl+W",
-            click: () => {
-              this.flux.getActions("TabActions").closeAll()
-            }
+            click: () => this.flux.getActions("TabActions").closeAll()
           }
         ]
       },
@@ -87,16 +73,12 @@ export default class ApplicationMenu {
           {
             label: "Undo",
             accelerator: "CmdOrCtrl+Z",
-            click: () => {
-              EditorCommands.send("undo")
-            }
+            click: () => EditorCommands.send("undo")
           },
           {
             label: "Redo",
             accelerator: "CmdOrCtrl+Shift+Z",
-            click: () => {
-              EditorCommands.send("redo")
-            }
+            click: () => EditorCommands.send("redo")
           },
           {
             type: "separator"
@@ -104,30 +86,37 @@ export default class ApplicationMenu {
           {
             label: "Cut",
             accelerator: "CmdOrCtrl+X",
-            click: () => {
-              EditorCommands.send("cut")
-            }
+            click: () => EditorCommands.send("cut")
           },
           {
             label: "Copy",
             accelerator: "CmdOrCtrl+C",
-            click: () => {
-              EditorCommands.send("copy")
-            }
+            click: () => EditorCommands.send("copy")
           },
           {
             label: "Paste",
             accelerator: "CmdOrCtrl+V",
-            click: () => {
-              EditorCommands.send("paste")
-            }
+            click: () => EditorCommands.send("paste")
           },
           {
             label: "Select all",
             accelerator: "CmdOrCtrl+A",
-            click: () => {
-              EditorCommands.send("selectAll")
-            }
+            click: () => EditorCommands.send("selectAll")
+          }
+        ]
+      },
+      {
+        label: "Format",
+        submenu: [
+          {
+            label: "Bold",
+            accelerator: "CmdOrCtrl+B",
+            click: () => EditorCommands.send("bold")
+          },
+          {
+            label: "Italic",
+            accelerator: "CmdOrCtrl+I",
+            click: () => EditorCommands.send("italic")
           }
         ]
       },
@@ -137,16 +126,12 @@ export default class ApplicationMenu {
           {
             label: "Reload",
             accelerator: "CmdOrCtrl+R",
-            click: () => {
-              remote.getCurrentWindow().reload()
-            }
+            click: () => remote.getCurrentWindow().reload()
           },
           {
             label: "Toggle DevTools",
             accelerator: process.platform == "darwin" ? "Alt+Command+I" : "Ctrl+Shift+I",
-            click: () => {
-              remote.getCurrentWindow().toggleDevTools()
-            }
+            click: () => remote.getCurrentWindow().toggleDevTools()
           }
         ]
       }
