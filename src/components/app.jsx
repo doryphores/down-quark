@@ -4,7 +4,6 @@ import ApplicationMenu from "../menus/application_menu"
 import Tree from "./tree"
 import Workspace from "./workspace"
 import remote from "remote"
-import path from "path"
 
 export default class App extends BaseComponent {
   constructor(props, context) {
@@ -21,6 +20,21 @@ export default class App extends BaseComponent {
     this.updateTitle()
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    // TODO: find a way to simplify this logic (move it to the store?)
+    let activeBuffer, prevActiveBuffer
+    if (this.state.bufferStore.activeBufferIndex > -1) {
+      activeBuffer = this.state.bufferStore.buffers[this.state.bufferStore.activeBufferIndex]
+      prevActiveBuffer = prevState.bufferStore.buffers[prevState.bufferStore.activeBufferIndex]
+    }
+    if (
+      prevState.bufferStore.activeBufferIndex != this.state.bufferStore.activeBufferIndex ||
+      activeBuffer && activeBuffer.name != prevActiveBuffer.name
+    ) {
+      this.updateTitle()
+    }
+  }
+
   getStoreState() {
     return {
       tree        : this.context.flux.getStore("TreeStore").getState(),
@@ -30,7 +44,6 @@ export default class App extends BaseComponent {
 
   handleChange() {
     this.setState(this.getStoreState())
-    this.updateTitle()
   }
 
   updateTitle() {
@@ -41,10 +54,8 @@ export default class App extends BaseComponent {
     if (activeBuffer) {
       if (activeBuffer.filePath) {
         win.setRepresentedFilename(activeBuffer.filePath)
-        title = `${activeBuffer.name} - ${path.dirname(activeBuffer.filePath)} - ${title}`
-      } else {
-        title = `${activeBuffer.name} - ${title}`
       }
+      title = `${activeBuffer.name} - ${title}`
     }
 
     win.setTitle(title)
