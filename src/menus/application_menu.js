@@ -143,6 +143,16 @@ export default class ApplicationMenu {
           }
         ]
       })
+    } else {
+      template[0].submenu.push({
+        type: "separator"
+      })
+
+      template[0].submenu.push({
+        label: "Quit",
+        accelerator: "Ctrl+Q",
+        click: () => remote.getCurrentWindow().close()
+      })
     }
 
     return template
