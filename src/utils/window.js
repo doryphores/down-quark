@@ -26,5 +26,7 @@ export default function initWindow() {
     if (process.platform != "darwin" && dims.maximized) {
       win.maximize()
     }
+  } else {
+    win.show()
   }
 }

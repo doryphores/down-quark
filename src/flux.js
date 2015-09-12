@@ -13,8 +13,13 @@ import TreeActions from "./actions/tree_actions"
 import TabActions from "./actions/tab_actions"
 import BufferActions from "./actions/buffer_actions"
 
-const SNAPSHOT_FILE = path.join(remote.require("app").getPath("appData"),
-  "DownQuark", "snapshot.json")
+const app = remote.require("app")
+
+const SNAPSHOT_FILE = path.join(
+  app.getPath("appData"),
+  app.getName(),
+  "snapshot.json"
+)
 
 export default class Flux extends Alt {
   constructor(config = {}) {
