@@ -86,6 +86,7 @@ export default class BufferStore {
     buffer.on("delete", () => {
       let index = _.findIndex(this.state.buffers, b => b.id == buffer.id)
       if (index > -1) this.closeBuffer(index)
+      this.emitChange()
     })
   }
 
