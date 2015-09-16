@@ -7,7 +7,7 @@ module.exports = {
         (converter) => [
           {
             type   : "lang",
-            filter : md => md.replace(/---[\s\S]*?---/, "")
+            filter : md => md.replace(/(^|---)[\s\S]*?---/, "")
           },
           {
             type    : "lang",
