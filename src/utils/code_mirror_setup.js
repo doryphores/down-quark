@@ -20,10 +20,10 @@ CodeMirror.defineMode("frontmatter_markdown", (config) => {
   return CodeMirror.multiplexingMode(
     CodeMirror.getMode(config, "text/x-gfm"),
     {
-      open            : /^\b.+\b: .*|^---$/,
-      close           : /^---$/,
-      mode            : CodeMirror.getMode(config, "text/x-yaml"),
-      parseDelimiters : true
+      open       : "---",
+      close      : "---",
+      mode       : CodeMirror.getMode(config, "text/x-yaml"),
+      delimStyle : "front-matter-delim"
     }
   )
 })
