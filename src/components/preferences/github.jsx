@@ -27,6 +27,7 @@ export default class GithubPreferences extends BaseComponent {
           <div className="o-user-card">
             <h3 className="o-user-card__name">{this.props.prefs.github_name}</h3>
             <p className="o-user-card__username">{this.props.prefs.github_username}</p>
+            <img className="o-user-card__avatar" src={this.props.prefs.github_avatar_url}/>
           </div>
 
           <button onClick={this.handleSignout.bind(this)}>Sign out</button>
@@ -43,7 +44,7 @@ export default class GithubPreferences extends BaseComponent {
           <form onSubmit={this.handleSignin.bind(this)}>
             <label>
               Username
-              <input ref="username" type="text" defaultValue={this.props.prefs.github_username} required/>
+              <input ref="username" type="email" defaultValue={this.props.prefs.github_username} required/>
             </label>
 
             <label>

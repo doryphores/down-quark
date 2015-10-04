@@ -7,14 +7,15 @@ export default class PrefStore {
 
       github_name: "",
       github_username: "",
-      github_email: ""
+      github_email: "",
+      github_avatar_url: ""
     }
 
     const PrefActions = this.alt.getActions("PrefActions")
 
     this.bindListeners({
       togglePanel : PrefActions.TOGGLE_PANEL,
-      signin      : PrefActions.SIGNIN,
+      signin      : PrefActions.SIGNIN_SUCCESS,
       signout     : PrefActions.SIGNOUT,
     })
   }
@@ -27,7 +28,10 @@ export default class PrefStore {
 
   signin(data) {
     this.setState({
-      github_username: data.username
+      github_name: data.name,
+      github_username: data.username,
+      github_email: data.email,
+      github_avatar_url: data.avatar_url
     })
   }
 
@@ -35,7 +39,8 @@ export default class PrefStore {
     this.setState({
       github_name: "",
       github_username: "",
-      github_email: ""
+      github_email: "",
+      github_avatar_url: ""
     })
   }
 }

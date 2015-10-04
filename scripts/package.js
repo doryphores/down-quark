@@ -19,7 +19,8 @@ packager({
   ignore: [
     "^/(docs|dist|src|stylus|psd)($|/)",
     "^/node_modules/\.bin($|/)",
-    "/node_modules/.*/(docs|test)($|/)"
+    "/node_modules/.*/(docs|test)($|/)",
+    "/node_modules/node-forge/(nodejs|tests|swf|flash|setup|mode_fsp)($|/)"
   ],
   asar: true,
   prune: true,
