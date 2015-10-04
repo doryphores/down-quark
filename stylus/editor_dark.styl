@@ -1,0 +1,50 @@
+
+visible-color    = #c5c8c6
+dimmed-color     = #999b99
+hidden-color     = #4b5056
+background-color = #1b1d1f
+cursor-color     = dimmed-color
+
+.cm-s-downquark-dark
+  background-color background-color
+  color visible-color
+
+  .CodeMirror-cursor
+    border-left 1px solid cursor-color
+
+  .CodeMirror-selected
+    background-color rgba(#fff, .2)
+
+  .CodeMirror-focused div.CodeMirror-selected
+    background-color rgba(#fff, 0.1)
+
+  .cm-atom,
+  .cm-url,
+  .cm-comment
+    color dimmed-color
+
+  .cm-formatting,
+  .cm-hr,
+  .cm-front-matter-delim
+    color hidden-color
+
+  .cm-front-matter-delim::after
+    content  "⬇ Front matter"
+    position  absolute
+    left  0
+    right  0
+    padding-right  5px
+    color  dimmed-color
+    background repeating-linear-gradient(
+      -45deg,
+      rgba(hidden-color, .2),
+      rgba(hidden-color, .2) 10px,
+      transparent 10px,
+      transparent 20px
+    )
+    text-transform  uppercase
+    text-align  right
+    font-size  0.8em
+
+  .cm-front-matter-delim-close::after
+    content: "⬆ Front matter";

@@ -6,19 +6,17 @@ require("codemirror/addon/edit/trailingspace")
 
 // Load modes
 _.each([
-  "gfm",
-  "javascript",
-  "ruby",
-  "coffeescript",
-  "css",
-  "sass",
-  "stylus",
+  "markdown",
   "yaml"
 ], mode => require(`codemirror/mode/${mode}/${mode}`))
 
 CodeMirror.defineMode("frontmatter_markdown", (config) => {
   return CodeMirror.multiplexingMode(
-    CodeMirror.getMode(config, "text/x-gfm"),
+    CodeMirror.getMode(config, {
+      name: "markdown",
+      highlightFormatting: true,
+      fencedCodeBlocks: true
+    }),
     {
       open       : "---",
       close      : "---",
