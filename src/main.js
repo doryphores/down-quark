@@ -3,7 +3,6 @@ import React from "react"
 import Flux from "./flux"
 import withAltContext from "alt/utils/withAltContext"
 import App from "./components/app"
-import nodegit from "nodegit"
 
 initWindow()
 
