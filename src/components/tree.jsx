@@ -47,12 +47,12 @@ export default class Tree extends BaseComponent {
   }
 
   render() {
-    if (this.props.tree.root == null) return null
+    if (this.props.treeStore.root == null) return null
 
     return (
       <div className={classNames(this.props.className, "c-tree")} style={this.state.treeStyles}>
         <div className="c-tree__scroller">
-          {this.renderNodeList(this.props.tree.root)}
+          {this.renderNodeList(this.props.treeStore.root)}
         </div>
         <div className="c-tree__resize-handle"
              onMouseDown={this.startResize.bind(this)}/>

@@ -37,7 +37,7 @@ export default class App extends BaseComponent {
 
   getStoreState() {
     return {
-      tree        : this.context.flux.getStore("TreeStore").getState(),
+      treeStore   : this.context.flux.getStore("TreeStore").getState(),
       bufferStore : this.context.flux.getStore("BufferStore").getState()
     }
   }
@@ -64,7 +64,7 @@ export default class App extends BaseComponent {
   render() {
     return (
       <div className="u-container u-container--horizontal">
-        <Tree className="u-panel" tree={this.state.tree}/>
+        <Tree className="u-panel" treeStore={this.state.treeStore}/>
         <Workspace className="u-panel u-panel--grow"
                    bufferStore={this.state.bufferStore}/>
       </div>
