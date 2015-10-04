@@ -142,6 +142,14 @@ export default class ApplicationMenu {
             type: "separator"
           },
           {
+            label: "Preferences...",
+            accelerator: "CmdOrCtrl+,",
+            click: () => this.flux.getActions("PrefActions").togglePanel()
+          },
+          {
+            type: "separator"
+          },
+          {
             label: "Quit",
             accelerator: "CmdOrCtrl+Q",
             click: () => remote.getCurrentWindow().close()
@@ -157,6 +165,16 @@ export default class ApplicationMenu {
         label: "Quit",
         accelerator: "Ctrl+Q",
         click: () => remote.getCurrentWindow().close()
+      })
+
+      template[1].submenu.push({
+        type: "separator"
+      })
+
+      template[1].submenu.push({
+        label: "Preferences...",
+        accelerator: "Ctrl+,",
+        click: () => this.flux.getActions("PrefActions").togglePanel()
       })
     }
 

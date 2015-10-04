@@ -3,6 +3,7 @@ import BaseComponent from "./base_component"
 import ApplicationMenu from "../menus/application_menu"
 import Tree from "./tree"
 import Workspace from "./workspace"
+import Preferences from "./preferences"
 import remote from "remote"
 
 export default class App extends BaseComponent {
@@ -14,6 +15,7 @@ export default class App extends BaseComponent {
   componentDidMount() {
     this.context.flux.getStore("TreeStore").listen(this.handleChange.bind(this))
     this.context.flux.getStore("BufferStore").listen(this.handleChange.bind(this))
+    this.context.flux.getStore("PrefStore").listen(this.handleChange.bind(this))
 
     // TODO: is this the right place to set the app menu?
     new ApplicationMenu(this.context.flux)
@@ -37,6 +39,7 @@ export default class App extends BaseComponent {
 
   getStoreState() {
     return {
+      prefStore    : this.context.flux.getStore("PrefStore").getState(),
       treeStore   : this.context.flux.getStore("TreeStore").getState(),
       bufferStore : this.context.flux.getStore("BufferStore").getState()
     }
@@ -67,6 +70,7 @@ export default class App extends BaseComponent {
         <Tree className="u-panel" treeStore={this.state.treeStore}/>
         <Workspace className="u-panel u-panel--grow"
                    bufferStore={this.state.bufferStore}/>
+                 <Preferences prefStore={this.state.prefStore}/>
       </div>
     )
   }
