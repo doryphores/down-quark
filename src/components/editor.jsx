@@ -9,7 +9,7 @@ export default class Editor extends BaseComponent {
   componentDidMount() {
     this.codeMirrorInstance = CodeMirror(React.findDOMNode(this), {
       mode              : "frontmatter_markdown",
-      theme             : "downquark-light",
+      theme             : "downquark-dark",
       lineWrapping      : true,
       showTrailingSpace : true,
       value             : this.props.buffer.content

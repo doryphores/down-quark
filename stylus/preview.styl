@@ -13,40 +13,66 @@
   padding 20px
   background-color #fff
   color #535353
-  font-family Arial, sans-serif
-  font-size 14px
-  line-height 20px
+  font-family Roboto, sans-serif
+  font-size 18px
+  line-height 30px
+  -webkit-font-smoothing antialiased
 
   h2
-    margin 36px 0 20px 0
-    font-size 20px
-    line-height 20px
-    font-weight 400
+    margin 40px 0 20px
+    font-size 24px
+    font-weight bold
+    line-height 1.2
 
     &:first-child
       margin-top 0
 
   h3
-    margin 0 0 20px 0
+    font-weight bold
     font-size 18px
-    line-height 20px
-    font-weight 500
+
+  p, ul, ol
+    margin 20px 0
+    
+    &:first-child
+      margin-top 0
+
+  code
+    padding 4px 5px
+    font-family "Roboto Mono"
+    font-size 14px
+    background-color lighten(#292929, 80%)
+    border-radius 2px
+    -webkit-font-smoothing subpixel-antialiased
+
+  pre code
+    display block
+    overflow-x auto
+    margin 0
+    padding 5px 10px
+    background #3f3f3f
+    border-radius 2px
+    color #dcdcdc
+    line-height 22px
+
+  blockquote
+    margin-left 0
+    padding 5px 30px
+    border-left 1px dotted lighten(#292929, 50%)
+
+    p
+      margin 0
+      font-style italic
+      color lighten(#292929, 50%)
 
   hr
     display none
 
   a
-    color #00827F
+    color #2B7EC5
+    border-bottom 1px dotted #2B7EC5
     text-decoration none
-
-    &:hover
-      text-decoration underline
-
-  p, ul, ol
-    margin 0 0 20px 0
-
-  ul, ol
-    padding-left 34px
+    pointer-events none
 
   img
     display block
