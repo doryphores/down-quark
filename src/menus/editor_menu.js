@@ -51,6 +51,10 @@ export default class EditorMenu {
       {
         label: "Italic",
         click: () => EditorCommands.send("italic")
+      },
+      {
+        label: "Link",
+        click: () => EditorCommands.send("link")
       }
     ]
   }

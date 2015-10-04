@@ -103,6 +103,11 @@ export default class ApplicationMenu {
             label: "Italic",
             accelerator: "CmdOrCtrl+I",
             click: () => EditorCommands.send("italic")
+          },
+          {
+            label: "Link",
+            accelerator: "CmdOrCtrl+L",
+            click: () => EditorCommands.send("link")
           }
         ]
       },

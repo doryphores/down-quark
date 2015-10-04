@@ -35,6 +35,14 @@ const COMMANDS = {
   italic: (editorInstance) => {
     let selection = editorInstance.getSelection()
     editorInstance.replaceSelection(`*${selection}*`)
+  },
+
+  link: (editorInstance) => {
+    let selection = editorInstance.getSelection()
+    editorInstance.replaceSelection(`[${selection}]()`)
+    let cursor = editorInstance.getCursor()
+    cursor.ch = cursor.ch - (selection.length ? 1 : 3)
+    editorInstance.setCursor(cursor)
   }
 }
 
