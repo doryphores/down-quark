@@ -1,6 +1,7 @@
 import React from "react"
 import BaseComponent from "../base_component"
 import classNames from "classnames"
+import FormMenu from "../../menus/form_menu"
 
 export default class GithubPreferences extends BaseComponent {
   handleSignin(e) {
@@ -13,6 +14,13 @@ export default class GithubPreferences extends BaseComponent {
 
   handleSignout() {
     this.context.flux.getActions("PrefActions").signout()
+  }
+
+  showMenu() {
+    if (!this.menu) {
+      this.menu = new FormMenu()
+    }
+    this.menu.show()
   }
 
   render() {
@@ -44,12 +52,12 @@ export default class GithubPreferences extends BaseComponent {
           <form onSubmit={this.handleSignin.bind(this)}>
             <label>
               Username
-              <input ref="username" type="email" defaultValue={this.props.prefs.github_username} required/>
+              <input ref="username" type="email" defaultValue={this.props.prefs.github_username} required onContextMenu={this.showMenu.bind(this)}/>
             </label>
 
             <label>
               Password
-              <input ref="password" type="password" required/>
+              <input ref="password" type="password" required onContextMenu={this.showMenu.bind(this)}/>
             </label>
 
             <button>Connect</button>
