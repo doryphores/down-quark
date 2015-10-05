@@ -12,7 +12,7 @@ export default class Preferences extends BaseComponent {
   }
 
   overlayClassNames() {
-    return classNames("o-overlay", {
+    return classNames("o-overlay u-container u-container--vertical c-preferences", {
       "o-overlay--is-open": this.props.prefStore.open
     })
   }
@@ -20,12 +20,12 @@ export default class Preferences extends BaseComponent {
   render() {
     return (
       <div className={this.overlayClassNames()} tabIndex="-1">
-        <div className="c-pref-panel">
-          <h1>
-            <i className="octicon octicon-settings"/>
-            Preferences
-          </h1>
+        <h1 className="o-overlay__title u-panel">
+          <i className="octicon octicon-settings"/>
+          Preferences
+        </h1>
 
+        <div className="o-overlay__content u-panel--grow">
           <GithubPreferences prefs={this.props.prefStore}/>
         </div>
       </div>

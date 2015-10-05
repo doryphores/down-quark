@@ -7,8 +7,8 @@ export default class GithubPreferences extends BaseComponent {
   handleSignin(e) {
     e.preventDefault()
     this.context.flux.getActions("PrefActions").signin({
-      username: React.findDOMNode(this.refs.username).value,
-      password: React.findDOMNode(this.refs.password).value
+      email    : React.findDOMNode(this.refs.email).value,
+      password : React.findDOMNode(this.refs.password).value
     })
   }
 
@@ -23,47 +23,61 @@ export default class GithubPreferences extends BaseComponent {
     this.menu.show()
   }
 
-  render() {
-    if (this.props.prefs.github_username) {
-      return (
-        <div>
-          <h2>
-            <i className="octicon octicon-mark-github"/>
-            GitHub account
-          </h2>
+  buttonClasses() {
+    return classNames("o-button", {
+      "o-button--waiting": this.props.prefs.github_waiting
+    })
+  }
 
+  render() {
+    let panelContent
+
+    if (this.props.prefs.github_username) {
+      panelContent = (
+        <div className="o-pref-panel__content">
           <div className="o-user-card">
             <h3 className="o-user-card__name">{this.props.prefs.github_name}</h3>
             <p className="o-user-card__username">{this.props.prefs.github_username}</p>
             <img className="o-user-card__avatar" src={this.props.prefs.github_avatar_url}/>
           </div>
 
-          <button onClick={this.handleSignout.bind(this)}>Sign out</button>
+          <button className={this.buttonClasses()} onClick={this.handleSignout.bind(this)}>Sign out</button>
         </div>
       )
     } else {
-      return (
-        <div>
-          <h2>
-            <i className="octicon octicon-mark-github"/>
-            GitHub account
-          </h2>
+      panelContent = (
+        <form className="o-pref-panel__content" onSubmit={this.handleSignin.bind(this)}>
+          <label>
+            Email address
+            <input ref="email"
+                   type="email"
+                   defaultValue={this.props.prefs.github_email}
+                   required="required"
+                   onContextMenu={this.showMenu.bind(this)}/>
+          </label>
 
-          <form onSubmit={this.handleSignin.bind(this)}>
-            <label>
-              Username
-              <input ref="username" type="email" defaultValue={this.props.prefs.github_username} required onContextMenu={this.showMenu.bind(this)}/>
-            </label>
+          <label>
+            Password
+            <input ref="password"
+                   type="password"
+                   required="required"
+                   onContextMenu={this.showMenu.bind(this)}/>
+          </label>
 
-            <label>
-              Password
-              <input ref="password" type="password" required onContextMenu={this.showMenu.bind(this)}/>
-            </label>
-
-            <button>Connect</button>
-          </form>
-        </div>
+          <button className={this.buttonClasses()}>Connect</button>
+        </form>
       )
     }
+
+    return (
+      <div className="o-pref-panel">
+        <h2 className="o-pref-panel__title">
+          <i className="octicon octicon-mark-github"/>
+          GitHub account
+        </h2>
+
+        {panelContent}
+      </div>
+    )
   }
 }

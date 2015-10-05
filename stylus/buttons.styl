@@ -1,0 +1,35 @@
+@keyframes waiting
+  from
+    background-position 0 0
+  to
+    background-position 32px 32px
+
+.o-button
+  padding 10px
+  font-size 1.5rem
+  font-weight bold
+  text-transform uppercase
+  border none
+  border-radius 2px
+  background-color color_highlight
+  color white
+  outline none
+
+  &:hover,
+  &:focus
+    background-color darken(color_highlight, 20%)
+
+.o-button--waiting
+  color rgba(white, .5)
+  animation waiting 2s linear infinite
+  background-size 16px 16px
+  background-image linear-gradient(
+    -45deg,
+    rgba(black, .1) 25%,
+    transparent     25%,
+    transparent     50%,
+    rgba(black, .1) 50%,
+    rgba(black, .1) 75%,
+    transparent     75%,
+    transparent     100%
+  )

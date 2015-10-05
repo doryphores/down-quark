@@ -1,14 +1,30 @@
 .o-overlay
   display none
-  justify-content center
   position fixed
   z-index 10
   top 0
   left 0
-  right 0
-  bottom 0
-  background #1b1d1f
+  width 100%
+  height 100%
+  background-color color_overlay-background
+  color color_overlay-text
   outline none
 
 .o-overlay--is-open
-  display flex
+  display block
+
+.o-overlay__title
+  margin 0
+  padding 20px
+  border-bottom 2px solid color_overlay-text
+  font-size 3rem
+  font-weight normal
+
+  i::before
+    font-size 32px
+    margin-right 10px
+
+.o-overlay__content
+  height 100%
+  overflow auto
+  padding 20px

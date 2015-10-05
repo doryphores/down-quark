@@ -8,7 +8,7 @@ export default class PrefActions {
   signin(data) {
     const github = new GitHub()
     this.dispatch()
-    github.setup(data.username, data.password, (err, details) => {
+    github.setup(data.email, data.password, (err, details) => {
       if (err) this.actions.signinFailed(err)
       else {
         this.actions.signinSuccess(details)
@@ -17,7 +17,7 @@ export default class PrefActions {
   }
 
   signinFailed(err) {
-    console.log(err)
+    this.dispatch(err)
   }
 
   signinSuccess(details) {

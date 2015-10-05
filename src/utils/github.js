@@ -10,12 +10,14 @@ const app = remote.require("app")
 const PUBLIC_KEY_PATH = path.join(
   app.getPath("appData"),
   app.getName(),
+  "Keys",
   "id_rsa.pub"
 )
 
 const PRIVATE_KEY_PATH = path.join(
   app.getPath("appData"),
   app.getName(),
+  "Keys",
   "id_rsa"
 )
 
@@ -51,11 +53,12 @@ export default class GitHub {
   setup(email, password, done) {
     this.authenticate(email, password, () => {
       this.getUserDetails((err, details) => {
+        if (err) return done(err)
+
         // Set email on details because we can't retrieve it from github if
         // it isn't public
         details.email = email
 
-        if (err) return done(err)
         console.log("SETUP KEY")
         fs.readFile(PUBLIC_KEY_PATH, "utf8", (_err, publicKey) => {
           if (publicKey) {
@@ -103,7 +106,7 @@ export default class GitHub {
 
     console.log("GENERATING A NEW KEY")
 
-    forge.pki.rsa.generateKeyPair(2048, (err, keypair) => {
+    forge.pki.rsa.generateKeyPair(4096, (err, keypair) => {
       console.log("KEY GENERATED")
       if (err) return done(err)
 
