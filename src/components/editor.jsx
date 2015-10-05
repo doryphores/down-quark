@@ -17,8 +17,19 @@ export default class Editor extends BaseComponent {
 
     this.codeMirrorInstance.on("change", this.handleChange.bind(this))
 
+    this.codeMirrorInstance.on("blur", () => {
+      if (this.props.buffer.active) {
+        EditorCommands.unbind(this.codeMirrorInstance)
+      }
+    })
+
+    this.codeMirrorInstance.on("focus", () => {
+      if (this.props.buffer.active) {
+        EditorCommands.bind(this.codeMirrorInstance)
+      }
+    })
+
     if (this.props.buffer.active) {
-      EditorCommands.bind(this.codeMirrorInstance)
       this.codeMirrorInstance.focus()
       setTimeout(() => this.codeMirrorInstance.refresh(), 100)
     }
