@@ -28,23 +28,27 @@ cursor-color     = dimmed-color
   .cm-front-matter-delim
     color hidden-color
 
-  .cm-front-matter-delim::after
-    content  "⬇ Front matter"
+  .cm-front-matter::after
+    content " "
     position  absolute
-    left  0
-    right  0
-    padding-right  5px
-    color  dimmed-color
-    background repeating-linear-gradient(
-      -45deg,
-      rgba(hidden-color, .2),
-      rgba(hidden-color, .2) 10px,
-      transparent 10px,
-      transparent 20px
-    )
-    text-transform  uppercase
-    text-align  right
-    font-size  0.8em
+    left 0
+    right 0
+    border-left 2px solid hidden-color
+    border-right 2px solid hidden-color
+
+  .cm-front-matter-delim::after
+    content " "
+    position absolute
+    left 0
+    right 0
+    padding-right 5px
+    color dimmed-color
+    border-bottom 1px solid hidden-color
+    text-transform uppercase
+    text-align right
+    font-size 0.8em
 
   .cm-front-matter-delim-close::after
     content: "⬆ Front matter";
+    border-top 1px solid hidden-color
+    border-bottom none

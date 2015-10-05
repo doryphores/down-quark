@@ -21,7 +21,8 @@ CodeMirror.defineMode("frontmatter_markdown", (config) => {
       open       : "---",
       close      : "---",
       mode       : CodeMirror.getMode(config, "text/x-yaml"),
-      delimStyle : "front-matter-delim"
+      delimStyle : "front-matter-delim",
+      innerStyle : "front-matter"
     }
   )
 })
