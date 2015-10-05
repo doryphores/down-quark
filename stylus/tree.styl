@@ -15,7 +15,8 @@
   width 300px
   // Set min and max widths for restricting the resizing
   min-width 40px
-  background-color #88867C
+  color color_tree-text
+  background-color color_tree-background
   font-size 1.3rem
   line-height 2.6rem
   -webkit-user-select none
@@ -67,10 +68,6 @@
   .c-tree__node--expanded > &
     display block
 
-  & + .c-tree__node-list
-    border-top 1px dotted #676161
-
-
 
 // Each node in the tree contains a label and an optional node list
 
@@ -87,7 +84,7 @@
   left 0
   right 0
   height 2.6rem
-  background-color rgba(255,255,255,.5)
+  background-color rgba(#FFF ,.5)
 
 
 // The node label contains the node's name and icon

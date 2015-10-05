@@ -5,9 +5,11 @@
   margin 0
   padding 0
   list-style none
-  background #525252
+  background color_tab-background
   font-size 1.3rem
   line-height 4rem
+  font-weight bold
+  -webkit-font-smoothing antialiased
 
 
 // Tabs are horizontally layed out flexbox items. There have two main states:
@@ -26,14 +28,14 @@
   overflow hidden
   text-overflow ellipsis
   white-space nowrap
-  color white
+  color color_tab-text
   -webkit-user-select none
   cursor default
   transition box-shadow .15s
 
 .c-tab-bar__item--active
   flex 2
-  box-shadow 0 -4px 0 #5B87C2 inset
+  box-shadow 0 -4px 0 color_tab-active inset
 
 .c-tab-bar__close
   position absolute
