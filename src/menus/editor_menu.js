@@ -16,10 +16,12 @@ export default class EditorMenu {
     return [
       {
         label: "Undo",
+        // TODO: role doesn't work here, not sure why
         click: () => EditorCommands.send("undo")
       },
       {
         label: "Redo",
+        // TODO: role doesn't work here, not sure why
         click: () => EditorCommands.send("redo")
       },
       {
@@ -27,15 +29,15 @@ export default class EditorMenu {
       },
       {
         label: "Cut",
-        click: () => EditorCommands.send("cut")
+        role: "cut"
       },
       {
         label: "Copy",
-        click: () => EditorCommands.send("copy")
+        role: "copy"
       },
       {
         label: "Paste",
-        click: () => EditorCommands.send("paste")
+        role: "paste"
       },
       {
         label: "Select all",

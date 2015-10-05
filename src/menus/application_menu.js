@@ -59,12 +59,12 @@ export default class ApplicationMenu {
           {
             label: "Undo",
             accelerator: "CmdOrCtrl+Z",
-            click: () => EditorCommands.send("undo")
+            role: "undo"
           },
           {
             label: "Redo",
-            accelerator: "CmdOrCtrl+Shift+Z",
-            click: () => EditorCommands.send("redo")
+            accelerator: "Shift+CmdOrCtrl+Z",
+            role: "redo"
           },
           {
             type: "separator"
@@ -72,22 +72,23 @@ export default class ApplicationMenu {
           {
             label: "Cut",
             accelerator: "CmdOrCtrl+X",
-            click: () => EditorCommands.send("cut")
+            role: "cut"
           },
           {
             label: "Copy",
             accelerator: "CmdOrCtrl+C",
-            click: () => EditorCommands.send("copy")
+            role: "copy"
           },
           {
             label: "Paste",
             accelerator: "CmdOrCtrl+V",
-            click: () => EditorCommands.send("paste")
+            role: "paste"
           },
           {
-            label: "Select all",
+            label: "Select All",
+            // TODO: this does not work in the editor
             accelerator: "CmdOrCtrl+A",
-            click: () => EditorCommands.send("selectAll")
+            role: "selectall"
           }
         ]
       },
