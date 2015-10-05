@@ -1,12 +1,13 @@
 .c-pref-panel
   max-width 800px
-  min-width 400px
+  min-width 500px
   color #c5c8c6
   -webkit-font-smoothing antialiased
 
   h1
     font-size 30px
     font-weight normal
+    padding-bottom 10px
     border-bottom 2px solid #c5c8c6
 
     i::before
@@ -15,7 +16,7 @@
 
   h2
     font-weight bold
-    font-size 16px
+    font-size 18px
 
     i::before
       margin-right 10px
@@ -26,8 +27,10 @@
     font-size 16px
 
   input
+    display block
     box-sizing border-box
     width 100%
+    max-width 300px
     padding 5px
     margin-top 5px
     border none
@@ -37,15 +40,31 @@
     outline none
 
   button
-    font-size 16px
+    font-size 15px
+    font-weight bold
+    text-transform uppercase
     border none
     border-radius 2px
+    background #c5c8c6
     outline none
+
+    &:hover,
+    &:focus
+      background white
 
 .o-user-card
   position relative
   min-height 40px
+  margin 20px 0
   padding-left 50px
+
+.o-user-card__name
+  margin 0
+  font-size 16px
+
+.o-user-card__username
+  margin 0
+  font-size 14px
 
 .o-user-card__avatar
   position absolute
