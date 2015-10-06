@@ -1,5 +1,6 @@
 import React from "react"
 import BaseComponent from "../base_component"
+import Panel from "./panel"
 import classNames from "classnames"
 import FormMenu from "../../menus/form_menu"
 
@@ -70,14 +71,9 @@ export default class GithubPreferences extends BaseComponent {
     }
 
     return (
-      <div className="o-pref-panel">
-        <h2 className="o-pref-panel__title">
-          <i className="octicon octicon-mark-github"/>
-          GitHub account
-        </h2>
-
+      <Panel title="GitHub account" iconClassName="octicon-mark-github">
         {panelContent}
-      </div>
+      </Panel>
     )
   }
 }
