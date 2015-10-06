@@ -4,6 +4,7 @@ import ApplicationMenu from "../menus/application_menu"
 import Tree from "./tree"
 import Workspace from "./workspace"
 import Preferences from "./preferences"
+import StatusBar from "./status_bar"
 import remote from "remote"
 
 export default class App extends BaseComponent {
@@ -16,6 +17,7 @@ export default class App extends BaseComponent {
     this.context.flux.getStore("TreeStore").listen(this.handleChange.bind(this))
     this.context.flux.getStore("BufferStore").listen(this.handleChange.bind(this))
     this.context.flux.getStore("PrefStore").listen(this.handleChange.bind(this))
+    this.context.flux.getStore("GitStore").listen(this.handleChange.bind(this))
 
     // TODO: is this the right place to set the app menu?
     new ApplicationMenu(this.context.flux)
@@ -39,6 +41,7 @@ export default class App extends BaseComponent {
 
   getStoreState() {
     return {
+      gitStore    : this.context.flux.getStore("GitStore").getState(),
       prefStore    : this.context.flux.getStore("PrefStore").getState(),
       treeStore   : this.context.flux.getStore("TreeStore").getState(),
       bufferStore : this.context.flux.getStore("BufferStore").getState()
@@ -66,11 +69,13 @@ export default class App extends BaseComponent {
 
   render() {
     return (
-      <div className="u-container u-container--horizontal">
-        <Tree className="u-panel" treeStore={this.state.treeStore}/>
-        <Workspace className="u-panel u-panel--grow"
-                   bufferStore={this.state.bufferStore}/>
-                 <Preferences prefStore={this.state.prefStore}/>
+      <div className="u-container u-container--vertical">
+        <StatusBar className="u-panel" gitStore={this.state.gitStore}/>
+        <div className="u-panel--grow u-container u-container--horizontal">
+          <Tree className="u-panel" treeStore={this.state.treeStore}/>
+          <Workspace className="u-panel u-panel--grow" bufferStore={this.state.bufferStore}/>
+          <Preferences prefStore={this.state.prefStore}/>
+        </div>
       </div>
     )
   }

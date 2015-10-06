@@ -21,6 +21,9 @@
     "url": "https://github.com/doryphores/down-quark"
   },
   "license": "MIT",
+  "engines": {
+    "electron": "0.33.6"
+  },
   "devDependencies": {
     "electron-packager": "^5.1.0",
     "electron-prebuilt": "0.33.6",
@@ -37,6 +40,7 @@
     "fs-extra": "^0.23.1",
     "github": "^0.2.4",
     "node-forge": "^0.6.35",
+    "nodegit": "^0.5.0",
     "pathwatcher": "^6.2.4",
     "react": "^0.13.3",
     "showdown": "^1.2.3",

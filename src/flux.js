@@ -8,6 +8,7 @@ import ProjectStore from "./stores/project_store"
 import TreeStore from "./stores/tree_store"
 import BufferStore from "./stores/buffer_store"
 import PrefStore from "./stores/pref_store"
+import GitStore from "./stores/git_store"
 
 import ProjectActions from "./actions/project_actions"
 import TreeActions from "./actions/tree_actions"
@@ -37,6 +38,7 @@ export default class Flux extends Alt {
     this.createStore(TreeStore)
     this.createStore(BufferStore)
     this.createStore(PrefStore)
+    this.createStore(GitStore)
 
     // Restore previous store state
     this.restoreSnapshot()
