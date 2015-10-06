@@ -5,6 +5,7 @@
   "description": "Electron based markdown editor",
   "main": "index.js",
   "scripts": {
+    "rebuild": "electron-rebuild",
     "install-deps": "npm install && electron-rebuild",
     "start": "npm run build-css -- -m && npm run build-js -- -s && electron .",
     "package": "npm run build-css && npm run build-js && node scripts/package.js",
@@ -22,7 +23,7 @@
   "license": "MIT",
   "devDependencies": {
     "electron-packager": "^5.1.0",
-    "electron-prebuilt": "0.33.4",
+    "electron-prebuilt": "0.33.6",
     "electron-rebuild": "^1.0.0",
     "stylus": "^0.52.4",
     "babel": "^5.8.21",
