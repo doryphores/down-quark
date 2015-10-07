@@ -50,7 +50,8 @@ export default class BranchSelector extends BaseComponent {
   }
 
   select(branch) {
-    console.log("SELECT", branch)
+    this.context.flux.getActions("GitActions").checkoutBranch(branch)
+    this.close()
   }
 
   componentClassNames() {
@@ -70,10 +71,10 @@ export default class BranchSelector extends BaseComponent {
         <ul className="c-branch-selector__branch-list">
           {this.props.gitStore.branches.map((branch) => {
             return (
-              <li key={branch}
+              <li key={branch.name}
                   className="c-branch-selector__branch-list-item"
                   onClick={this.select.bind(this, branch)}>
-                {branch}
+                {branch.name}
               </li>
             )
           })}

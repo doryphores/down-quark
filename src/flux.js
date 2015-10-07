@@ -15,6 +15,7 @@ import TreeActions from "./actions/tree_actions"
 import TabActions from "./actions/tab_actions"
 import BufferActions from "./actions/buffer_actions"
 import PrefActions from "./actions/pref_actions"
+import GitActions from "./actions/git_actions"
 
 const app = remote.require("app")
 
@@ -33,6 +34,7 @@ export default class Flux extends Alt {
     this.addActions("TabActions", TabActions)
     this.addActions("BufferActions", BufferActions)
     this.addActions("PrefActions", PrefActions)
+    this.addActions("GitActions", GitActions)
 
     this.createStore(ProjectStore)
     this.createStore(TreeStore)

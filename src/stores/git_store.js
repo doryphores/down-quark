@@ -8,6 +8,7 @@ export default class GitStore {
   static displayName = "GitStore"
 
   static defaultState = {
+    working       : false,
     enabled       : false,
     clean         : true,
     currentBranch : "master",
@@ -19,9 +20,11 @@ export default class GitStore {
     this.state = Object.assign({}, GitStore.defaultState)
 
     const ProjectActions = this.alt.getActions("ProjectActions")
+    const GitActions = this.alt.getActions("GitActions")
 
     this.bindListeners({
-      setRoot: ProjectActions.OPEN
+      setRoot: ProjectActions.OPEN,
+      checkoutBranch: GitActions.CHECKOUT_BRANCH
     })
 
     this.on("bootstrap", () => {
@@ -37,22 +40,69 @@ export default class GitStore {
   setRoot(rootPath) {
     this.root = rootPath
     this.updateCurrentState()
-    this.pollForChanges()
+    this.startPolling()
     this.preventDefault()
   }
 
-  updateCurrentState() {
-    let newState = {}
+  checkoutBranch(branch) {
+    this.setState({
+      working: true
+    })
+    this.stopPolling()
+    NodeGit.Repository.open(this.root).then(repo => {
+      if (branch.remote) {
+        return repo.getBranchCommit("origin/" + branch.name)
+        .then(commit => {
+          return repo.createBranch(
+            branch.name,
+            commit,
+            0,
+            NodeGit.Signature.default(repo),
+            "Created " + branch.name
+          )
+        })
+        .then(branchObj => {
+          NodeGit.Branch.setUpstream(branchObj, "origin/" + branch.name)
+          return repo.checkoutBranch(branch.name)
+        })
+      } else {
+        return repo.checkoutBranch(branch.name)
+      }
+    })
+    .catch(err => console.log(err.stack))
+    .done(() => {
+      this.startPolling()
+    })
+  }
 
-    NodeGit.Repository.open(this.root).then((repo) => {
+  updateCurrentState() {
+    let newState = {
+      working: false
+    }
+
+    return NodeGit.Repository.open(this.root).then((repo) => {
       newState.enabled = true
       repo.getCurrentBranch().then((branch) => {
         newState.currentBranch = branch.shorthand()
-        return repo.getReferences(NodeGit.Reference.TYPE.LISTALL)
+        return repo.getReferences(NodeGit.Reference.TYPE.OID)
       }).then((refs) => {
-        newState.branches = refs.filter(r => !r.isTag()).map((r) => {
-          return r.shorthand()
-        }).sort()
+        newState.branches = []
+        let branches = refs.filter(r => r.isBranch()).map(r => {
+          return {
+            remote : false,
+            name   : r.shorthand()
+          }
+        })
+        refs.filter(r => !r.isTag() && r.isRemote()).forEach(r => {
+          let name = r.shorthand().replace(/^origin\//, "")
+          if (!_.some(branches, b => b.name == name)) {
+            branches.push({
+              remote : true,
+              name   : name
+            })
+          }
+        })
+        newState.branches = branches.sort((a, b) => a.name.localeCompare(b.name))
         return repo.getStatus()
       }).then((status) => {
         newState.status = status.map((s) => {
@@ -62,24 +112,24 @@ export default class GitStore {
           }
         })
       })
+      .then(() => this.setState(newState))
       .catch(err => console.log(err))
-      .done(() => this.setState(newState))
     }, (err) => {
       this.reset()
       this.stopPolling()
     })
   }
 
-  pollForChanges() {
+  startPolling() {
     this.stopPolling()
-    this.poll = setInterval(() => {
-      this.updateCurrentState()
-    }, POLL_INTERVAL)
+    this.updateCurrentState().then(() => {
+      this.pollTimer = setTimeout(this.startPolling.bind(this), POLL_INTERVAL)
+    })
   }
 
   stopPolling() {
-    if (this.poll) {
-      clearInterval(this.poll)
+    if (this.pollTimer) {
+      clearTimeout(this.pollTimer)
     }
   }
 }
