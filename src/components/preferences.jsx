@@ -21,7 +21,7 @@ export default class Preferences extends BaseComponent {
     return (
       <div className={this.overlayClassNames()} tabIndex="-1">
         <h1 className="o-overlay__title u-panel">
-          <i className="octicon octicon-settings"/>
+          <i className="octicon-settings"/>
           Preferences
         </h1>
 

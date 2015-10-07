@@ -1,5 +1,59 @@
 .c-status-bar
-  text-align right
-  padding 5px 10px
+  position relative
+  z-index 4
+  padding 10px
   font-size 1.4rem
   background-color color_status-bar-background
+  -webkit-user-select none
+
+
+.c-branch-selector
+  position relative
+  display inline-block
+  margin-left 10px
+
+.c-branch-selector__current
+  padding 6px
+  border-radius 2px
+  background-color white
+  cursor pointer
+
+.c-branch-selector__icon
+  margin-left 5px
+
+.c-branch-selector--open .c-branch-selector__icon--closed
+  display none
+
+.c-branch-selector__icon--open
+  display none
+
+  .c-branch-selector--open &
+    display inline-block
+
+.c-branch-selector__branch-list
+  position absolute
+  display none
+  top 30px
+  width 300px
+  max-height 400px
+  overflow-y auto
+  list-style none
+  margin 0
+  padding 0
+  background-color white
+  border-radius 2px
+  box-shadow 0 1px 2px rgba(0,0,0,.1)
+
+  .c-branch-selector--open &
+    display block
+
+.c-branch-selector__branch-list-item
+  padding 6px
+  border-top 1px dotted black
+  cursor pointer
+
+  &:hover
+    background-color #EFEDE5
+
+  &:first-child
+    border-top none

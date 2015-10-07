@@ -6,7 +6,7 @@ export default class Panel {
     return (
       <div className="o-pref-panel">
         <h2 className="o-pref-panel__title">
-          <i className={classNames("octicon", this.props.iconClassName)}/>
+          <i className={this.props.iconClassName}/>
           {this.props.title}
         </h2>
         {this.props.children}
