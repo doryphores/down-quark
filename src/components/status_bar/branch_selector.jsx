@@ -37,6 +37,13 @@ export default class BranchSelector extends BaseComponent {
     document.removeEventListener("keyup", this.docEvents, false)
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    // Ensure list is always scrolled to top when opened
+    if (this.state.open && !prevState.open) {
+      React.findDOMNode(this.refs.listContainer).scrollTop = 0
+    }
+  }
+
   toggle() {
     this.setState({
       open: !this.state.open
@@ -60,6 +67,12 @@ export default class BranchSelector extends BaseComponent {
     })
   }
 
+  listItemClassNames(branch) {
+    return classNames("c-branch-selector__branch-list-item", {
+      "c-branch-selector__branch-list-item--current": branch == this.props.gitStore.currentBranch
+    })
+  }
+
   render() {
     return (
       <div className={this.componentClassNames()}>
@@ -68,17 +81,20 @@ export default class BranchSelector extends BaseComponent {
           <i className="c-branch-selector__icon c-branch-selector__icon--closed octicon-chevron-down"/>
           <i className="c-branch-selector__icon c-branch-selector__icon--open octicon-chevron-up"/>
         </strong>
-        <ul className="c-branch-selector__branch-list">
-          {this.props.gitStore.branches.map((branch) => {
-            return (
-              <li key={branch.name}
-                  className="c-branch-selector__branch-list-item"
-                  onClick={this.select.bind(this, branch)}>
-                {branch.name}
-              </li>
-            )
-          })}
-        </ul>
+        <div className="c-branch-selector__branch-list-container" ref="listContainer">
+          <ul className="c-branch-selector__branch-list">
+            {this.props.gitStore.branchNames.map((branch) => {
+              return (
+                <li key={branch}
+                    className={this.listItemClassNames(branch)}
+                    onClick={this.select.bind(this, branch)}>
+                  {branch}
+                  <i className="octicon-check c-branch-selector__current-icon"/>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
       </div>
     )
   }
