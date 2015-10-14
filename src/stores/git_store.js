@@ -1,6 +1,13 @@
 import path from "path"
-import NodeGit from "nodegit"
 import _ from "underscore"
+
+var NodeGit = false
+
+try {
+  NodeGit = require("nodegit")
+} catch(err) {
+  console.warn("Cannot find NodeGit module. Git integration is disabled.")
+}
 
 const POLL_INTERVAL = 1000
 
@@ -9,7 +16,7 @@ export default class GitStore {
 
   static defaultState = {
     working       : false,
-    enabled       : false,
+    enabled       : !!NodeGit,
     clean         : true,
     currentBranch : "master",
     branchNames   : [],
@@ -86,6 +93,12 @@ export default class GitStore {
       working: false
     }
 
+    if (!NodeGit) {
+      this.reset()
+      this.stopPolling()
+      return Promise.reject()
+    }
+
     return NodeGit.Repository.open(this.root).then((repo) => {
       newState.enabled = true
       return repo.getCurrentBranch().then((branch) => {
@@ -135,7 +148,7 @@ export default class GitStore {
     this.stopPolling()
     this.updateCurrentState().then(() => {
       this.pollTimer = setTimeout(this.startPolling.bind(this), POLL_INTERVAL)
-    })
+    }).catch(() => {})
   }
 
   stopPolling() {

@@ -11,14 +11,24 @@ Tech stack:
 
 ![Screenshot - Editing Electron docs folder](docs/screenshot.png)
 
-## Install and run in development mode
+## Install dependencies
 
-To install node dependencies and rebuild native modules for the electron
+To install node dependencies and rebuild native modules for the Electron
 runtime:
 
 ```
 npm run install-deps
 ```
+
+### To enable Git integration
+
+The `nodegit` package is set as an optional dependency as it takes a long time to compile (and may not compile at all on Windows). The `install-deps` script ignores optional dependencies so `nodegit` won't be installed. If you want Git integration, install nodegit separately with:
+
+```
+npm install nodegit
+```
+
+## To run in development mode
 
 To start **Down Quark**:
 
@@ -43,6 +53,10 @@ This will package **Down Quark** for your platform and architecture.
 Requirements for building on Windows:
 - [Python 2.7](https://www.python.org/downloads/)
 - [Visual Studio Express 2013](http://www.microsoft.com/en-gb/download/details.aspx?id=44914)
+
+### Issue building on Windows with Git integration
+
+I haven't been able to build **nodegit** for Electron on Windows. The issue has been raised here: [#738](https://github.com/nodegit/nodegit/issues/738).
 
 ## Down Quark?
 
