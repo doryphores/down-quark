@@ -42,14 +42,18 @@ cursor-color     = dimmed-color
     position absolute
     left 0
     right 0
+    border-bottom 1px solid hidden-color
+
+  .cm-front-matter-delim-open::before
+    content "⬇ Front matter";
+    position absolute
+    right 0
+    margin-top 2px
     padding-right 5px
     color dimmed-color
-    border-bottom 1px solid hidden-color
     text-transform uppercase
-    text-align right
     font-size 0.8em
 
   .cm-front-matter-delim-close::after
-    content: "⬆ Front matter";
     border-top 1px solid hidden-color
     border-bottom none

@@ -7,7 +7,7 @@ export default class PrefStore {
     open: false,
 
     editor_theme: "downquark-dark",
-    editor_font_size: 12,
+    editor_font_size: 14,
 
     github_waiting: false,
     github_name: "",
@@ -30,10 +30,13 @@ export default class PrefStore {
     const PrefActions = this.alt.getActions("PrefActions")
 
     this.bindListeners({
-      switchTheme : PrefActions.SWITCH_THEME,
-      togglePanel : PrefActions.TOGGLE_PANEL,
-      signin      : PrefActions.SIGNIN_SUCCESS,
-      signout     : PrefActions.SIGNOUT,
+      increaseFontSize : PrefActions.INCREASE_FONT_SIZE,
+      decreaseFontSize : PrefActions.DECREASE_FONT_SIZE,
+      resetFontSize    : PrefActions.RESET_FONT_SIZE,
+      switchTheme      : PrefActions.SWITCH_THEME,
+      togglePanel      : PrefActions.TOGGLE_PANEL,
+      signin           : PrefActions.SIGNIN_SUCCESS,
+      signout          : PrefActions.SIGNOUT,
     })
 
     this.bindAction(PrefActions.SIGNIN, () => {
@@ -64,6 +67,28 @@ export default class PrefStore {
   switchTheme() {
     this.setState({
       editor_theme: this.state.editor_theme == "downquark-dark" ? "downquark-light" : "downquark-dark"
+    })
+  }
+
+  resetFontSize() {
+    this.setState({
+      editor_font_size: PrefStore.defaultState.editor_font_size
+    })
+  }
+
+  increaseFontSize() {
+    this.setState({
+      editor_font_size: this.state.editor_font_size + 1
+    })
+  }
+
+  decreaseFontSize() {
+    if (this.state.editor_font_size == 10) {
+      e.preventDefault()
+      return
+    }
+    this.setState({
+      editor_font_size: this.state.editor_font_size - 1
     })
   }
 

@@ -68,6 +68,12 @@ export default class Workspace extends BaseComponent {
     return this.context.flux.getStore("BufferStore").getPreviewContent()
   }
 
+  editorStyles() {
+    return {
+      fontSize: this.props.prefs.editor_font_size + "px"
+    }
+  }
+
   render() {
     if (!this.props.bufferStore.buffers.length) return null
 
@@ -76,7 +82,7 @@ export default class Workspace extends BaseComponent {
         <TabBar className="u-panel" buffers={this.props.bufferStore.buffers}/>
 
         <div className="u-panel u-panel--grow u-container u-container--horizontal">
-          <div className="c-workspace__item-list u-panel u-panel--grow">
+          <div className="c-workspace__item-list u-panel u-panel--grow" style={this.editorStyles()}>
             {this.props.bufferStore.buffers.map((buffer, index) => {
               return (
                 <div key={buffer.id} className={this.itemClasses(buffer)}>

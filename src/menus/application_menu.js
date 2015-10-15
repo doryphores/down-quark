@@ -124,6 +124,24 @@ export default class ApplicationMenu {
             label: "Toggle DevTools",
             accelerator: process.platform == "darwin" ? "Alt+Command+I" : "Ctrl+Shift+I",
             click: () => remote.getCurrentWindow().toggleDevTools()
+          },
+          {
+            type: "separator"
+          },
+          {
+            label: "Increase Font Size",
+            accelerator: "CmdOrCtrl+=",
+            click: () => this.flux.getActions("PrefActions").increaseFontSize()
+          },
+          {
+            label: "Decrease Font Size",
+            accelerator: "CmdOrCtrl+-",
+            click: () => this.flux.getActions("PrefActions").decreaseFontSize()
+          },
+          {
+            label: "Reset Font Size",
+            accelerator: "CmdOrCtrl+0",
+            click: () => this.flux.getActions("PrefActions").resetFontSize()
           }
         ]
       }

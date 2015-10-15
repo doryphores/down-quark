@@ -9,6 +9,18 @@ export default class PrefActions {
     this.dispatch()
   }
 
+  increaseFontSize() {
+    this.dispatch()
+  }
+
+  decreaseFontSize() {
+    this.dispatch()
+  }
+
+  resetFontSize() {
+    this.dispatch()
+  }
+
   signin(data) {
     const github = new GitHub()
     this.dispatch()
