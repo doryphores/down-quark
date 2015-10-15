@@ -9,7 +9,7 @@ export default class Editor extends BaseComponent {
   componentDidMount() {
     this.codeMirrorInstance = CodeMirror(React.findDOMNode(this), {
       mode              : "frontmatter_markdown",
-      theme             : "downquark-dark",
+      theme             : this.props.prefs.editor_theme,
       lineWrapping      : true,
       showTrailingSpace : true,
       value             : this.props.buffer.content
@@ -41,10 +41,12 @@ export default class Editor extends BaseComponent {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.buffer !== this.props.buffer
+    return nextProps.buffer != this.props.buffer || nextProps.prefs.editor_theme != this.props.prefs.editor_theme
   }
 
   componentDidUpdate(prevProps, prevState) {
+    this.codeMirrorInstance.setOption("theme", this.props.prefs.editor_theme)
+
     // Update content if it's clean and content has changed on disk
     if (this.props.buffer.clean &&
       this.props.buffer.content !== this.codeMirrorInstance.getValue()) {

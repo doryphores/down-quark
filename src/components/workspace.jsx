@@ -80,7 +80,7 @@ export default class Workspace extends BaseComponent {
             {this.props.bufferStore.buffers.map((buffer, index) => {
               return (
                 <div key={buffer.id} className={this.itemClasses(buffer)}>
-                  <Editor buffer={buffer}/>
+                  <Editor buffer={buffer} prefs={this.props.prefs}/>
                 </div>
               )
             })}

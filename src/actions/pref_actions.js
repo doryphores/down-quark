@@ -5,6 +5,10 @@ export default class PrefActions {
     this.dispatch()
   }
 
+  switchTheme() {
+    this.dispatch()
+  }
+
   signin(data) {
     const github = new GitHub()
     this.dispatch()

@@ -1,6 +1,7 @@
 import React from "react"
 import classNames from "classnames"
 import BaseComponent from "./base_component"
+import GeneralPreferences from "./preferences/general"
 import GithubPreferences from "./preferences/github"
 
 export default class Preferences extends BaseComponent {
@@ -21,11 +22,12 @@ export default class Preferences extends BaseComponent {
     return (
       <div className={this.overlayClassNames()} tabIndex="-1">
         <h1 className="o-overlay__title u-panel">
-          <i className="octicon-settings"/>
+          <i className="octicon-tools"/>
           Preferences
         </h1>
 
         <div className="o-overlay__content u-panel--grow">
+          <GeneralPreferences prefs={this.props.prefStore}/>
           <GithubPreferences prefs={this.props.prefStore}/>
         </div>
       </div>

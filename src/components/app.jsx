@@ -73,7 +73,9 @@ export default class App extends BaseComponent {
         <StatusBar className="u-panel" gitStore={this.state.gitStore}/>
         <div className="u-panel--grow u-container u-container--horizontal">
           <Tree className="u-panel" treeStore={this.state.treeStore}/>
-          <Workspace className="u-panel u-panel--grow" bufferStore={this.state.bufferStore}/>
+          <Workspace className="u-panel u-panel--grow"
+                     bufferStore={this.state.bufferStore}
+                     prefs={this.state.prefStore}/>
           <Preferences prefStore={this.state.prefStore}/>
         </div>
       </div>

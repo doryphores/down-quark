@@ -1,6 +1,7 @@
 .o-pref-panel
   width 50%
   min-width 500px
+  padding 20px 40px
   -webkit-font-smoothing antialiased
 
   h2
@@ -11,13 +12,8 @@
       font-size 24px
       margin-right 10px
 
-  label
-    display block
-    margin-bottom 20px
-    font-size 1.6rem
-    font-weight bold
-
-  input
+  input["text"],
+  input["password"]
     display block
     box-sizing border-box
     width 100%
@@ -29,6 +25,21 @@
     font-family inherit
     outline none
 
+
+.o-form-label
+  display block
+  margin-bottom 20px
+  font-size 1.6rem
+  font-weight bold
+
+.o-form-radio
+  font-size 1.6rem
+  margin-right 20px
+
+  input
+    position relative
+    top -2px
+    margin-right 10px
 
 // User card
 // TODO: maybe move this to a separate partial
