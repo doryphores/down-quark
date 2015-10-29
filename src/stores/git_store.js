@@ -31,8 +31,9 @@ export default class GitStore {
     const GitActions = this.alt.getActions("GitActions")
 
     this.bindListeners({
-      setRoot: ProjectActions.OPEN,
-      checkoutBranch: GitActions.CHECKOUT_BRANCH
+      setRoot        : ProjectActions.OPEN,
+      checkoutBranch : GitActions.CHECKOUT_BRANCH,
+      createBranch   : GitActions.CREATE_BRANCH
     })
 
     this.on("bootstrap", () => {
@@ -48,7 +49,13 @@ export default class GitStore {
   setRoot(rootPath) {
     this.preventDefault()
     this.root = rootPath
-    this.startPolling()
+    this.stopPolling()
+    NodeGit.Repository.open(this.root).then(repo => {
+      this.repo = repo
+      this.startPolling()
+    }, err => {
+      this.reset()
+    })
   }
 
   checkoutBranch(branchName) {
@@ -64,84 +71,99 @@ export default class GitStore {
     })
     this.stopPolling()
 
-    NodeGit.Repository.open(this.root).then(repo => {
-      if (branch.remote) {
-        return repo.getBranchCommit(branch.shorthand)
-        .then(commit => {
-          return repo.createBranch(
-            branchName,
-            commit,
-            0,
-            NodeGit.Signature.default(repo),
-            "Created " + branchName
-          )
-        })
-        .then(branchObj => {
-          NodeGit.Branch.setUpstream(branchObj, branch.shorthand)
-          return repo.checkoutBranch(branchName)
-        })
-      } else {
-        return repo.checkoutBranch(branchName)
-      }
+    let checkoutOperation
+
+    if (branch.remote) {
+      checkoutOperation = this.repo.getBranchCommit(branch.shorthand)
+      .then(commit => {
+        return this.repo.createBranch(
+          branchName,
+          commit,
+          0,
+          this.repo.defaultSignature(),
+          "Created " + branchName
+        )
+      })
+      .then(branchObj => {
+        NodeGit.Branch.setUpstream(branchObj, branch.shorthand)
+        return this.repo.checkoutBranch(branchName)
+      })
+    } else {
+      checkoutOperation = this.repo.checkoutBranch(branchName)
+    }
+
+    checkoutOperation.catch(err => {
+      console.log(err)
+    }).done(() => {
+      this.startPolling()
     })
-    .catch(err => console.log(err.stack))
-    .done(this.startPolling.bind(this))
+  }
+
+  createBranch(branchName) {
+    this.setState({
+      working: true
+    })
+    this.stopPolling()
+    this.repo.getMasterCommit().then((commit) => {
+      return this.repo.createBranch(
+        branchName,
+        commit,
+        0,
+        this.repo.defaultSignature(),
+        "Created " + branchName
+      )
+    }).then(() => {
+      return this.repo.checkoutBranch(branchName)
+    }).catch((err) => {
+      console.log(err)
+    }).done(() => {
+      this.startPolling()
+    })
   }
 
   updateCurrentState() {
     let newState = {
-      working: false
+      working: false,
+      enabled: true
     }
 
-    if (!NodeGit) {
-      this.reset()
-      this.stopPolling()
-      return Promise.reject()
-    }
+    return this.repo.getCurrentBranch().then((branch) => {
+      newState.currentBranch = branch.shorthand()
+      return this.repo.getReferences(NodeGit.Reference.TYPE.OID)
+    }).then((refs) => {
+      newState.branchNames = []
+      let branches = {}
 
-    return NodeGit.Repository.open(this.root).then((repo) => {
-      newState.enabled = true
-      return repo.getCurrentBranch().then((branch) => {
-        newState.currentBranch = branch.shorthand()
-        return repo.getReferences(NodeGit.Reference.TYPE.OID)
-      }).then((refs) => {
-        newState.branchNames = []
-        let branches = {}
+      refs.filter(r => r.isBranch()).forEach(ref => {
+        branches[ref.shorthand()] = {
+          remote    : false,
+          shorthand : ref.shorthand()
+        }
+      })
 
-        refs.filter(r => r.isBranch()).forEach(ref => {
-          branches[ref.shorthand()] = {
-            remote    : false,
+      refs.filter(r => !r.isTag() && r.isRemote()).forEach(ref => {
+        let branchName = ref.shorthand().replace(/^origin\//, "")
+        if (!branches[branchName]) {
+          branches[branchName] = {
+            remote    : true,
             shorthand : ref.shorthand()
           }
-        })
-
-        refs.filter(r => !r.isTag() && r.isRemote()).forEach(ref => {
-          let branchName = ref.shorthand().replace(/^origin\//, "")
-          if (!branches[branchName]) {
-            branches[branchName] = {
-              remote    : true,
-              shorthand : ref.shorthand()
-            }
-          }
-        })
-
-        this.branches = branches
-        newState.branchNames = _.keys(branches).sort()
-        return repo.getStatus()
-      }).then((status) => {
-        newState.status = status.map((s) => {
-          return {
-            path   : s.path(),
-            status : s.status()[0].toLowerCase().replace(/^WT_/, "")
-          }
-        })
+        }
       })
-      .then(() => this.setState(newState))
-      .catch(err => console.log(err))
-    }, (err) => {
-      this.reset()
-      this.stopPolling()
+
+      this.branches = branches
+      newState.branchNames = _.keys(branches).sort()
+      return this.repo.getStatus()
+    }).then((status) => {
+      newState.status = status.map((s) => {
+        return {
+          path   : s.path(),
+          status : s.status()[0].toLowerCase().replace(/^WT_/, "")
+        }
+      })
     })
+    .then(() => this.setState(newState))
+    .catch(err => console.log(err))
   }
 
   startPolling() {

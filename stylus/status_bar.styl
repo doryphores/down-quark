@@ -59,32 +59,47 @@
   .c-branch-selector--open &
     display inline-block
 
-.c-branch-selector__branch-list-container
+.c-branch-selector__menu
   position absolute
   display none
-  top 30px
+  top 40px
   width 300px
-  max-height 400px
-  overflow-y auto
   background-color white
   border-radius 2px
   box-shadow 0 1px 10px rgba(0,0,0,.3)
 
+  &::before
+    content ""
+    position absolute
+    top -10px
+    left 20px
+    height 0
+    width 0
+    border-style solid
+    border-color transparent
+    border-bottom-color #e2e2e2
+    border-width 0 10px 10px 10px
+
   .c-branch-selector--open &
     display block
 
-.c-branch-selector__branch-list
+.c-branch-selector__scroller
+  max-height 300px
+  overflow-y auto
+
+.c-branch-selector__list
+  position relative
   list-style none
   margin 0
   padding 0
 
-.c-branch-selector__branch-list-item
-  position relative
-  padding 6px
+.c-branch-selector__item
+  padding 8px 9px
   border-top 1px solid #d5d5d5
   cursor pointer
 
-  &:hover
+  &:hover,
+  &.c-branch-selector__item--selected
     background-color #EFEDE5
 
   &:first-child
@@ -93,12 +108,27 @@
 .c-branch-selector__current-icon
   display none
   position absolute
-  top 5px
+  margin-top -15px
   right 5px
 
-.c-branch-selector__branch-list-item--current
+.c-branch-selector__item--current
   padding-right 26px
   cursor default
 
   .c-branch-selector__current-icon
     display block
+
+.c-branch-selector__filter
+  padding 4px
+  border-radius 2px 2px 0 0
+  background-color #e2e2e2
+
+  input
+    box-sizing border-box
+    width 100%
+    border 1px solid #a0a0a0
+    border-radius 2px
+    padding 4px
+    outline none
+    font-size inherit
+    font-family inherit
