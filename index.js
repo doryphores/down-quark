@@ -5,6 +5,18 @@ var BrowserWindow = require("browser-window");  // Module to create native brows
 // be closed automatically when the javascript object is GCed.
 var mainWindow = null;
 
+// Prevent multiple instances of Down Quark
+if (app.makeSingleInstance(function (commandLine, workingDirectory) {
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.focus();
+  }
+  return true;
+})) {
+  app.quit();
+  return;
+}
+
 // Quit when all windows are closed.
 app.on("window-all-closed", function() {
   app.quit();
