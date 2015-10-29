@@ -41,11 +41,17 @@ export default class Editor extends BaseComponent {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.buffer != this.props.buffer || nextProps.prefs.editor_theme != this.props.prefs.editor_theme
+    return nextProps.buffer != this.props.buffer
+      || nextProps.prefs.editor_theme != this.props.prefs.editor_theme
+      || nextProps.prefs.editor_font_size != this.props.prefs.editor_font_size
   }
 
   componentDidUpdate(prevProps, prevState) {
     this.codeMirrorInstance.setOption("theme", this.props.prefs.editor_theme)
+
+    if (prevProps.prefs.editor_font_size != this.props.prefs.editor_font_size) {
+      this.codeMirrorInstance.refresh()
+    }
 
     // Update content if it's clean and content has changed on disk
     if (this.props.buffer.clean &&
