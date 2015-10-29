@@ -1,4 +1,5 @@
 import React from "react"
+import ReactDOM from "react-dom"
 import BaseComponent from "../base_component"
 import classNames from "classnames"
 
@@ -11,7 +12,7 @@ export default class BranchSelector extends BaseComponent {
     this.docEvents = {
       handleEvent: (e) => {
         // Ignore clicks on this component
-        if (React.findDOMNode(this).contains(e.target)) {
+        if (ReactDOM.findDOMNode(this).contains(e.target)) {
           return
         }
 
@@ -40,12 +41,12 @@ export default class BranchSelector extends BaseComponent {
   componentDidUpdate(prevProps, prevState) {
     // Ensure list is always scrolled to top when opened
     if (this.state.open && !prevState.open) {
-      React.findDOMNode(this.refs.filter).focus()
-      React.findDOMNode(this.refs.listScroller).scrollTop = 0
+      this.refs.filter.focus()
+      this.refs.listScroller.scrollTop = 0
     }
 
     if (this.state.scroll) {
-      React.findDOMNode(this).querySelector(".c-branch-selector__item--selected").scrollIntoView(this.state.scroll == "top")
+      ReactDOM.findDOMNode(this).querySelector(".c-branch-selector__item--selected").scrollIntoView(this.state.scroll == "top")
     }
   }
 

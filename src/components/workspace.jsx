@@ -19,12 +19,12 @@ export default class Workspace extends BaseComponent {
       this.props.bufferStore.activeBufferIndex > -1 &&
       prevProps.bufferStore.activeBufferIndex != this.props.bufferStore.activeBufferIndex
     ) {
-      React.findDOMNode(this.refs.previewPane).scrollTop = 0
+      this.refs.previewPane.scrollTop = 0
     }
   }
 
   startResize() {
-    let {left, width} = React.findDOMNode(this).getBoundingClientRect()
+    let {left, width} = this.refs.workspace.getBoundingClientRect()
 
     document.body.classList.add("is-resizing")
 
@@ -78,7 +78,7 @@ export default class Workspace extends BaseComponent {
     if (!this.props.bufferStore.buffers.length) return null
 
     return (
-      <div className={this.componentClasses()}>
+      <div className={this.componentClasses()} ref="workspace">
         <TabBar className="u-panel" buffers={this.props.bufferStore.buffers}/>
 
         <div className="u-panel u-panel--grow u-container u-container--horizontal">

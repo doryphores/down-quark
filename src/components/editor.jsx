@@ -1,4 +1,5 @@
 import React from "react"
+import ReactDOM from "react-dom"
 import BaseComponent from "./base_component"
 import CodeMirror from "../utils/code_mirror_setup"
 import classNames from "classnames"
@@ -7,7 +8,7 @@ import EditorCommands from "../utils/editor_commands"
 
 export default class Editor extends BaseComponent {
   componentDidMount() {
-    this.codeMirrorInstance = CodeMirror(React.findDOMNode(this), {
+    this.codeMirrorInstance = CodeMirror(ReactDOM.findDOMNode(this), {
       mode              : "frontmatter_markdown",
       theme             : this.props.prefs.editor_theme,
       lineWrapping      : true,

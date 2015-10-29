@@ -1,7 +1,7 @@
 import React from "react"
 import classNames from "classnames"
 
-export default class Panel {
+export default class Panel extends React.Component {
   render() {
     return (
       <div className="o-pref-panel">

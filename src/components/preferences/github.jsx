@@ -8,8 +8,8 @@ export default class GithubPreferences extends BaseComponent {
   handleSignin(e) {
     e.preventDefault()
     this.context.flux.getActions("PrefActions").signin({
-      email    : React.findDOMNode(this.refs.email).value,
-      password : React.findDOMNode(this.refs.password).value
+      email    : this.refs.email.value,
+      password : this.refs.password.value
     })
   }
 

@@ -1,4 +1,5 @@
 import React from "react"
+import ReactDOM from "react-dom"
 import classNames from "classnames"
 import BaseComponent from "./base_component"
 import GeneralPreferences from "./preferences/general"
@@ -8,7 +9,7 @@ export default class Preferences extends BaseComponent {
   componentDidUpdate(prevProps, prevState) {
     // Move focus on the panel when opened
     if (!prevProps.prefStore.open && this.props.prefStore.open) {
-      React.findDOMNode(this).focus()
+      ReactDOM.findDOMNode(this).focus()
     }
   }
 
