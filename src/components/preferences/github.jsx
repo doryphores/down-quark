@@ -48,18 +48,20 @@ export default class GithubPreferences extends BaseComponent {
     } else {
       panelContent = (
         <form className="o-pref-panel__content" onSubmit={this.handleSignin.bind(this)}>
-          <label className="o-form-label">
+          <label className="o-form__label">
             Email address
             <input ref="email"
+                   className="o-form__text-input"
                    type="email"
                    defaultValue={this.props.prefs.get("email")}
                    required="required"
                    onContextMenu={this.showMenu.bind(this)}/>
           </label>
 
-          <label className="o-form-label">
+          <label className="o-form__label">
             Password
             <input ref="password"
+                   className="o-form__text-input"
                    type="password"
                    required="required"
                    onContextMenu={this.showMenu.bind(this)}/>

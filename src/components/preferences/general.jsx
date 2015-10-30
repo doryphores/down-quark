@@ -12,17 +12,17 @@ export default class GithubPreferences extends BaseComponent {
     return (
       <Panel title="General settings" iconClassName="octicon-settings">
         <div className="o-pref-panel__content">
-          <div className="o-form-label">
+          <div className="o-form__label">
             Editor theme
           </div>
-          <label className="o-form-radio">
+          <label className="o-form__radio">
             <input type="radio"
                    name="editor_theme"
                    checked={this.props.prefs.getIn(["editor", "theme"]) == "downquark-dark"}
                    onChange={this.handleThemeChange.bind(this)}/>
             Dark theme
           </label>
-          <label className="o-form-radio">
+          <label className="o-form__radio">
             <input type="radio"
                    name="editor_theme"
                    checked={this.props.prefs.getIn(["editor", "theme"]) == "downquark-light"}
