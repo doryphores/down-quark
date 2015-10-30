@@ -10,7 +10,7 @@ export default class Editor extends BaseComponent {
   componentDidMount() {
     this.codeMirrorInstance = CodeMirror(ReactDOM.findDOMNode(this), {
       mode              : "frontmatter_markdown",
-      theme             : this.props.prefs.editor_theme,
+      theme             : this.props.prefs.get("theme"),
       lineWrapping      : true,
       showTrailingSpace : true,
       value             : this.props.buffer.content
@@ -42,17 +42,14 @@ export default class Editor extends BaseComponent {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.buffer != this.props.buffer
-      || nextProps.prefs.editor_theme != this.props.prefs.editor_theme
-      || nextProps.prefs.editor_font_size != this.props.prefs.editor_font_size
+    return nextProps.buffer != this.props.buffer || nextProps.prefs !== this.props.prefs
   }
 
   componentDidUpdate(prevProps, prevState) {
-    this.codeMirrorInstance.setOption("theme", this.props.prefs.editor_theme)
+    this.codeMirrorInstance.setOption("theme", this.props.prefs.get("theme"))
 
-    if (prevProps.prefs.editor_font_size != this.props.prefs.editor_font_size) {
-      this.codeMirrorInstance.refresh()
-    }
+    // Refresh editor instance if preferences have changed
+    if (prevProps.prefs !== this.props.prefs) this.codeMirrorInstance.refresh()
 
     // Update content if it's clean and content has changed on disk
     if (this.props.buffer.clean &&

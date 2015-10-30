@@ -70,7 +70,7 @@ export default class Workspace extends BaseComponent {
 
   editorStyles() {
     return {
-      fontSize: this.props.prefs.editor_font_size + "px"
+      fontSize: this.props.prefs.getIn(["editor", "font_size"]) + "px"
     }
   }
 
@@ -86,7 +86,7 @@ export default class Workspace extends BaseComponent {
             {this.props.bufferStore.buffers.map((buffer, index) => {
               return (
                 <div key={buffer.id} className={this.itemClasses(buffer)}>
-                  <Editor buffer={buffer} prefs={this.props.prefs}/>
+                  <Editor buffer={buffer} prefs={this.props.prefs.get("editor")}/>
                 </div>
               )
             })}

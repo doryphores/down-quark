@@ -1,31 +1,50 @@
 import _ from "underscore"
+import Immutable from "immutable"
 
 export default class PrefStore {
   static displayName = "PrefStore"
 
+  static config = {
+    onSerialize(state) {
+      return state.toJS()
+    },
+
+    onDeserialize(data) {
+      _.defaults(data, PrefStore.defaultState)
+      data.open = false
+      data.github.waiting = false
+      return Immutable.fromJS(data)
+    },
+
+    setState(currentState, nextState) {
+      this.state = currentState.mergeDeep(nextState)
+      return this.state
+    },
+
+    getState(currentState) {
+      return currentState
+    }
+  }
+
   static defaultState = {
     open: false,
 
-    editor_theme: "downquark-dark",
-    editor_font_size: 14,
+    editor: {
+      theme: "downquark-dark",
+      font_size: 14
+    },
 
-    github_waiting: false,
-    github_name: "",
-    github_username: "",
-    github_email: "",
-    github_avatar_url: ""
+    github: {
+      waiting: false,
+      name: "",
+      username: "",
+      email: "",
+      avatar_url: ""
+    }
   }
 
   constructor() {
-    this.state = Object.assign({}, PrefStore.defaultState)
-
-    // Reset all transient states
-    this.on("bootstrap", () => {
-      _.defaults(this.state, PrefStore.defaultState)
-      this.setState({
-        github_waiting: false
-      })
-    })
+    this.state = Immutable.fromJS(PrefStore.defaultState)
 
     const PrefActions = this.alt.getActions("PrefActions")
 
@@ -41,73 +60,92 @@ export default class PrefStore {
 
     this.bindAction(PrefActions.SIGNIN, () => {
       this.setState({
-        github_waiting: true
+        github: {
+          waiting: true
+        }
       })
     })
 
     this.bindAction(PrefActions.SIGNIN_FAILED, () => {
       this.setState({
-        github_waiting: false
+        github: {
+          waiting: false
+        }
       })
     })
   }
 
   setInProgress() {
     this.setState({
-      github_waiting: true
+      github: {
+        waiting: true
+      }
     })
   }
 
   togglePanel() {
     this.setState({
-      open: !this.state.open
+      open: !this.state.get("open")
     })
   }
 
   switchTheme() {
+    let currentTheme = this.state.getIn(["editor", "theme"])
     this.setState({
-      editor_theme: this.state.editor_theme == "downquark-dark" ? "downquark-light" : "downquark-dark"
+      editor: {
+        theme: currentTheme == "downquark-dark" ? "downquark-light" : "downquark-dark"
+      }
     })
   }
 
   resetFontSize() {
     this.setState({
-      editor_font_size: PrefStore.defaultState.editor_font_size
+      editor: {
+        font_size: PrefStore.defaultState.editor.font_size
+      }
     })
   }
 
   increaseFontSize() {
     this.setState({
-      editor_font_size: this.state.editor_font_size + 1
+      editor: {
+        font_size: this.state.getIn(["editor", "font_size"]) + 1
+      }
     })
   }
 
   decreaseFontSize() {
-    if (this.state.editor_font_size == 10) {
-      e.preventDefault()
+    if (this.state.getIn(["editor", "font_size"]) == 10) {
+      this.preventDefault()
       return
     }
     this.setState({
-      editor_font_size: this.state.editor_font_size - 1
+      editor: {
+        font_size: this.state.getIn(["editor", "font_size"]) - 1
+      }
     })
   }
 
   signin(data) {
     this.setState({
-      github_waiting: false,
-      github_name: data.name,
-      github_username: data.username,
-      github_email: data.email,
-      github_avatar_url: data.avatar_url
+      github: {
+        waiting: false,
+        name: data.name,
+        username: data.username,
+        email: data.email,
+        avatar_url: data.avatar_url
+      }
     })
   }
 
   signout() {
     this.setState({
-      github_name: "",
-      github_username: "",
-      github_email: "",
-      github_avatar_url: ""
+      github: {
+        name: "",
+        username: "",
+        email: "",
+        avatar_url: ""
+      }
     })
   }
 }

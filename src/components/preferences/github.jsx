@@ -26,20 +26,20 @@ export default class GithubPreferences extends BaseComponent {
 
   buttonClasses() {
     return classNames("o-button", {
-      "o-button--waiting": this.props.prefs.github_waiting
+      "o-button--waiting": this.props.prefs.get("waiting")
     })
   }
 
   render() {
     let panelContent
 
-    if (this.props.prefs.github_username) {
+    if (this.props.prefs.get("username")) {
       panelContent = (
         <div className="o-pref-panel__content">
           <div className="o-user-card">
-            <h3 className="o-user-card__name">{this.props.prefs.github_name}</h3>
-            <p className="o-user-card__username">{this.props.prefs.github_username}</p>
-            <img className="o-user-card__avatar" src={this.props.prefs.github_avatar_url}/>
+            <h3 className="o-user-card__name">{this.props.prefs.get("name")}</h3>
+            <p className="o-user-card__username">{this.props.prefs.get("username")}</p>
+            <img className="o-user-card__avatar" src={this.props.prefs.get("avatar_url")}/>
           </div>
 
           <button className={this.buttonClasses()} onClick={this.handleSignout.bind(this)}>Sign out</button>
@@ -52,7 +52,7 @@ export default class GithubPreferences extends BaseComponent {
             Email address
             <input ref="email"
                    type="email"
-                   defaultValue={this.props.prefs.github_email}
+                   defaultValue={this.props.prefs.get("email")}
                    required="required"
                    onContextMenu={this.showMenu.bind(this)}/>
           </label>

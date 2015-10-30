@@ -6,16 +6,20 @@ import GeneralPreferences from "./preferences/general"
 import GithubPreferences from "./preferences/github"
 
 export default class Preferences extends BaseComponent {
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.props.prefStore !== nextProps.prefStore
+  }
+
   componentDidUpdate(prevProps, prevState) {
     // Move focus on the panel when opened
-    if (!prevProps.prefStore.open && this.props.prefStore.open) {
+    if (!prevProps.prefStore.get("open") && this.props.prefStore.get("open")) {
       ReactDOM.findDOMNode(this).focus()
     }
   }
 
   overlayClassNames() {
     return classNames("o-overlay u-container u-container--vertical c-preferences", {
-      "o-overlay--is-open": this.props.prefStore.open
+      "o-overlay--is-open": this.props.prefStore.get("open")
     })
   }
 
@@ -29,7 +33,7 @@ export default class Preferences extends BaseComponent {
 
         <div className="o-overlay__content u-panel--grow">
           <GeneralPreferences prefs={this.props.prefStore}/>
-          <GithubPreferences prefs={this.props.prefStore}/>
+          <GithubPreferences prefs={this.props.prefStore.get("github")}/>
         </div>
       </div>
     )

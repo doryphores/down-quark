@@ -18,14 +18,14 @@ export default class GithubPreferences extends BaseComponent {
           <label className="o-form-radio">
             <input type="radio"
                    name="editor_theme"
-                   checked={this.props.prefs.editor_theme == "downquark-dark"}
+                   checked={this.props.prefs.getIn(["editor", "theme"]) == "downquark-dark"}
                    onChange={this.handleThemeChange.bind(this)}/>
             Dark theme
           </label>
           <label className="o-form-radio">
             <input type="radio"
                    name="editor_theme"
-                   checked={this.props.prefs.editor_theme == "downquark-light"}
+                   checked={this.props.prefs.getIn(["editor", "theme"]) == "downquark-light"}
                    onChange={this.handleThemeChange.bind(this)}/>
             Light theme
           </label>
