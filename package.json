@@ -9,8 +9,8 @@
     "install-app": "(cd app && npm install --no-optional && electron-rebuild)",
     "start": "npm run build-css -- -m && npm run build-js -- -s && electron app",
     "package": "npm run build-css && npm run build-js && node scripts/package.js",
-    "build-js": "mkdirp app/js && babel src/js --out-dir app/js --stage 0",
-    "build-css": "mkdirp app/css && stylus src/stylus/app.styl -o app/css/ -c",
+    "build-js": "rimraf app/js && mkdirp app/js && babel src/js --out-dir app/js --stage 0",
+    "build-css": "rimraf app/css && mkdirp app/css && stylus src/stylus/app.styl -o app/css/ -c",
     "watch": "npm run build-css -- -m -w & npm run build-js -- -s -w"
   },
   "author": "Martin Laine",
@@ -25,6 +25,7 @@
     "electron-prebuilt": "0.34.3",
     "electron-rebuild": "^1.0.0",
     "mkdirp": "^0.5.1",
+    "rimraf": "^2.4.3",
     "stylus": "^0.52.4"
   }
 }
