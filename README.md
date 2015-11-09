@@ -1,7 +1,6 @@
 # Down Quark
 
-**Down Quark** is a cross-platform markdown editor built on top of
-[Electron](http://electron.atom.io/).
+**Down Quark** is a cross-platform markdown editor built on top of [Electron](http://electron.atom.io/).
 
 Tech stack:
 - JavaScript ES6/ES7 (using [Babel](http://babeljs.io) as a transpiler)
@@ -13,19 +12,27 @@ Tech stack:
 
 ## Install dependencies
 
-To install node dependencies and rebuild native modules for the Electron
-runtime:
+The repository has two `package.json` files: one for setting up the dev environment and one for the app itself. This helps to keep dependencies separate for packaging.
+
+First, install dev dependencies (Electron runtime and helpers as well as JS and CSS transpilers):
 
 ```
-npm run install-deps
+> npm install
+```
+
+To install app dependencies and rebuild native modules for the Electron runtime:
+
+```
+> npm run install-app
 ```
 
 ### To enable Git integration
 
-The `nodegit` package is set as an optional dependency as it takes a long time to compile (and may not compile at all on Windows). The `install-deps` script ignores optional dependencies so `nodegit` won't be installed. If you want Git integration, install nodegit separately with:
+The `nodegit` package is set as an optional dependency as it takes a long time to compile (and may not compile at all on Windows). The `install-app` script ignores optional dependencies so `nodegit` won't be installed. If you want Git integration, install `nodegit` separately with:
 
 ```
-npm install nodegit
+> cd app
+> npm install nodegit
 ```
 
 ## To run in development mode
@@ -33,19 +40,19 @@ npm install nodegit
 To start **Down Quark**:
 
 ```
-npm start
+> npm start
 ```
 
 To watch for JS and CSS changes:
 
 ```
-npm run watch
+> npm run watch
 ```
 
 ## Build for your platform
 
 ```
-npm run package
+> npm run package
 ```
 
 This will package **Down Quark** for your platform and architecture.

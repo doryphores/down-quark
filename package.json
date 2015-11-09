@@ -5,15 +5,13 @@
   "description": "Electron based markdown editor",
   "main": "index.js",
   "scripts": {
-    "rebuild": "electron-rebuild",
-    "install-deps": "npm install --no-optional && electron-rebuild",
-    "start": "npm run build-css -- -m && npm run build-js -- -s && electron .",
+    "rebuild": "(cd app && electron-rebuild)",
+    "install-app": "(cd app && npm install --no-optional && electron-rebuild)",
+    "start": "npm run build-css -- -m && npm run build-js -- -s && electron app",
     "package": "npm run build-css && npm run build-js && node scripts/package.js",
-    "build-js": "mkdirp static/js && babel src --out-dir static/js --stage 0",
-    "watch-js": "mkdirp static/js && babel src --out-dir static/js -w --stage 0 -s",
-    "build-css": "mkdirp static/css && stylus stylus/app.styl -o static/css/ -c",
-    "watch-css": "mkdirp static/css && stylus stylus/app.styl -o static/css/ -w -m",
-    "watch": "npm run watch-css & npm run watch-js"
+    "build-js": "mkdirp app/js && babel src/js --out-dir app/js --stage 0",
+    "build-css": "mkdirp app/css && stylus src/stylus/app.styl -o app/css/ -c",
+    "watch": "npm run build-css -- -m -w & npm run build-js -- -s -w"
   },
   "author": "Martin Laine",
   "repository": {
@@ -21,33 +19,12 @@
     "url": "https://github.com/doryphores/down-quark"
   },
   "license": "MIT",
-  "engines": {
-    "electron": "0.33.6"
-  },
-  "devDependencies": {
-    "electron-packager": "^5.1.0",
-    "electron-prebuilt": "0.34.1",
-    "electron-rebuild": "^1.0.0",
-    "stylus": "^0.52.4",
-    "babel": "^5.8.21",
-    "mkdirp": "^0.5.1"
-  },
   "dependencies": {
-    "alt": "^0.17.3",
-    "async": "^1.4.2",
-    "classnames": "^2.1.3",
-    "codemirror": "^5.8.0",
-    "fs-extra": "^0.24.0",
-    "github": "^0.2.4",
-    "immutable": "^3.7.5",
-    "node-forge": "^0.6.35",
-    "pathwatcher": "^6.2.4",
-    "react": "^0.14.0",
-    "react-dom": "^0.14.0",
-    "showdown": "^1.2.3",
-    "underscore": "^1.8.3"
-  },
-  "optionalDependencies": {
-    "nodegit": "^0.5.0"
+    "babel": "^5.8.21",
+    "electron-packager": "^5.1.1",
+    "electron-prebuilt": "0.34.3",
+    "electron-rebuild": "^1.0.0",
+    "mkdirp": "^0.5.1",
+    "stylus": "^0.52.4"
   }
 }

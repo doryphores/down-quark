@@ -1,4 +1,4 @@
 node_modules
 dist
-static/css
-static/js
+app/css
+app/js
