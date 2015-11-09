@@ -5,7 +5,7 @@ import classNames from "classnames"
 
 export default class GithubPreferences extends BaseComponent {
   handleThemeChange(e) {
-    this.context.flux.getActions("PrefActions").switchTheme()
+    this.context.flux.actions.PrefActions.switchTheme()
   }
 
   render() {

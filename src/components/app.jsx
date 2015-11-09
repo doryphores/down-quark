@@ -6,19 +6,29 @@ import Workspace from "./workspace"
 import Preferences from "./preferences"
 import StatusBar from "./status_bar"
 import remote from "remote"
+import connectToStores from "alt/utils/connectToStores"
 
+@connectToStores
 export default class App extends BaseComponent {
-  constructor(props, context) {
-    super(props, context)
-    this.state = this.getStoreState()
+  static getStores(props, context) {
+    return [
+      context.flux.stores.TreeStore,
+      context.flux.stores.BufferStore,
+      context.flux.stores.PrefStore,
+      context.flux.stores.GitStore
+    ]
+  }
+
+  static getPropsFromStores(props, context) {
+    return {
+      gitStore    : context.flux.stores.GitStore.getState(),
+      prefStore   : context.flux.stores.PrefStore.getState(),
+      treeStore   : context.flux.stores.TreeStore.getState(),
+      bufferStore : context.flux.stores.BufferStore.getState()
+    }
   }
 
   componentDidMount() {
-    this.context.flux.getStore("TreeStore").listen(this.handleChange.bind(this))
-    this.context.flux.getStore("BufferStore").listen(this.handleChange.bind(this))
-    this.context.flux.getStore("PrefStore").listen(this.handleChange.bind(this))
-    this.context.flux.getStore("GitStore").listen(this.handleChange.bind(this))
-
     // TODO: is this the right place to set the app menu?
     new ApplicationMenu(this.context.flux)
     this.updateTitle()
@@ -27,34 +37,21 @@ export default class App extends BaseComponent {
   componentDidUpdate(prevProps, prevState) {
     // TODO: find a way to simplify this logic (move it to the store?)
     let activeBuffer, prevActiveBuffer
-    if (this.state.bufferStore.activeBufferIndex > -1) {
-      activeBuffer = this.state.bufferStore.buffers[this.state.bufferStore.activeBufferIndex]
-      prevActiveBuffer = prevState.bufferStore.buffers[prevState.bufferStore.activeBufferIndex]
+    if (this.props.bufferStore.activeBufferIndex > -1) {
+      activeBuffer = this.props.bufferStore.buffers[this.props.bufferStore.activeBufferIndex]
+      prevActiveBuffer = prevProps.bufferStore.buffers[prevProps.bufferStore.activeBufferIndex]
     }
     if (
-      prevState.bufferStore.activeBufferIndex != this.state.bufferStore.activeBufferIndex ||
+      prevProps.bufferStore.activeBufferIndex != this.props.bufferStore.activeBufferIndex ||
       activeBuffer && activeBuffer.name != prevActiveBuffer.name
     ) {
       this.updateTitle()
     }
   }
 
-  getStoreState() {
-    return {
-      gitStore    : this.context.flux.getStore("GitStore").getState(),
-      prefStore    : this.context.flux.getStore("PrefStore").getState(),
-      treeStore   : this.context.flux.getStore("TreeStore").getState(),
-      bufferStore : this.context.flux.getStore("BufferStore").getState()
-    }
-  }
-
-  handleChange() {
-    this.setState(this.getStoreState())
-  }
-
   updateTitle() {
     const win = remote.getCurrentWindow()
-    const activeBuffer = this.context.flux.getStore("BufferStore").getBuffer()
+    const activeBuffer = this.context.flux.stores.BufferStore.getBuffer()
     let title = remote.require("app").getName()
 
     if (activeBuffer) {
@@ -70,13 +67,13 @@ export default class App extends BaseComponent {
   render() {
     return (
       <div className="u-container u-container--vertical">
-        <StatusBar className="u-panel" gitStore={this.state.gitStore}/>
+        <StatusBar className="u-panel" gitStore={this.props.gitStore}/>
         <div className="u-panel--grow u-container u-container--horizontal">
-          <Tree className="u-panel" treeStore={this.state.treeStore}/>
+          <Tree className="u-panel" treeStore={this.props.treeStore}/>
           <Workspace className="u-panel u-panel--grow"
-                     bufferStore={this.state.bufferStore}
-                     prefs={this.state.prefStore}/>
-          <Preferences prefStore={this.state.prefStore}/>
+                     bufferStore={this.props.bufferStore}
+                     prefs={this.props.prefStore}/>
+                   <Preferences prefStore={this.props.prefStore}/>
         </div>
       </div>
     )

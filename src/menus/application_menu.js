@@ -18,12 +18,12 @@ export default class ApplicationMenu {
           {
             label: "New file",
             accelerator: "CmdOrCtrl+N",
-            click: () => this.flux.getActions("TabActions").new()
+            click: () => this.flux.actions.TabActions.new()
           },
           {
             label: "Open folder...",
             accelerator: "CmdOrCtrl+O",
-            click: () => this.flux.getActions("ProjectActions").open()
+            click: () => this.flux.actions.ProjectActions.open()
           },
           {
             type: "separator"
@@ -31,12 +31,12 @@ export default class ApplicationMenu {
           {
             label: "Save",
             accelerator: "CmdOrCtrl+S",
-            click: () => this.flux.getActions("BufferActions").save()
+            click: () => this.flux.actions.BufferActions.save()
           },
           {
             label: "Save As...",
             accelerator: "Shift+CmdOrCtrl+S",
-            click: () => this.flux.getActions("BufferActions").saveAs()
+            click: () => this.flux.actions.BufferActions.saveAs()
           },
           {
             type: "separator"
@@ -44,12 +44,12 @@ export default class ApplicationMenu {
           {
             label: "Close Tab",
             accelerator: "CmdOrCtrl+W",
-            click: () => this.flux.getActions("TabActions").close()
+            click: () => this.flux.actions.TabActions.close()
           },
           {
             label: "Close All",
             accelerator: "Shift+CmdOrCtrl+W",
-            click: () => this.flux.getActions("TabActions").closeAll()
+            click: () => this.flux.actions.TabActions.closeAll()
           }
         ]
       },
@@ -131,17 +131,17 @@ export default class ApplicationMenu {
           {
             label: "Increase Font Size",
             accelerator: "CmdOrCtrl+=",
-            click: () => this.flux.getActions("PrefActions").increaseFontSize()
+            click: () => this.flux.actions.PrefActions.increaseFontSize()
           },
           {
             label: "Decrease Font Size",
             accelerator: "CmdOrCtrl+-",
-            click: () => this.flux.getActions("PrefActions").decreaseFontSize()
+            click: () => this.flux.actions.PrefActions.decreaseFontSize()
           },
           {
             label: "Reset Font Size",
             accelerator: "CmdOrCtrl+0",
-            click: () => this.flux.getActions("PrefActions").resetFontSize()
+            click: () => this.flux.actions.PrefActions.resetFontSize()
           }
         ]
       }
@@ -163,7 +163,7 @@ export default class ApplicationMenu {
           {
             label: "Preferences...",
             accelerator: "CmdOrCtrl+,",
-            click: () => this.flux.getActions("PrefActions").togglePanel()
+            click: () => this.flux.actions.PrefActions.togglePanel()
           },
           {
             type: "separator"
@@ -193,7 +193,7 @@ export default class ApplicationMenu {
       template[1].submenu.push({
         label: "Preferences...",
         accelerator: "Ctrl+,",
-        click: () => this.flux.getActions("PrefActions").togglePanel()
+        click: () => this.flux.actions.PrefActions.togglePanel()
       })
     }
 

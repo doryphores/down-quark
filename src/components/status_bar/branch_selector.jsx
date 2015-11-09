@@ -67,7 +67,7 @@ export default class BranchSelector extends BaseComponent {
   select(branch) {
     let selectedBranch = branch || this.state.selectedBranch;
     if (selectedBranch) {
-      this.context.flux.getActions("GitActions").checkoutBranch(selectedBranch)
+      this.context.flux.actions.GitActions.checkoutBranch(selectedBranch)
     }
     this.close()
   }

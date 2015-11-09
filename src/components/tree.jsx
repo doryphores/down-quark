@@ -69,18 +69,18 @@ class TreeNode extends BaseComponent {
   handleClick() {
     if (this.props.node.type == "dir") {
       let action = this.props.node.expanded ? "collapse" : "expand"
-      this.context.flux.getActions("TreeActions")[action](this.props.node.path)
+      this.context.flux.actions.TreeActions[action](this.props.node.path)
     }
-    this.context.flux.getActions("TreeActions").select(this.props.node.path)
+    this.context.flux.actions.TreeActions.select(this.props.node.path)
   }
 
   handleDoubleClick() {
     if (this.props.node.type == "dir") return
-    this.context.flux.getActions("BufferActions").open(this.props.node.path)
+    this.context.flux.actions.BufferActions.open(this.props.node.path)
   }
 
   handleContextMenu() {
-    this.context.flux.getActions("TreeActions").select(this.props.node.path)
+    this.context.flux.actions.TreeActions.select(this.props.node.path)
     let menu = new TreeMenu(this.context.flux, this.props.node)
     menu.show()
   }

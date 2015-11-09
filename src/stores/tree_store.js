@@ -34,8 +34,8 @@ export default class TreeStore {
   constructor() {
     this.state = { root: null }
 
-    const ProjectActions = this.alt.getActions("ProjectActions")
-    const TreeActions = this.alt.getActions("TreeActions")
+    const ProjectActions = this.alt.actions.ProjectActions
+    const TreeActions = this.alt.actions.TreeActions
 
     this.bindListeners({
       setRoot      : [
@@ -63,7 +63,7 @@ export default class TreeStore {
   }
 
   setRoot() {
-    const ProjectStore = this.alt.getStore("ProjectStore")
+    const ProjectStore = this.alt.stores.ProjectStore
 
     this.waitFor(ProjectStore)
 

@@ -73,7 +73,7 @@ export default class Editor extends BaseComponent {
   }
 
   handleChange() {
-    this.context.flux.getActions("BufferActions").changeContent({
+    this.context.flux.actions.BufferActions.changeContent({
       id      : this.props.buffer.id,
       content : this.codeMirrorInstance.getValue()
     })

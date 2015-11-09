@@ -6,7 +6,7 @@ export default class BufferActions {
   }
 
   save(index) {
-    let buffer = this.alt.getStore("BufferStore").getBuffer(index)
+    let buffer = this.alt.stores.BufferStore.getBuffer(index)
 
     if (!buffer) return Promise.reject("Attempting to save a buffer that does not exist")
 
@@ -15,7 +15,7 @@ export default class BufferActions {
         this.dispatch({ index: index })
         resolve()
       } else {
-        this.alt.getActions("BufferActions").saveAs(index).then(() => {
+        this.alt.actions.BufferActions.saveAs(index).then(() => {
           resolve()
         })
       }
@@ -23,11 +23,11 @@ export default class BufferActions {
   }
 
   saveAs(index) {
-    if (this.alt.getStore("BufferStore").getBuffer(index) === undefined) {
+    if (this.alt.stores.BufferStore.getBuffer(index) === undefined) {
       return Promise.reject("Attempting to save a buffer that does not exist")
     }
 
-    let rootPath = this.alt.getStore("ProjectStore").getState().contentPath
+    let rootPath = this.alt.stores.ProjectStore.getState().contentPath
     return Dialogs.saveAs(rootPath).then((filename) => {
       this.dispatch({
         index    : index,

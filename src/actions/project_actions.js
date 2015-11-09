@@ -8,7 +8,7 @@ export default class ProjectActions {
   open() {
     // TODO: this triggers a warning as dispatch is deferred
     Dialogs.selectFolder().then((folderPath) => {
-      this.alt.getActions("TabActions").closeAll().then(() => {
+      this.alt.actions.TabActions.closeAll().then(() => {
         this.dispatch(folderPath)
       })
     })

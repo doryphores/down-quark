@@ -46,7 +46,7 @@ export default class PrefStore {
   constructor() {
     this.state = Immutable.fromJS(PrefStore.defaultState)
 
-    const PrefActions = this.alt.getActions("PrefActions")
+    const PrefActions = this.alt.actions.PrefActions
 
     this.bindListeners({
       increaseFontSize : PrefActions.INCREASE_FONT_SIZE,

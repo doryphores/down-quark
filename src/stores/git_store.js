@@ -27,8 +27,8 @@ export default class GitStore {
     this.state = Object.assign({}, GitStore.defaultState)
     this.branches = {}
 
-    const ProjectActions = this.alt.getActions("ProjectActions")
-    const GitActions = this.alt.getActions("GitActions")
+    const ProjectActions = this.alt.actions.ProjectActions
+    const GitActions = this.alt.actions.GitActions
 
     this.bindListeners({
       setRoot        : ProjectActions.OPEN,
@@ -38,7 +38,7 @@ export default class GitStore {
 
     this.on("bootstrap", () => {
       _.defaults(this.state, GitStore.defaultState)
-      this.setRoot(this.alt.getStore("ProjectStore").getState().rootPath)
+      this.setRoot(this.alt.stores.ProjectStore.getState().rootPath)
     })
   }
 

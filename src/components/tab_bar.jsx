@@ -20,9 +20,9 @@ export default class TabBar extends BaseComponent {
 
   handleClick(index, event) {
     if (event.target.classList.contains("js-close")) {
-      this.context.flux.getActions("TabActions").close(index)
+      this.context.flux.actions.TabActions.close(index)
     } else {
-      this.context.flux.getActions("TabActions").select(index)
+      this.context.flux.actions.TabActions.select(index)
     }
   }
 

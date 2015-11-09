@@ -7,14 +7,14 @@ import FormMenu from "../../menus/form_menu"
 export default class GithubPreferences extends BaseComponent {
   handleSignin(e) {
     e.preventDefault()
-    this.context.flux.getActions("PrefActions").signin({
+    this.context.flux.actions.PrefActions.signin({
       email    : this.refs.email.value,
       password : this.refs.password.value
     })
   }
 
   handleSignout() {
-    this.context.flux.getActions("PrefActions").signout()
+    this.context.flux.actions.PrefActions.signout()
   }
 
   showMenu() {

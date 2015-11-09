@@ -13,7 +13,7 @@ export default class ProjectStore {
       shortcuts: {}
     }
 
-    const ProjectActions = this.alt.getActions("ProjectActions")
+    const ProjectActions = this.alt.actions.ProjectActions
 
     this.bindListeners({
       setRoot: ProjectActions.OPEN

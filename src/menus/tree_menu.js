@@ -20,13 +20,13 @@ export default class TreeMenu {
       {
         label: "Delete",
         click: () => {
-          this.flux.getActions("TreeActions").delete(this.node.path)
+          this.flux.actions.TreeActions.delete(this.node.path)
         }
       },
       {
         label: "Move",
         click: () => {
-          this.flux.getActions("TreeActions").move(this.node.path)
+          this.flux.actions.TreeActions.move(this.node.path)
         }
       }
     ]

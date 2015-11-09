@@ -10,7 +10,7 @@ export default class TabActions {
   }
 
   close(index) {
-    let buffer = this.alt.getStore("BufferStore").getBuffer(index)
+    let buffer = this.alt.stores.BufferStore.getBuffer(index)
 
     if (!buffer) {
       return Promise.reject("Attempting to close a buffer that does not exist")
@@ -23,7 +23,7 @@ export default class TabActions {
       } else {
         Dialogs.confirmClose(buffer.name).then((save) => {
           if (save) {
-            this.alt.getActions("BufferActions").save(index).then(() => {
+            this.alt.actions.BufferActions.save(index).then(() => {
               this.dispatch(index)
               resolve()
             }).catch(reject)
@@ -38,9 +38,9 @@ export default class TabActions {
 
   closeAll() {
     return new Promise((resolve, reject) => {
-      if (this.alt.getStore("BufferStore").getState().buffers.length) {
-        this.alt.getActions("TabActions").close().then(() => {
-          this.alt.getActions("TabActions").closeAll().then(() => {
+      if (this.alt.stores.BufferStore.getState().buffers.length) {
+        this.alt.actions.TabActions.close().then(() => {
+          this.alt.actions.TabActions.closeAll().then(() => {
             resolve()
           })
         })

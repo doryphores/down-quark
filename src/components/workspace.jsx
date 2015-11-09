@@ -65,7 +65,7 @@ export default class Workspace extends BaseComponent {
   }
 
   previewContent() {
-    return this.context.flux.getStore("BufferStore").getPreviewContent()
+    return this.context.flux.stores.BufferStore.getPreviewContent()
   }
 
   editorStyles() {

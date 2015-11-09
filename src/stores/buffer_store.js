@@ -38,9 +38,9 @@ export default class BufferStore {
       this.state.buffers.forEach(this.listenToBuffer.bind(this))
     })
 
-    const ProjectActions = this.alt.getActions("ProjectActions")
-    const BufferActions = this.alt.getActions("BufferActions")
-    const TabActions = this.alt.getActions("TabActions")
+    const ProjectActions = this.alt.actions.ProjectActions
+    const BufferActions = this.alt.actions.BufferActions
+    const TabActions = this.alt.actions.TabActions
 
     this.bindListeners({
       openBuffer          : BufferActions.OPEN,
@@ -61,13 +61,13 @@ export default class BufferStore {
 
     this.setConverter()
 
-    this.alt.getStore("ProjectStore").listen(() => {
+    this.alt.stores.ProjectStore.listen(() => {
       this.setConverter()
     })
   }
 
   setConverter() {
-    const ProjectStore = this.alt.getStore("ProjectStore")
+    const ProjectStore = this.alt.stores.ProjectStore
     this.converter = getShowdownConverter(ProjectStore.getState().mediaPath)
   }
 
