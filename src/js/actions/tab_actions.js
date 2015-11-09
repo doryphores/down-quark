@@ -13,7 +13,7 @@ export default class TabActions {
     let buffer = this.alt.stores.BufferStore.getBuffer(index)
 
     if (!buffer) {
-      return Promise.reject("Attempting to close a buffer that does not exist")
+      return Promise.resolve()
     }
 
     return new Promise((resolve, reject) => {
