@@ -21,14 +21,18 @@ export default class ProjectStore {
   }
 
   setRoot(rootPath) {
-    this.state.rootPath = rootPath
-    this.state.contentPath = rootPath
-    this.state.mediaPath = rootPath
+    this.setState({
+      rootPath    : rootPath,
+      contentPath : rootPath,
+      mediaPath   : rootPath,
+      shortcuts   : {}
+    })
     this.loadConfig()
   }
 
   loadConfig() {
     let configFile = path.join(this.state.rootPath, "downquark_config.json")
+    if (!fs.existsSync(configFile)) return
     let config = fs.readJSONSync(configFile, { throws: false })
     if (config) {
       this.setState({
