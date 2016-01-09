@@ -6,7 +6,7 @@
   "main": "index.js",
   "author": "Martin Laine",
   "engines": {
-    "electron": "0.34.3"
+    "electron": "0.36.3"
   },
   "dependencies": {
     "alt": "^0.17.3",
@@ -24,6 +24,6 @@
     "underscore": "^1.8.3"
   },
   "optionalDependencies": {
-    "nodegit": "^0.5.0"
+    "nodegit": "^0.7.0"
   }
 }

@@ -21,11 +21,11 @@
   "license": "MIT",
   "dependencies": {
     "babel": "^5.8.21",
-    "electron-packager": "^5.1.1",
-    "electron-prebuilt": "0.34.3",
-    "electron-rebuild": "^1.0.0",
+    "electron-packager": "^5.2.0",
+    "electron-prebuilt": "0.36.3",
+    "electron-rebuild": "^1.0.2",
     "mkdirp": "^0.5.1",
-    "rimraf": "^2.4.3",
+    "rimraf": "^2.5.0",
     "stylus": "^0.52.4"
   }
 }
